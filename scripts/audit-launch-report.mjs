@@ -51,7 +51,7 @@ const audit = {
   model,
   effort: 'low',
   generatedAt: new Date().toISOString(),
-  ...aggregateReader10(personas, { minPass: 9 }),
+  ...aggregateReader10(personas, { minPass: 10 }),
   personas,
 };
 await writeJson(path.join(root, 'docs', 'launch-reader-live.json'), audit);
