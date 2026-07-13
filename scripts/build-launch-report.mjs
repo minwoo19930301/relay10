@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { evaluateReader10, evaluateReader10Payload } from '../src/reader10.mjs';
@@ -10,6 +10,10 @@ await mkdir(outputs, { recursive: true });
 
 const repository = 'https://github.com/minwoo19930301/relay10';
 const releaseTarget = `${repository}/releases/tag/v0.1.1`;
+const verificationLog = JSON.parse(await readFile(path.join(root, 'docs', 'launch-verification.json'), 'utf8'));
+if (verificationLog.passed !== true || !Array.isArray(verificationLog.commands)) {
+  throw new Error('Run npm run verify:launch successfully before building the launch report.');
+}
 const task = '국내 OMO·OMP·OMC·OMX·GJC·LazyCodex와 글로벌 코딩 에이전트 프로젝트를 공개 근거로 비교하고, 단계별 모델·추론 노력 라우팅과 10회 저비용 독자 검수를 갖춘 더 가벼운 Codex 하네스를 구현해 GitHub 출시를 준비한다.';
 const summary = '한 문장 설명: Relay10은 사용자 요청 하나를 자료 읽기, 깊은 계획, 코드 작성, 정확성 검토, 쉬운 보고서 순서로 실행하고 각 단계에 맞는 Codex 모델을 고르는 프로그램이다. 현재 코드는 GitHub 저장소에 공개됐지만 v0.1.1 릴리스는 보류 중이다. 저장소는 계속 바뀌는 코드 보관함이고, 릴리스는 검수를 끝낸 특정 버전의 고정 배포본이다. 따라서 v0.1.1 예정 주소는 승인 뒤에만 열린다. 이 HTML은 현재 검수 입력이며 과거 점수를 현재 점수로 사용하지 않는다. 자동 구조 검사는 프로그램 규칙으로 제목·링크·접근성을 확인하지만 글의 뜻을 이해하지 못한다. 실제 모델 판독은 저비용 모델 열 번에게 목적, 결과, 근거, 위험, 다음 행동을 다시 말하게 해 이해도를 확인한다. @minwoo19930301이 이 저장소의 최상위 폴더에서 npm run audit:launch를 실행하고, 10명 모두 이해하며 치명적 구조 문제가 0개이면 같은 담당자가 릴리스를 승인한다. 구현 근거는 73개 자동 테스트, 문법 검사, 실제 모델 탐색, 모델 배정 미리보기, 패키지 검사다. 남은 위험은 초기 규칙 기반 모델 배정의 실전 정확도, 같은 모델 계열 판단의 상관성, 비교 프로젝트의 빠른 변경이다. 용어: OMO(Oh My OpenAgent), OMP(Oh My Pi), OMC(Oh My ClaudeCode), OMX(Oh My Codex), GJC(Gajae-Code), CLI(명령줄 인터페이스), HTML(웹 문서 형식), URL(웹 주소), MIT(오픈소스 라이선스), LICENSE(라이선스 파일), RPC(원격 프로시저 호출), DSL(도메인 전용 언어), Reader-10(열 가지 독자 역할 검수), 하네스(작업 단계를 연결하는 실행 도구), 라우팅(단계별 모델 배정), economy(가벼운 역할), balanced(중간 역할), frontier(고성능 역할), low(낮은 추론 노력).';
 
@@ -17,6 +21,8 @@ const evidence = [
   { title: 'Relay10 공개 저장소', url: repository, note: 'GitHub CLI로 게시한 공식 저장소다.' },
   { title: 'Relay10 v0.1.1 릴리스 예정 주소', url: releaseTarget, note: '저장소와 달리 검수를 끝낸 고정 배포본 주소다. 최종 승인 전에는 열리지 않는 것이 정상이다.' },
   { title: '실제 Reader-10 결과 파일', url: `${repository}/blob/main/docs/launch-reader-live.json`, note: '현재 HTML 판독을 실행하면 이 파일이 새 결과로 교체된다. 과거 점수는 현재 HTML의 점수로 취급하지 않는다.' },
+  { title: '출시 검증 원본 명령 로그', url: `${repository}/blob/main/docs/launch-verification.json`, note: `실행 시각 ${verificationLog.generatedAt}. 테스트·문법·모델 탐색·모델 배정·패키지 검사의 명령, 종료 코드, stdout, stderr 원문.` },
+  { title: '자동 구조 검사 원본', url: `${repository}/blob/main/docs/launch-reader-deterministic.json`, note: '내용 구조와 최종 HTML 렌더를 각각 검사하고 치명적 문제 수를 기록한다.' },
   { title: '자동 테스트', url: `${repository}/tree/main/test`, note: '73개 회귀 테스트: 모델 배정, 구성, 하위 프로세스, 파이프라인, 동결 재생, 보고서 안전성.' },
   { title: '한국 하네스 조사 원문', url: `${repository}/blob/main/docs/korea-landscape.md`, note: '사실·추론·명칭 혼선을 분리한 2026-07-13 스냅샷.' },
   { title: '글로벌 오픈소스 조사 원문', url: `${repository}/blob/main/docs/global-landscape.md`, note: '실사용 점유율이 아닌 공개 프로젝트 지형과 선행 패턴.' },
@@ -43,11 +49,11 @@ const risks = [
 ];
 
 const verificationChecks = [
-  { name: 'Node 자동 테스트', passed: true, detail: 'npm test: 73개 통과, 실패 0개.' },
-  { name: '문법 검사', passed: true, detail: 'npm run lint: src와 test의 모든 mjs 파일 node --check 통과.' },
-  { name: '실제 Codex 모델 카탈로그', passed: true, detail: 'doctor에서 frontier=gpt-5.6-sol/max, balanced=gpt-5.6-terra/medium, economy=gpt-5.6-luna/low 확인.' },
-  { name: '라우팅 스모크', passed: true, detail: '출시 성격의 요청을 frontier 위험도로 분류하고 5개 모델 단계와 구조 Reader-10 계획을 출력.' },
-  { name: '패키지 검사', passed: true, detail: 'npm pack --dry-run: 19개 파일, 약 45 kB 압축, third-party npm runtime dependency 0개.' },
+  ...verificationLog.commands.map((command) => ({
+    name: command.label,
+    passed: command.passed,
+    detail: `${command.commandLine}; 시작 ${command.startedAt}; 종료 코드 ${command.code}; ${command.durationMs}ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.`,
+  })),
   { name: 'HTML 안전·접근성 구조', passed: true, detail: '외부 스크립트 없음, 출력 이스케이프, URL 허용목록, 콘텐츠 보안 정책, 모바일 viewport, main/h1/표 머리글 검사.' },
   { name: '현재 HTML 실제 모델 판독', passed: false, detail: '아직 실행 전이다. @minwoo19930301이 저장소 최상위 폴더에서 npm run audit:launch를 실행하며 결과는 docs/launch-reader-live.json에 기록된다.' },
 ];
@@ -62,36 +68,47 @@ const stages = [
     title: 'OMO(Oh My OpenAgent)', status: 'pass', profile: '국내 비교', model: '공식 저장소',
     summary: '장점은 가장 넓은 기능과 큰 공개 관심 신호, 단점은 큰 운영 표면과 라이선스 제약이다.',
     output: '사실: OpenCode Ultimate와 Codex Light를 한 계열에서 제공하며 11 agents, 54+ hooks, 도구·팀·복구 기능을 묶는다. 장점: 기능 폭과 생태계 신호가 크다. 단점: 상태·hook·도구의 상호작용이 많아 작은 하네스보다 진단 비용이 높다. 주의: 코어는 MIT가 아니라 Sustainable Use License 1.0이다. Relay10은 코드를 복제하지 않은 클린룸 구현을 택했다.',
+    evidence: [{ title: 'OMO 공식 README와 라이선스', url: 'https://github.com/code-yeongyu/oh-my-openagent' }],
   },
   {
     title: 'OMP(Oh My Pi)', status: 'pass', profile: '국내 비교', model: '공식 저장소',
     summary: '장점은 완성형 독립 엔진, 단점은 경량 라우터보다 훨씬 큰 구현·배포 범위다.',
     output: '사실: 자체 터미널 화면, 언어 서버, 디버거, 실행 환경, 하위 에이전트, 검색과 여러 공급자를 포함한 독립 코딩 에이전트다. 장점: 호스트 플러그인 한계를 벗어난 깊은 도구 통합과 MIT 라이선스. 단점: TypeScript·Rust·Python과 네이티브 기능을 함께 품어 단순한 Codex 래퍼의 기준에는 무겁다.',
+    evidence: [{ title: 'OMP 공식 README', url: 'https://github.com/can1357/oh-my-pi' }],
   },
   {
     title: 'OMC(Oh My ClaudeCode)', status: 'pass', profile: '국내 비교', model: '공식 저장소',
     summary: '장점은 단계형 팀 실행, 단점은 여러 반복 실행 모드와 Claude Code 중심 경계다.',
     output: '사실: Claude Code 플러그인과 명령줄 도구로 계획·요구사항·실행·검증·수정 흐름과 전문 역할을 제공한다. 장점: staged team workflow가 명시적이다. 단점: Team, Autopilot, Ralph, UltraQA, tmux worker처럼 실행 권위가 여러 곳에 생길 수 있어 상태 소유권을 관리해야 한다.',
+    evidence: [{ title: 'OMC 공식 README', url: 'https://github.com/Yeachan-Heo/oh-my-claudecode' }],
   },
   {
     title: 'OMX(Oh My Codex)', status: 'pass', profile: '국내 비교', model: '공식 저장소',
     summary: '장점은 Codex 위 durable goal·worktree 흐름, 단점은 설정·tmux·상태 학습면이다.',
     output: '사실: Codex 위에 deep-interview, ralplan, ultragoal, /goal, 격리 Git 작업공간과 터미널 세션 도구를 얹는다. 장점: 목표·근거·격리 작업공간을 오래 유지하는 운영 흐름. 단점: 설치 범위, 자동 연결 동작, 터미널 세션, 격리 작업공간, .omx 상태를 이해해야 한다. README는 MIT를 말하지만 조사 시점 root 표준 LICENSE 파일은 비어 있어 재사용 전 재확인이 필요하다.',
+    evidence: [{ title: 'OMX 공식 README', url: 'https://github.com/Yeachan-Heo/oh-my-codex' }],
   },
   {
     title: 'GJC(Gajae-Code)', status: 'pass', profile: '국내 비교', model: '공식 저장소',
     summary: '장점은 좁은 공개 workflow, 단점은 내부 구현과 실험 기능이 여전히 크다는 점이다.',
     output: '사실: 독립 외부 실행 도구이며 deep-interview, ralplan, ultragoal, 선택적 team과 네 기본 역할을 앞세운다. 장점: 사용자에게 보이는 기본 방법이 비교적 작고 MIT다. 단점: 내부에는 TypeScript·Rust·Python, 터미널 화면, 터미널 세션, 원격 통신, Telegram, notebook research가 있어 배포물은 가볍지 않으며 스스로 experimental beta라고 밝힌다.',
+    evidence: [{ title: 'GJC 공식 README와 NOTICE', url: 'https://github.com/Yeachan-Heo/gajae-code' }],
   },
   {
     title: 'LazyCodex', status: 'pass', profile: '국내 비교', model: '공식 저장소',
     summary: '장점은 한 줄 설치, 단점은 독립 엔진이 아니라 OMO Codex Light 배포층이라는 점이다.',
     output: '사실: OMO의 Codex Light를 설치·문서·marketplace로 배포하는 레이어이며 core를 submodule로 포함한다. 장점: 도입과 doctor 경험이 단순하다. 단점: LazyCodex, OMO, marketplace 이름이 동시에 노출되고 wrapper의 MIT가 OMO core의 Sustainable Use License를 덮지 않는다. OMO와 별도 엔진처럼 중복 집계하면 안 된다.',
+    evidence: [{ title: 'LazyCodex 공식 README와 submodule', url: 'https://github.com/code-yeongyu/lazycodex' }],
   },
   {
     title: '글로벌 공개 프로젝트 지형', status: 'pass', profile: '해외 조사', model: '공식 문서',
     summary: '해외에도 단일 표준은 없으며, multi-CLI runner·workflow pack·독립 runtime·조직형 비동기 플랫폼으로 갈린다.',
     output: '확인된 선행 사례: OpenDev는 Normal·Thinking·Compact·Self-Critique·vision 역할별 모델 슬롯을 둔다. Continue는 chat·autocomplete·edit·apply·embed·rerank 역할을 나눈다. Aider는 Architect가 해결 방향을 만들고 Editor가 실제 편집을 만든다. Claude Squad와 Agent Orchestrator는 worktree에서 기존 CLI를 병렬 운영한다. mini software-engineering agent는 최소 코어 기준선이고 OpenHands·Open software-engineering agent·Ruflo는 더 큰 플랫폼 축이다. 공개 별은 발견 신호일 뿐 실제 해외 사용 점유율의 증거가 아니다.',
+    evidence: [
+      { title: 'OpenDev 공식 저장소', url: 'https://github.com/opendev-to/opendev' },
+      { title: 'Aider Architect와 Editor 문서', url: 'https://aider.chat/2024/09/26/architect.html' },
+      { title: 'Continue 모델 역할 문서', url: 'https://docs.continue.dev/customize/model-roles' },
+    ],
   },
   {
     title: 'Relay10 라우팅 설계', status: 'pass', profile: 'frontier', model: 'gpt-5.6-sol / max 원칙',

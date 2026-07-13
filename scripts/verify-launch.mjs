@@ -1,0 +1,54 @@
+import path from 'node:path';
+
+import { spawnCapture } from '../src/executor.mjs';
+import { writeJson } from '../src/utils.mjs';
+
+const root = path.resolve(new URL('..', import.meta.url).pathname);
+const specifications = [
+  { label: '73개 Node 자동 테스트', command: 'npm', args: ['test'] },
+  { label: '전체 JavaScript 문법 검사', command: 'npm', args: ['run', 'lint'] },
+  { label: '실제 Codex 모델 탐색', command: 'node', args: ['src/cli.mjs', 'doctor', '--json'] },
+  {
+    label: '출시 작업 모델 배정 미리보기',
+    command: 'node',
+    args: ['src/cli.mjs', 'route', 'research current coding harnesses, build a lightweight CLI, verify it, and prepare a release', '--json'],
+  },
+  { label: 'npm 배포 파일 검사', command: 'npm', args: ['pack', '--dry-run', '--json'] },
+];
+
+const commands = [];
+for (const specification of specifications) {
+  const startedAt = new Date().toISOString();
+  const result = await spawnCapture(specification.command, specification.args, {
+    cwd: root,
+    timeoutMs: 1_200_000,
+  });
+  commands.push({
+    label: specification.label,
+    command: specification.command,
+    args: specification.args,
+    commandLine: [specification.command, ...specification.args].join(' '),
+    startedAt,
+    finishedAt: new Date().toISOString(),
+    durationMs: result.durationMs,
+    code: result.code,
+    timedOut: result.timedOut,
+    stdoutTruncated: result.stdoutTruncated,
+    stderrTruncated: result.stderrTruncated,
+    stdout: result.stdout,
+    stderr: result.stderr,
+    passed: result.code === 0 && result.timedOut !== true,
+  });
+}
+
+const log = {
+  version: 1,
+  generatedAt: new Date().toISOString(),
+  cwd: root,
+  node: process.version,
+  passed: commands.every((command) => command.passed),
+  commands,
+};
+await writeJson(path.join(root, 'docs', 'launch-verification.json'), log);
+process.stdout.write(`launch verification: ${commands.filter((command) => command.passed).length}/${commands.length} commands passed\n`);
+if (!log.passed) process.exitCode = 2;

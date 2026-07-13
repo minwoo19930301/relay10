@@ -13,7 +13,8 @@
     "lint": "node --check src/*.mjs && node --check test/*.mjs",
     "smoke": "node src/cli.mjs doctor && node src/cli.mjs route \"research and build a small CLI\" --json",
     "report:launch": "node scripts/build-launch-report.mjs",
-    "audit:launch": "node scripts/audit-launch-report.mjs"
+    "audit:launch": "node scripts/audit-launch-report.mjs",
+    "verify:launch": "node scripts/verify-launch.mjs"
   },
   "engines": {
     "node": ">=20"
