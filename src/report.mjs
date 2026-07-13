@@ -185,26 +185,29 @@ function renderReader10(reader) {
   const overall = reader.passed ?? reader.pass ?? reader.status;
   const mode = reader.mode ?? 'unknown';
   const isDeterministic = mode.startsWith('deterministic');
+  const isPendingLive = mode === 'pending-live';
   const passUnit = isDeterministic ? '자동 구조 프로필' : mode === 'live' ? '실제 모델 독자 역할' : '검수 항목';
   const modeDescription = isDeterministic
     ? '자동 구조 모드: 모델을 호출하지 않고 HTML 구조, 길이, 용어, 링크, 행동 신호와 접근성 규칙만 검사합니다. 아래 점수는 실제 모델 독자 점수가 아니며 의미 이해나 사실 정확성을 증명하지 않습니다.'
+    : isPendingLive
+      ? '판독 대기 모드: 이 HTML이 완성된 뒤 실제 모델 독자 10회 판독을 실행합니다. 이 상태는 제품 출시 보류를 뜻하지 않습니다. 최종 결과는 reportSha256으로 이 HTML과 연결한 별도 JSON에 기록합니다.'
     : mode === 'live'
       ? '라이브 모드: 10개 독자 역할을 각각 별도 모델 호출로 평가합니다. 호출 실패도 실패로 집계될 수 있으며, 모델 간 독립성이나 사실 정확성을 증명하지 않습니다.'
       : '검수 모드가 기록되지 않았습니다. 이 결과만으로 검사 방식이나 의미 이해를 추정할 수 없습니다.';
   return `<p class="reader-mode"><strong>검수 방식:</strong> ${escapeHtml(modeDescription)}</p>
     <div class="reader-summary">
-      <div>${statusBadge(overall)}<strong>${escapeHtml(`${passed}/${total} ${passUnit} 통과`)}</strong></div>
-      <p>치명적 문제 ${escapeHtml(critical)}개 · 요구 기준 ${escapeHtml(reader.minPass ?? 9)}/${escapeHtml(total || 10)}</p>
-    </div>
-    ${personas.length ? `<ul class="persona-grid">${personas.map((persona) => {
+      <div>${statusBadge(overall)}<strong>${escapeHtml(isPendingLive ? '실제 모델 10회 판독 전' : `${passed}/${total} ${passUnit} 통과`)}</strong></div>
+      <p>${escapeHtml(isPendingLive ? `완료 조건 ${reader.minPass ?? 10}/${total || 10} 이해 · 치명적 문제 0개 · HTML 해시 일치` : `치명적 문제 ${critical}개 · 요구 기준 ${reader.minPass ?? 9}/${total || 10}`)}</p>
+    </div>${personas.length ? `
+    <ul class="persona-grid">${personas.map((persona) => {
       const failures = (persona.checks ?? []).filter((item) => !item.passed);
       return `<li>
         <div>${statusBadge(persona.passed)}<strong>${escapeHtml(persona.name ?? persona.id)}</strong></div>
         ${persona.description ? `<p>${escapeHtml(persona.description)}</p>` : ''}
         ${failures.length ? `<details><summary>개선점 ${failures.length}개</summary><ul>${failures.map((failure) => `<li>${escapeHtml(failure.detail ?? failure.label ?? failure.id)}</li>`).join('')}</ul></details>` : '<p class="muted">발견된 이해도 문제가 없습니다.</p>'}
       </li>`;
-    }).join('')}</ul>` : ''}
-    ${reader.criticalIssues?.length ? `<aside class="critical" aria-label="치명적 문제"><h3>치명적 문제</h3><ul>${reader.criticalIssues.map((issue) => `<li>${escapeHtml(issue.message ?? issue.code ?? issue)}</li>`).join('')}</ul></aside>` : ''}`;
+    }).join('')}</ul>` : ''}${reader.criticalIssues?.length ? `
+    <aside class="critical" aria-label="치명적 문제"><h3>치명적 문제</h3><ul>${reader.criticalIssues.map((issue) => `<li>${escapeHtml(issue.message ?? issue.code ?? issue)}</li>`).join('')}</ul></aside>` : ''}`;
 }
 
 function normalizeDate(value) {

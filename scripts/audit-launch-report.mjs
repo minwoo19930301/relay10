@@ -1,4 +1,5 @@
-import { mkdir } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { discoverCatalog } from '../src/catalog.mjs';
@@ -12,6 +13,7 @@ const reportFile = path.join(root, 'docs', 'launch-report.html');
 const auditDir = path.join(root, '.relay10', 'launch-audit');
 const schema = fileURLToPath(new URL('../schema/reader-result.schema.json', import.meta.url));
 await mkdir(auditDir, { recursive: true });
+const reportSha256 = createHash('sha256').update(await readFile(reportFile)).digest('hex');
 
 const catalog = await discoverCatalog();
 const model = catalog.roles.economy.model;
@@ -50,6 +52,7 @@ const audit = {
   mode: 'live',
   model,
   effort: 'low',
+  reportSha256,
   generatedAt: new Date().toISOString(),
   ...aggregateReader10(personas, { minPass: 10 }),
   personas,

@@ -5,7 +5,7 @@ import { writeJson } from '../src/utils.mjs';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const specifications = [
-  { label: '73개 Node 자동 테스트', command: 'npm', args: ['test'] },
+  { label: '74개 Node 자동 테스트', command: 'npm', args: ['test'] },
   { label: '전체 JavaScript 문법 검사', command: 'npm', args: ['run', 'lint'] },
   { label: '실제 Codex 모델 탐색', command: 'node', args: ['src/cli.mjs', 'doctor', '--json'] },
   {

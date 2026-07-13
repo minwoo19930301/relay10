@@ -108,6 +108,25 @@ test('generateReport labels deterministic-structure as automatic rules, not mode
   assert.match(html, /자동 구조 프로필 통과/);
 });
 
+test('generateReport presents pending live readers without implying execution or failure', () => {
+  const html = generateReport({
+    ...reportData,
+    reader10: {
+      mode: 'pending-live',
+      status: 'warn',
+      minPass: 10,
+      passedPersonas: 0,
+      totalPersonas: 10,
+      criticalCount: 0,
+      personas: [],
+    },
+  });
+  assert.match(html, /판독 대기 모드/);
+  assert.match(html, /실제 모델 10회 판독 전/);
+  assert.match(html, /이 상태는 제품 출시 보류를 뜻하지 않습니다/);
+  assert.doesNotMatch(html, /0\/10 검수 항목 통과/);
+});
+
 test('generateReport escapes every caller-provided HTML value and drops unsafe links', () => {
   const html = generateReport({
     ...reportData,

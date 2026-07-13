@@ -10,7 +10,7 @@
   "scripts": {
     "check": "npm run test && npm run lint",
     "test": "node --test",
-    "lint": "node --check src/*.mjs && node --check test/*.mjs",
+    "lint": "node --check src/*.mjs && node --check test/*.mjs && node --check scripts/*.mjs",
     "smoke": "node src/cli.mjs doctor && node src/cli.mjs route \"research and build a small CLI\" --json",
     "report:launch": "node scripts/build-launch-report.mjs",
     "audit:launch": "node scripts/audit-launch-report.mjs",

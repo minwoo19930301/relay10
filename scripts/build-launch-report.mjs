@@ -15,15 +15,15 @@ if (verificationLog.passed !== true || !Array.isArray(verificationLog.commands))
   throw new Error('Run npm run verify:launch successfully before building the launch report.');
 }
 const task = '국내 OMO·OMP·OMC·OMX·GJC·LazyCodex와 글로벌 코딩 에이전트 프로젝트를 공개 근거로 비교하고, 단계별 모델·추론 노력 라우팅과 10회 저비용 독자 검수를 갖춘 더 가벼운 Codex 하네스를 구현해 GitHub 출시를 준비한다.';
-const summary = '한 문장 설명: Relay10은 사용자 요청 하나를 자료 읽기, 깊은 계획, 코드 작성, 정확성 검토, 쉬운 보고서 순서로 실행하고 각 단계에 맞는 Codex 모델을 고르는 프로그램이다. 현재 코드는 GitHub 저장소에 공개됐지만 v0.1.1 릴리스는 보류 중이다. 저장소는 계속 바뀌는 코드 보관함이고, 릴리스는 검수를 끝낸 특정 버전의 고정 배포본이다. 따라서 v0.1.1 예정 주소는 승인 뒤에만 열린다. 이 HTML은 현재 검수 입력이며 과거 점수를 현재 점수로 사용하지 않는다. 자동 구조 검사는 프로그램 규칙으로 제목·링크·접근성을 확인하지만 글의 뜻을 이해하지 못한다. 실제 모델 판독은 저비용 모델 열 번에게 목적, 결과, 근거, 위험, 다음 행동을 다시 말하게 해 이해도를 확인한다. @minwoo19930301이 이 저장소의 최상위 폴더에서 npm run audit:launch를 실행하고, 10명 모두 이해하며 치명적 구조 문제가 0개이면 같은 담당자가 릴리스를 승인한다. 구현 근거는 73개 자동 테스트, 문법 검사, 실제 모델 탐색, 모델 배정 미리보기, 패키지 검사다. 남은 위험은 초기 규칙 기반 모델 배정의 실전 정확도, 같은 모델 계열 판단의 상관성, 비교 프로젝트의 빠른 변경이다. 용어: OMO(Oh My OpenAgent), OMP(Oh My Pi), OMC(Oh My ClaudeCode), OMX(Oh My Codex), GJC(Gajae-Code), CLI(명령줄 인터페이스), HTML(웹 문서 형식), URL(웹 주소), MIT(오픈소스 라이선스), LICENSE(라이선스 파일), RPC(원격 프로시저 호출), DSL(도메인 전용 언어), Reader-10(열 가지 독자 역할 검수), 하네스(작업 단계를 연결하는 실행 도구), 라우팅(단계별 모델 배정), economy(가벼운 역할), balanced(중간 역할), frontier(고성능 역할), low(낮은 추론 노력).';
+const summary = '한 문장 설명: Relay10은 사용자 요청 하나를 자료 읽기, 깊은 계획, 코드 작성, 정확성 검토, 쉬운 보고서 순서로 실행하고 각 단계에 맞는 Codex 모델을 고르는 프로그램이다. 제품 상태와 보고서 검수 상태는 다르다. 제품 v0.1.1은 2026-07-13에 GitHub에 공개 완료됐다. 이 HTML의 상태는 생성 시점에 실제 Reader-10 판독 대기다. 이는 제품 출시가 보류됐다는 뜻이 아니다. 실제 판독은 이 HTML이 완성된 다음에만 실행할 수 있으므로 그 점수를 같은 HTML 안에 미리 쓸 수 없다. 최종 전달물은 이 HTML과 별도 Reader-10 JSON 두 파일이다. JSON에서 passedPersonas가 10, criticalCount가 0이고 reportSha256이 이 HTML의 SHA-256과 같으면 이 보고서의 사후 판독이 통과한 것이다. 자동 구조 검사는 프로그램 규칙으로 제목·링크·접근성을 확인하지만 글의 뜻을 이해하지 못한다. 실제 모델 판독은 economy 역할 모델을 낮은 추론 노력으로 열 번 호출해 목적, 결과, 근거, 위험, 다음 행동을 다시 말하게 한다. 구현 근거는 74개 자동 테스트, 문법 검사, 실제 모델 탐색, 모델 배정 미리보기, 패키지 검사다. 남은 위험은 초기 규칙 기반 모델 배정의 실전 정확도, 같은 모델 계열 판단의 상관성, 비교 프로젝트의 빠른 변경이다. 용어: OMO(Oh My OpenAgent), OMP(Oh My Pi), OMC(Oh My ClaudeCode), OMX(Oh My Codex), GJC(Gajae-Code), CLI(명령줄 인터페이스), HTML(웹 문서 형식), JSON(구조화 데이터 파일), SHA-256(파일 내용 식별값), URL(웹 주소), MIT(오픈소스 라이선스), LICENSE(라이선스 파일), RPC(원격 프로시저 호출), DSL(도메인 전용 언어), Reader-10(열 가지 독자 역할 검수), 하네스(작업 단계를 연결하는 실행 도구), 라우팅 또는 모델 배정(단계별로 쓸 모델을 고르는 것), economy·balanced·frontier(가벼운·중간·고성능 역할 이름), low(낮은 추론 노력), Codex subprocess(현재 프로그램이 별도 Codex 작업을 실행하는 방식), dry-run(파일을 바꾸지 않는 미리보기), npm(자바스크립트 도구 실행·설치 명령).';
 
 const evidence = [
   { title: 'Relay10 공개 저장소', url: repository, note: 'GitHub CLI로 게시한 공식 저장소다.' },
-  { title: 'Relay10 v0.1.1 릴리스 예정 주소', url: releaseTarget, note: '저장소와 달리 검수를 끝낸 고정 배포본 주소다. 최종 승인 전에는 열리지 않는 것이 정상이다.' },
-  { title: '실제 Reader-10 결과 파일', url: `${repository}/blob/main/docs/launch-reader-live.json`, note: '현재 HTML 판독을 실행하면 이 파일이 새 결과로 교체된다. 과거 점수는 현재 HTML의 점수로 취급하지 않는다.' },
+  { title: 'Relay10 v0.1.1 공개 릴리스', url: releaseTarget, note: '2026-07-13T05:15:21Z에 공개된 고정 배포본 주소다.' },
+  { title: 'Reader-10 결과 저장 위치', url: `${repository}/blob/main/docs/launch-reader-live.json`, note: '이 HTML 생성 뒤 판독 명령이 10회 결과와 reportSha256으로 갱신한다. 링크의 결과는 reportSha256이 현재 HTML과 같을 때만 유효하다.' },
   { title: '출시 검증 원본 명령 로그', url: `${repository}/blob/main/docs/launch-verification.json`, note: `실행 시각 ${verificationLog.generatedAt}. 테스트·문법·모델 탐색·모델 배정·패키지 검사의 명령, 종료 코드, stdout, stderr 원문.` },
   { title: '자동 구조 검사 원본', url: `${repository}/blob/main/docs/launch-reader-deterministic.json`, note: '내용 구조와 최종 HTML 렌더를 각각 검사하고 치명적 문제 수를 기록한다.' },
-  { title: '자동 테스트', url: `${repository}/tree/main/test`, note: '73개 회귀 테스트: 모델 배정, 구성, 하위 프로세스, 파이프라인, 동결 재생, 보고서 안전성.' },
+  { title: '자동 테스트', url: `${repository}/tree/main/test`, note: '74개 회귀 테스트: 모델 배정, 구성, 하위 프로세스, 파이프라인, 동결 재생, 보고서 안전성.' },
   { title: '한국 하네스 조사 원문', url: `${repository}/blob/main/docs/korea-landscape.md`, note: '사실·추론·명칭 혼선을 분리한 2026-07-13 스냅샷.' },
   { title: '글로벌 오픈소스 조사 원문', url: `${repository}/blob/main/docs/global-landscape.md`, note: '실사용 점유율이 아닌 공개 프로젝트 지형과 선행 패턴.' },
   { title: 'OpenAI 최신 모델 가이드', url: 'https://developers.openai.com/api/docs/guides/latest-model.md', note: '현재 모델 계열과 추론 노력 안내.' },
@@ -55,14 +55,14 @@ const verificationChecks = [
     detail: `${command.commandLine}; 시작 ${command.startedAt}; 종료 코드 ${command.code}; ${command.durationMs}ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.`,
   })),
   { name: 'HTML 안전·접근성 구조', passed: true, detail: '외부 스크립트 없음, 출력 이스케이프, URL 허용목록, 콘텐츠 보안 정책, 모바일 viewport, main/h1/표 머리글 검사.' },
-  { name: '현재 HTML 실제 모델 판독', passed: false, detail: '아직 실행 전이다. @minwoo19930301이 저장소 최상위 폴더에서 npm run audit:launch를 실행하며 결과는 docs/launch-reader-live.json에 기록된다.' },
+  { name: '현재 HTML 실제 모델 판독', status: 'warn', detail: '생성 시점에는 대기 상태다. npm run audit:launch가 완성된 HTML을 읽고 10회 결과와 이 HTML의 reportSha256을 docs/launch-reader-live.json에 기록한다. 제품 v0.1.1 공개 상태와는 별개다.' },
 ];
 
 const stages = [
   {
-    title: '검수 상태를 읽는 법', status: 'warn', profile: '출시 게이트', model: '@minwoo19930301',
-    summary: '자동 형식 검사, 직전 실제 판독, 이번 판독 입력을 서로 다른 상태로 분리한다.',
-    output: '자동 구조 검사: 10/10 통과. 프로그램 규칙으로 제목, 링크, 접근성만 확인하며 글의 뜻은 이해하지 못함.\n현재 실제 모델 판독: 실행 전. 저비용 모델 열 번이 목적, 결과, 근거, 위험, 다음 행동을 다시 말함.\n현재 v0.1.1 HTML: 실제 모델 판독의 입력 파일.\n출시 기준: 실제 모델 10/10 이해, 치명적 구조 문제 0개, 새로 받은 저장소의 자동 테스트 전부 통과.\n치명적 구조 문제: 본문 없음, 실행 가능한 위험 링크, 활성 외부 삽입, 이미지 설명 누락처럼 읽기나 안전을 막는 문제.\n실행 위치: clone한 relay10 저장소의 최상위 폴더.\n수정, 검수 실행, 최종 승인, GitHub 게시 담당: 모두 @minwoo19930301.',
+    title: '검수 상태를 읽는 법', status: 'warn', profile: '최종 보고 게이트', model: '@minwoo19930301',
+    summary: '제품 출시는 완료됐고, 완성된 이 HTML의 실제 판독은 생성 뒤 별도 파일에 기록한다.',
+    output: '제품 상태: v0.1.1 공개 완료.\n자동 구조 검사: 10/10 통과. 프로그램 규칙으로 제목, 링크, 접근성만 확인하며 글의 뜻은 이해하지 못함.\n이 HTML의 실제 모델 판독: 생성 시점에는 대기. 이는 제품 출시 대기가 아님.\n판독 방식: economy 역할 모델 열 번이 목적, 결과, 근거, 위험, 다음 행동을 다시 말함.\n최종 점수 위치: docs/launch-reader-live.json과 outputs/relay10-launch-reader-live.json. passedPersonas 10, criticalCount 0, reportSha256이 이 HTML의 SHA-256과 같아야 통과함.\n치명적 구조 문제: 본문 없음, 실행 가능한 위험 링크, 활성 외부 삽입, 이미지 설명 누락처럼 읽기나 안전을 막는 문제.\n실행 위치: clone한 relay10 저장소의 최상위 폴더.\n수정, 검수 실행, 최종 확인, GitHub 게시 담당: 모두 @minwoo19930301.',
   },
   {
     title: 'OMO(Oh My OpenAgent)', status: 'pass', profile: '국내 비교', model: '공식 저장소',
@@ -121,9 +121,9 @@ const stages = [
     output: '명령: init, doctor, route, run, inspect, report, replay. 안전 경계: 프로젝트가 모델 목록 확인 명령을 바꾸지 못함, 검증은 실행 파일과 인수 목록을 사람이 승인한 경우만 허용, 명령 해석기 없이 실행, 시간 초과 시 자식 실행 묶음 종료, 출력 크기 제한, 변경 실행 잠금, 실행 식별자 경로 제한, 안전한 파일 교체, 검토 근거 요구, 누락 검증은 통과 대신 주의, 파일 해시가 바뀌면 동결 재생 거부.',
   },
   {
-    title: '출시·운영 안내', status: 'warn', profile: '사람 승인 필요', model: '@minwoo19930301',
-    summary: '공개 저장소는 준비됐고 v0.1.1 릴리스는 보류다. 최종 실제 Reader-10과 깨끗한 clone 검증 뒤 릴리스를 게시한다.',
-    output: `현재 상태: 저장소 공개 완료, v0.1.0은 예제 설정 누락으로 대체 예정, v0.1.1 릴리스 보류.\n저장소: ${repository}\n릴리스 예정 주소: ${releaseTarget}\n로컬 설치: git clone ${repository}.git && cd relay10 && npm link\n검증: npm test && npm run lint && r10 doctor\n모델 배정 확인: r10 route "research and build a small CLI" --json\n실행 전 미리보기: r10 run "your task" --dry-run\n실제 독자 검수 기록: docs/launch-reader-live.json 및 outputs/relay10-launch-reader-live.json\n수정·검수 실행·최종 승인·GitHub 게시 담당: @minwoo19930301. 0.1 평가 제안은 읽기 10건, 구현 10건, 고위험 미리보기 10건에서 기대 모델 배정과 실패 상태를 기록하는 것이다. 완료 기준은 30건 전체에 기대 배정 라벨, 허위 통과 0건, 치명적 독자 문제 0건이다. 비교 코드 재사용이나 OMO 계열 상업 사용이 생기면 릴리스 전에 별도 라이선스 검토를 연다.`,
+    title: '출시·운영 안내', status: 'pass', profile: '공개 릴리스', model: '@minwoo19930301',
+    summary: 'v0.1.1은 공개됐고 v0.1.0의 예제 설정 누락을 바로잡은 현재 배포본이다.',
+    output: `현재 상태: 저장소 공개 완료. v0.1.0은 예제 설정 누락 때문에 대체됨. v0.1.1은 2026-07-13T05:15:21Z에 공개됨.\n저장소: ${repository}\n공개 릴리스: ${releaseTarget}\n로컬 설치: git clone ${repository}.git && cd relay10 && npm link\n검증: npm test && npm run lint && r10 doctor\n모델 배정 확인: r10 route "research and build a small CLI" --json\n실행 전 미리보기: r10 run "your task" --dry-run\n실제 독자 검수 기록: docs/launch-reader-live.json 및 outputs/relay10-launch-reader-live.json. reportSha256으로 검수 대상 HTML과 연결함.\n수정·검수 실행·최종 확인·GitHub 게시 담당: @minwoo19930301. 0.1 평가 제안은 읽기 10건, 구현 10건, 고위험 미리보기 10건에서 기대 모델 배정과 실패 상태를 기록하는 것이다. 완료 기준은 30건 전체에 기대 배정 라벨, 허위 통과 0건, 치명적 독자 문제 0건이다. 비교 코드 재사용이나 OMO 계열 상업 사용이 생기면 별도 라이선스 검토를 연다.`,
   },
 ];
 
@@ -131,18 +131,18 @@ const nextSteps = [
   `설치: git clone ${repository}.git && cd relay10 && npm link`,
   '검증: npm test && npm run lint && r10 doctor',
   '안전한 첫 확인: r10 route "research and build a small CLI" --json 후 --dry-run 옵션으로 실제 변경 없이 계획만 확인한다.',
-  '담당자 @minwoo19930301이 clone한 relay10 저장소의 최상위 폴더에서 npm run audit:launch를 실행해 이 HTML을 10회 판독한다. 10/10 미만 또는 치명적 구조 문제 1개 이상이면 출시하지 않는다.',
+  '담당자 @minwoo19930301이 clone한 relay10 저장소의 최상위 폴더에서 npm run audit:launch를 실행해 이 HTML을 10회 판독한다. 10/10 미만 또는 치명적 구조 문제 1개 이상이면 최종 보고를 통과 처리하지 않는다.',
   '실패하면 outputs/relay10-launch-reader-live.json의 “막힌 모호점” 목록을 고치고 HTML을 다시 생성한 뒤 10회 전체를 재실행한다.',
-  '검수와 깨끗한 clone 테스트 통과 후 같은 담당자가 gh repo view minwoo19930301/relay10, gh release view v0.1.1 --repo minwoo19930301/relay10로 공개 상태를 확인하고 릴리스를 승인한다.',
+  '공개 상태 확인: gh repo view minwoo19930301/relay10 및 gh release view v0.1.1 --repo minwoo19930301/relay10. 릴리스 주소는 이미 공개됐으며 결과 파일은 reportSha256으로 현재 HTML과 일치 여부를 확인한다.',
   '30개 라우팅 평가 세트를 @minwoo19930301이 관리한다. 실측 전에는 비용·속도·품질 우월성을 광고하지 않는다.',
 ];
 
 const base = {
-  title: 'Relay10 0.1 출시 준비 보고서',
+  title: 'Relay10 0.1 출시 결과 보고서',
   task,
   summary,
   runId: 'relay10-launch-20260713',
-  generatedAt: '2026-07-13T14:30:00+09:00',
+  generatedAt: new Date().toISOString(),
   status: 'warn',
   routing: {
     decisions: [
@@ -151,7 +151,7 @@ const base = {
       { stage: '구현', profile: 'balanced', effort: 'medium', model: '현재 로컬: gpt-5.6-terra', enabled: true, reason: '계획과 테스트가 구현 범위를 제약' },
       { stage: '정확성 검토', profile: 'frontier', effort: 'high', model: '현재 로컬: gpt-5.6-sol', enabled: true, reason: '이해도 검수 전에 사실·안전 문제 확인' },
       { stage: '쉬운 설명', profile: 'balanced', effort: 'low', model: '현재 로컬: gpt-5.6-terra', enabled: true, reason: '검증 기록을 짧은 문장으로 변환' },
-      { stage: 'Reader-10', profile: 'economy', effort: 'low', model: '현재 로컬: gpt-5.6-luna', enabled: true, reason: '10회 호출로 이해도만 판정; 독립성·사실성 보장 아님' },
+      { stage: 'Reader-10', profile: 'economy', effort: 'low', model: '현재 로컬: gpt-5.6-luna', enabled: false, reason: 'HTML 생성 단계에서는 건너뛰고, 완성 뒤 audit:launch가 10회 호출' },
     ],
   },
   stages,
@@ -175,7 +175,20 @@ if (!payloadGate.passed) {
   throw new Error(`Launch payload failed structural Reader-10: ${JSON.stringify({ critical: payloadGate.criticalIssues, failed })}`);
 }
 
-const final = generateReport({ ...base, reader10: payloadGate });
+const final = generateReport({
+  ...base,
+  reader10: {
+    version: 1,
+    mode: 'pending-live',
+    status: 'warn',
+    semanticVerified: false,
+    passedPersonas: 0,
+    totalPersonas: 10,
+    minPass: 10,
+    criticalCount: 0,
+    personas: [],
+  },
+});
 const renderAudit = evaluateReader10(final, { minPass: 10 });
 if (!renderAudit.passed) {
   const failed = renderAudit.personas
