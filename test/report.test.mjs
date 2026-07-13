@@ -1,0 +1,138 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+
+import { evaluateReader10 } from '../src/reader10.mjs';
+import { escapeHtml, generateReport, renderReport, sanitizeUrl } from '../src/report.mjs';
+
+const reportData = {
+  title: 'Relay10 배포 준비',
+  task: '이 보고서의 목적은 경량 하네스의 배포 준비 상태를 검증하고 다음 실행 단계를 안내하는 것입니다.',
+  summary: '핵심 기능과 검증 10개가 통과했습니다. 담당자는 준비 조건을 확인한 뒤 게시 명령을 실행할 수 있습니다.',
+  status: 'passed',
+  runId: 'run-001',
+  generatedAt: '2026-07-13T03:00:00.000Z',
+  routing: [
+    { stage: '자료 읽기', enabled: true, profile: 'economy', effort: 'low', model: 'scout', reason: '구조화된 입력이라 자동 검증이 가능합니다.' },
+    { stage: '분석과 계획', enabled: false, profile: 'frontier', effort: 'high', model: 'architect', reason: '출시 판단의 영향이 큽니다.' },
+  ],
+  stages: [
+    {
+      name: '준비 조건 확인',
+      status: 'completed',
+      profile: 'economy',
+      summary: '필요한 파일과 환경을 확인했습니다.',
+      output: { files: 4, environment: 'Node 20 이상' },
+    },
+    {
+      name: '구현과 검증',
+      status: 'passed',
+      profile: 'balanced',
+      summary: '오류 없이 테스트를 마쳤습니다.',
+      output: '검증 명령을 실행했고 모든 결과를 확인했습니다.',
+    },
+  ],
+  verification: {
+    checks: [
+      { name: '구문 검사', passed: true, detail: '오류 없음' },
+      { name: '단위 테스트', passed: true, detail: '10개 통과' },
+    ],
+  },
+  reader10: {
+    mode: 'deterministic',
+    passed: true,
+    minPass: 9,
+    passedPersonas: 10,
+    totalPersonas: 10,
+    criticalCount: 0,
+    personas: [
+      { id: 'executive', name: '30초 독자', description: '결론부터 읽는 독자', passed: true, checks: [] },
+    ],
+  },
+  evidence: [
+    { title: '검증 기록', url: 'https://example.com/evidence', note: '테스트 결과의 근거입니다.' },
+  ],
+  nextSteps: ['먼저 변경 내용을 확인합니다.', '게시 명령을 실행합니다.', '문제가 생기면 이전 버전으로 복구합니다.'],
+};
+
+test('escapeHtml and sanitizeUrl reject HTML and executable URLs', () => {
+  assert.equal(escapeHtml('<script>"x" & y</script>'), '&lt;script&gt;&quot;x&quot; &amp; y&lt;/script&gt;');
+  assert.equal(sanitizeUrl('javascript:alert(1)'), '#');
+  assert.equal(sanitizeUrl('data:text/html,bad'), '#');
+  assert.equal(sanitizeUrl('https://example.com/a?q=1'), 'https://example.com/a?q=1');
+  assert.equal(sanitizeUrl('#reader10'), '#reader10');
+});
+
+test('generateReport creates a self-contained, accessible Korean HTML report', () => {
+  const html = generateReport(reportData);
+  assert.match(html, /^<!doctype html>/);
+  assert.match(html, /<html lang="ko">/);
+  assert.match(html, /<meta name="viewport"/);
+  assert.match(html, /Content-Security-Policy/);
+  assert.match(html, /<main id="main"/);
+  assert.match(html, /<h1>Relay10 배포 준비<\/h1>/);
+  assert.match(html, /<th scope="col">단계<\/th>/);
+  assert.match(html, /<th scope="col">실행 여부<\/th>/);
+  assert.match(html, /> 실행<\/span>/);
+  assert.match(html, /> 건너뜀<\/span>/);
+  assert.match(html, /Reader-10 검수/);
+  assert.match(html, /10\/10 자동 구조 프로필 통과/);
+  assert.match(html, /자동 구조 모드: 모델을 호출하지 않고 HTML 구조/);
+  assert.match(html, /의미 이해나 사실 정확성을 증명하지 않습니다/);
+  assert.match(html, /https:\/\/example\.com\/evidence/);
+  assert.doesNotMatch(html, /<script\b/i);
+  assert.doesNotMatch(html, /<link\b[^>]*rel=["']stylesheet/i);
+  assert.equal(renderReport(reportData), html);
+});
+
+test('generateReport labels live Reader-10 as ten model calls without claiming independence', () => {
+  const html = generateReport({
+    ...reportData,
+    reader10: {
+      ...reportData.reader10,
+      mode: 'live',
+    },
+  });
+
+  assert.match(html, /10개 독자 역할을 각각 별도 모델 호출로 평가합니다/);
+  assert.match(html, /모델 간 독립성이나 사실 정확성을 증명하지 않습니다/);
+  assert.match(html, /10\/10 실제 모델 독자 역할 통과/);
+});
+
+test('generateReport labels deterministic-structure as automatic rules, not model readers', () => {
+  const html = generateReport({
+    ...reportData,
+    reader10: { ...reportData.reader10, mode: 'deterministic-structure' },
+  });
+  assert.match(html, /자동 구조 모드/);
+  assert.match(html, /실제 모델 독자 점수가 아니며/);
+  assert.match(html, /자동 구조 프로필 통과/);
+});
+
+test('generateReport escapes every caller-provided HTML value and drops unsafe links', () => {
+  const html = generateReport({
+    ...reportData,
+    title: '<img src=x onerror=alert(1)>',
+    stages: [{ name: '<script>bad()</script>', output: '</code><script>bad()</script>' }],
+    evidence: [{ title: '<b>위험 링크</b>', url: 'javascript:alert(1)' }],
+  });
+  assert.doesNotMatch(html, /<script\b/i);
+  assert.doesNotMatch(html, /<img\b/i);
+  assert.doesNotMatch(html, /javascript:/i);
+  assert.match(html, /&lt;script&gt;bad\(\)&lt;\/script&gt;/);
+  assert.match(html, /안전하지 않거나 지원하지 않는 URL은 생략했습니다/);
+});
+
+test('generated full report clears the deterministic Reader-10 gate', () => {
+  const html = generateReport(reportData);
+  const result = evaluateReader10(html);
+  assert.equal(result.criticalCount, 0);
+  assert.ok(result.passedPersonas >= 9, `expected readable report, received ${result.passedPersonas}/10`);
+  assert.equal(result.passed, true);
+});
+
+test('report rendering tolerates circular structured output', () => {
+  const output = { result: '완료' };
+  output.self = output;
+  const html = generateReport({ ...reportData, stages: [{ name: '순환 출력', output }] });
+  assert.match(html, /\[Circular\]/);
+});

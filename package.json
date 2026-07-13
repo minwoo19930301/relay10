@@ -1,0 +1,45 @@
+{
+  "name": "relay10",
+  "version": "0.1.0",
+  "description": "A small Codex harness with metadata-based model roles and an explicit Reader-10 report gate.",
+  "type": "module",
+  "bin": {
+    "relay10": "./src/cli.mjs",
+    "r10": "./src/cli.mjs"
+  },
+  "scripts": {
+    "check": "npm run test && npm run lint",
+    "test": "node --test",
+    "lint": "node --check src/*.mjs && node --check test/*.mjs",
+    "smoke": "node src/cli.mjs doctor && node src/cli.mjs route \"research and build a small CLI\" --json",
+    "report:launch": "node scripts/build-launch-report.mjs",
+    "audit:launch": "node scripts/audit-launch-report.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "codex",
+    "agent-harness",
+    "model-routing",
+    "multi-agent",
+    "clarity-eval"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minwoo19930301/relay10.git"
+  },
+  "bugs": {
+    "url": "https://github.com/minwoo19930301/relay10/issues"
+  },
+  "homepage": "https://github.com/minwoo19930301/relay10#readme",
+  "files": [
+    "src",
+    "schema",
+    "examples",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md"
+  ]
+}

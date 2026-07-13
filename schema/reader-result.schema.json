@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["understood", "restatement", "blocking_ambiguities", "jargon", "action"],
+  "properties": {
+    "understood": { "type": "boolean" },
+    "restatement": { "type": "string" },
+    "blocking_ambiguities": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "jargon": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "action": { "type": "string" }
+  }
+}

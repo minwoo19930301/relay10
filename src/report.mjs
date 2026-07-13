@@ -1,0 +1,338 @@
+const STATUS_LABELS = Object.freeze({
+  pass: '통과',
+  fail: '실패',
+  warn: '주의',
+  neutral: '정보',
+});
+
+/** Escape untrusted content for an HTML text or quoted-attribute context. */
+export function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/** Allow only navigation fragments and ordinary web/email links. */
+export function sanitizeUrl(value) {
+  const url = String(value ?? '').trim();
+  if (/^#[a-z][\w:.-]*$/i.test(url)) return url;
+  if (/^https?:\/\/[^\s]+$/i.test(url)) return url;
+  if (/^mailto:[^\s@]+@[^\s@]+$/i.test(url)) return url;
+  return '#';
+}
+
+function safeId(value, fallback = 'section') {
+  const normalized = String(value ?? '')
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/[^a-z0-9가-힣_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 64);
+  return normalized || fallback;
+}
+
+function normalizeStatus(value) {
+  const status = String(value ?? '').toLowerCase();
+  if (['pass', 'passed', 'ok', 'success', 'succeeded', 'complete', 'completed', 'done', 'true'].includes(status)) return 'pass';
+  if (['fail', 'failed', 'error', 'blocked', 'false'].includes(status)) return 'fail';
+  if (['warn', 'warning', 'running', 'partial', 'skipped', 'pending'].includes(status)) return 'warn';
+  return 'neutral';
+}
+
+function statusBadge(value, explicitLabel) {
+  const status = normalizeStatus(value);
+  const label = explicitLabel || STATUS_LABELS[status];
+  return `<span class="status status--${status}"><span aria-hidden="true">${status === 'pass' ? '●' : status === 'fail' ? '×' : status === 'warn' ? '▲' : 'i'}</span> ${escapeHtml(label)}</span>`;
+}
+
+function executionBadge(enabled) {
+  if (enabled === true) return statusBadge('pass', '실행');
+  if (enabled === false) return statusBadge('skipped', '건너뜀');
+  return statusBadge('neutral', '미기록');
+}
+
+function normalizeList(value, valueKey = 'value') {
+  if (Array.isArray(value)) return value;
+  if (!value || typeof value !== 'object') return value == null ? [] : [value];
+  return Object.entries(value).map(([name, item]) => {
+    if (item && typeof item === 'object' && !Array.isArray(item)) return { name, ...item };
+    return { name, [valueKey]: item };
+  });
+}
+
+function safeStringify(value) {
+  const seen = new WeakSet();
+  try {
+    return JSON.stringify(value, (key, item) => {
+      if (typeof item === 'bigint') return `${item}n`;
+      if (typeof item === 'object' && item !== null) {
+        if (seen.has(item)) return '[Circular]';
+        seen.add(item);
+      }
+      return item;
+    }, 2);
+  } catch {
+    return String(value ?? '');
+  }
+}
+
+function renderText(value, className = '') {
+  if (value == null || value === '') return '<p class="muted">기록 없음</p>';
+  if (typeof value !== 'string') return `<pre class="data ${className}"><code>${escapeHtml(safeStringify(value))}</code></pre>`;
+  const paragraphs = value.split(/\n{2,}/).map((paragraph) => paragraph.trim()).filter(Boolean);
+  if (!paragraphs.length) return '<p class="muted">기록 없음</p>';
+  return paragraphs.map((paragraph) => `<p class="${escapeHtml(className)}">${escapeHtml(paragraph).replace(/\n/g, '<br>')}</p>`).join('\n');
+}
+
+function renderKeyValue(items) {
+  const entries = Object.entries(items).filter(([, value]) => value !== undefined && value !== null && value !== '');
+  if (!entries.length) return '<p class="muted">기록 없음</p>';
+  return `<dl class="facts">${entries.map(([key, value]) => `<div><dt>${escapeHtml(key)}</dt><dd>${escapeHtml(typeof value === 'object' ? safeStringify(value) : value)}</dd></div>`).join('')}</dl>`;
+}
+
+function renderRouting(routing) {
+  const rows = normalizeList(routing?.decisions ?? routing?.routes ?? routing);
+  if (!rows.length) return '<p class="muted">라우팅 기록이 없습니다.</p>';
+  return `<div class="table-wrap" tabindex="0" role="region" aria-label="모델 라우팅 표">
+    <table>
+      <thead><tr><th scope="col">단계</th><th scope="col">실행 여부</th><th scope="col">프로필</th><th scope="col">노력도</th><th scope="col">모델</th><th scope="col">선택 이유</th></tr></thead>
+      <tbody>${rows.map((row, index) => {
+        const item = row && typeof row === 'object' ? row : { value: row };
+        return `<tr>
+          <th scope="row">${escapeHtml(item.stage ?? item.name ?? item.id ?? `단계 ${index + 1}`)}</th>
+          <td>${executionBadge(item.enabled)}</td>
+          <td>${escapeHtml(item.profile ?? item.tier ?? item.capability ?? '-')}</td>
+          <td>${escapeHtml(item.effort ?? item.reasoning ?? '-')}</td>
+          <td>${escapeHtml(item.model ?? item.providerModel ?? '-')}</td>
+          <td>${escapeHtml(item.reason ?? item.rationale ?? item.value ?? '-')}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+function renderEvidence(evidence) {
+  const rows = normalizeList(evidence, 'url');
+  if (!rows.length) return '<p class="muted">연결된 근거가 없습니다.</p>';
+  return `<ol class="evidence-list">${rows.map((item, index) => {
+    const evidenceItem = item && typeof item === 'object' ? item : { title: String(item) };
+    const label = evidenceItem.title ?? evidenceItem.label ?? evidenceItem.name ?? `근거 ${index + 1}`;
+    const rawUrl = evidenceItem.url ?? evidenceItem.href ?? evidenceItem.source;
+    const safeUrl = sanitizeUrl(rawUrl);
+    const linkedLabel = safeUrl === '#'
+      ? `<span>${escapeHtml(label)}</span>`
+      : `<a href="${escapeHtml(safeUrl)}" rel="noreferrer noopener">${escapeHtml(label)}</a>`;
+    const note = evidenceItem.note ?? evidenceItem.excerpt ?? evidenceItem.description;
+    return `<li>${linkedLabel}${note ? `<p>${escapeHtml(note)}</p>` : ''}${rawUrl && safeUrl === '#' ? '<p class="muted">안전하지 않거나 지원하지 않는 URL은 생략했습니다.</p>' : ''}</li>`;
+  }).join('')}</ol>`;
+}
+
+function normalizeStages(data) {
+  return normalizeList(data.stages ?? data.stageOutputs ?? data.outputs);
+}
+
+function renderStages(data) {
+  const stages = normalizeStages(data);
+  if (!stages.length) return '<p class="muted">단계별 출력이 없습니다.</p>';
+  return `<div class="stage-list">${stages.map((stage, index) => {
+    const item = stage && typeof stage === 'object' ? stage : { output: stage };
+    const title = item.title ?? item.name ?? item.stage ?? item.id ?? `단계 ${index + 1}`;
+    const status = item.status ?? item.passed;
+    const metadata = {
+      프로필: item.profile ?? item.tier,
+      모델: item.model,
+      소요시간: item.duration ?? item.durationMs,
+      비용: item.cost ?? item.costUsd,
+    };
+    return `<article class="stage" aria-labelledby="stage-${index}">
+      <header><div><p class="eyebrow">단계 ${index + 1}</p><h3 id="stage-${index}">${escapeHtml(title)}</h3></div>${status !== undefined ? statusBadge(status, item.statusLabel) : ''}</header>
+      ${item.summary ? `<div class="stage-summary">${renderText(item.summary)}</div>` : ''}
+      ${renderKeyValue(metadata)}
+      <details${index === 0 ? ' open' : ''}><summary>출력 보기</summary>${renderText(item.output ?? item.result ?? item.value ?? item.data, 'stage-output')}</details>
+      ${item.evidence ? `<div class="nested-evidence"><h3>단계 근거</h3>${renderEvidence(item.evidence)}</div>` : ''}
+    </article>`;
+  }).join('')}</div>`;
+}
+
+function normalizeVerification(verification) {
+  if (Array.isArray(verification)) return verification;
+  if (!verification || typeof verification !== 'object') return verification == null ? [] : [verification];
+  if (Array.isArray(verification.checks)) return verification.checks;
+  return normalizeList(verification);
+}
+
+function renderVerification(verification) {
+  const checks = normalizeVerification(verification);
+  if (!checks.length) return '<p class="muted">검증 기록이 없습니다.</p>';
+  return `<ul class="check-list">${checks.map((checkItem, index) => {
+    const item = checkItem && typeof checkItem === 'object' ? checkItem : { name: `검증 ${index + 1}`, value: checkItem };
+    const state = item.passed ?? item.pass ?? item.status ?? item.value;
+    const name = item.name ?? item.label ?? item.id ?? `검증 ${index + 1}`;
+    const detail = item.detail ?? item.message ?? item.output;
+    return `<li><div>${statusBadge(state)}<strong>${escapeHtml(name)}</strong></div>${detail != null ? `<p>${escapeHtml(typeof detail === 'object' ? safeStringify(detail) : detail)}</p>` : ''}</li>`;
+  }).join('')}</ul>`;
+}
+
+function renderReader10(reader) {
+  if (!reader || typeof reader !== 'object') return '<p class="muted">Reader-10 검수 결과가 없습니다.</p>';
+  const personas = Array.isArray(reader.personas) ? reader.personas : [];
+  const passed = reader.passedPersonas ?? personas.filter((item) => item.passed).length;
+  const total = reader.totalPersonas ?? personas.length ?? 10;
+  const critical = reader.criticalCount ?? reader.criticalIssues?.length ?? 0;
+  const overall = reader.passed ?? reader.pass ?? reader.status;
+  const mode = reader.mode ?? 'unknown';
+  const isDeterministic = mode.startsWith('deterministic');
+  const passUnit = isDeterministic ? '자동 구조 프로필' : mode === 'live' ? '실제 모델 독자 역할' : '검수 항목';
+  const modeDescription = isDeterministic
+    ? '자동 구조 모드: 모델을 호출하지 않고 HTML 구조, 길이, 용어, 링크, 행동 신호와 접근성 규칙만 검사합니다. 아래 점수는 실제 모델 독자 점수가 아니며 의미 이해나 사실 정확성을 증명하지 않습니다.'
+    : mode === 'live'
+      ? '라이브 모드: 10개 독자 역할을 각각 별도 모델 호출로 평가합니다. 호출 실패도 실패로 집계될 수 있으며, 모델 간 독립성이나 사실 정확성을 증명하지 않습니다.'
+      : '검수 모드가 기록되지 않았습니다. 이 결과만으로 검사 방식이나 의미 이해를 추정할 수 없습니다.';
+  return `<p class="reader-mode"><strong>검수 방식:</strong> ${escapeHtml(modeDescription)}</p>
+    <div class="reader-summary">
+      <div>${statusBadge(overall)}<strong>${escapeHtml(`${passed}/${total} ${passUnit} 통과`)}</strong></div>
+      <p>치명적 문제 ${escapeHtml(critical)}개 · 요구 기준 ${escapeHtml(reader.minPass ?? 9)}/${escapeHtml(total || 10)}</p>
+    </div>
+    ${personas.length ? `<ul class="persona-grid">${personas.map((persona) => {
+      const failures = (persona.checks ?? []).filter((item) => !item.passed);
+      return `<li>
+        <div>${statusBadge(persona.passed)}<strong>${escapeHtml(persona.name ?? persona.id)}</strong></div>
+        ${persona.description ? `<p>${escapeHtml(persona.description)}</p>` : ''}
+        ${failures.length ? `<details><summary>개선점 ${failures.length}개</summary><ul>${failures.map((failure) => `<li>${escapeHtml(failure.detail ?? failure.label ?? failure.id)}</li>`).join('')}</ul></details>` : '<p class="muted">발견된 이해도 문제가 없습니다.</p>'}
+      </li>`;
+    }).join('')}</ul>` : ''}
+    ${reader.criticalIssues?.length ? `<aside class="critical" aria-label="치명적 문제"><h3>치명적 문제</h3><ul>${reader.criticalIssues.map((issue) => `<li>${escapeHtml(issue.message ?? issue.code ?? issue)}</li>`).join('')}</ul></aside>` : ''}`;
+}
+
+function normalizeDate(value) {
+  const date = value instanceof Date ? value : new Date(value ?? Date.now());
+  return Number.isNaN(date.getTime()) ? new Date(0).toISOString() : date.toISOString();
+}
+
+function renderNextSteps(nextSteps) {
+  const steps = normalizeList(nextSteps, 'text');
+  if (!steps.length) return '<p class="muted">추가 조치가 필요하지 않거나 아직 기록되지 않았습니다.</p>';
+  return `<ol>${steps.map((step) => {
+    const text = step && typeof step === 'object' ? step.text ?? step.title ?? step.name ?? step.value : step;
+    return `<li>${escapeHtml(text ?? '')}</li>`;
+  }).join('')}</ol>`;
+}
+
+/**
+ * Render a self-contained, accessible Korean HTML run report.
+ * Every value supplied by the caller is escaped; stage output is never trusted as HTML.
+ */
+export function generateReport(data = {}, options = {}) {
+  const title = data.title ?? options.title ?? 'Relay10 실행 보고서';
+  const summary = data.summary ?? data.resultSummary ?? '요약이 아직 기록되지 않았습니다.';
+  const task = data.task ?? data.request ?? data.goal ?? '요청 내용이 기록되지 않았습니다.';
+  const runId = data.runId ?? data.id ?? 'unknown';
+  const generatedAt = normalizeDate(data.generatedAt ?? options.generatedAt);
+  const overallStatus = data.status ?? data.passed ?? data.verification?.passed ?? 'neutral';
+  const reader = data.reader10 ?? data.readerResults ?? data.reader;
+  const evidence = data.evidence ?? data.sources ?? data.provenance;
+  const nextSteps = data.nextSteps ?? data.actions;
+
+  return `<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+  <title>${escapeHtml(title)}</title>
+  <style>
+    :root { color-scheme: light dark; --bg:#f5f6f8; --panel:#fff; --text:#17202a; --muted:#5d6876; --line:#dfe3e8; --accent:#315efb; --pass:#16794b; --fail:#b42318; --warn:#8a5700; --info:#52606d; --code:#101828; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif; font-size:16px; line-height:1.7; overflow-wrap:anywhere; }
+    a { color:var(--accent); text-underline-offset:.18em; }
+    a:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+    .skip-link { position:absolute; top:-4rem; left:1rem; z-index:20; padding:.65rem 1rem; background:var(--panel); color:var(--text); border:2px solid var(--accent); }
+    .skip-link:focus { top:1rem; }
+    .shell { width:min(100% - 2rem, 1100px); margin-inline:auto; }
+    .hero { padding:4rem 0 2rem; background:linear-gradient(135deg,#111827,#243b73); color:#fff; }
+    .eyebrow { margin:0 0 .35rem; color:inherit; font-size:.78rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; opacity:.78; }
+    h1,h2,h3 { line-height:1.25; letter-spacing:-.02em; }
+    h1 { margin:.2rem 0 .7rem; font-size:clamp(2rem,5vw,3.6rem); }
+    h2 { margin:0 0 1rem; font-size:clamp(1.45rem,3vw,2rem); }
+    h3 { margin:.1rem 0 .55rem; font-size:1.08rem; }
+    .hero-summary { max-width:72ch; font-size:1.08rem; }
+    .meta { display:flex; flex-wrap:wrap; gap:.75rem 1.3rem; margin-top:1.3rem; align-items:center; }
+    .meta span, .meta time { color:#d9e2f2; }
+    nav { position:sticky; top:0; z-index:10; background:color-mix(in srgb,var(--panel) 94%,transparent); border-bottom:1px solid var(--line); backdrop-filter:blur(10px); }
+    nav ul { display:flex; gap:.35rem; margin:0; padding:.65rem 0; list-style:none; overflow-x:auto; }
+    nav a { display:block; padding:.4rem .68rem; border-radius:.45rem; color:var(--text); font-weight:700; white-space:nowrap; text-decoration:none; }
+    nav a:hover { background:var(--bg); }
+    main { padding:2rem 0 5rem; }
+    section { scroll-margin-top:5rem; margin:0 0 1.2rem; padding:clamp(1.1rem,3vw,2rem); background:var(--panel); border:1px solid var(--line); border-radius:1rem; box-shadow:0 8px 30px rgb(16 24 40 / .05); }
+    .lede { font-size:1.08rem; }
+    .status { display:inline-flex; align-items:center; gap:.3rem; width:max-content; margin-right:.55rem; padding:.12rem .55rem; border:1px solid currentColor; border-radius:999px; font-size:.8rem; font-weight:800; }
+    .status--pass { color:var(--pass); } .status--fail { color:var(--fail); } .status--warn { color:var(--warn); } .status--neutral { color:var(--info); }
+    .facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(12rem,1fr)); gap:.7rem; margin:1rem 0; }
+    .facts div { padding:.7rem .8rem; background:var(--bg); border-radius:.6rem; }
+    .facts dt { color:var(--muted); font-size:.78rem; font-weight:800; }
+    .facts dd { margin:.16rem 0 0; white-space:pre-wrap; }
+    .table-wrap { max-width:100%; overflow:auto; border:1px solid var(--line); border-radius:.7rem; }
+    table { width:100%; border-collapse:collapse; min-width:44rem; }
+    th,td { padding:.7rem .8rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+    thead th { background:var(--bg); }
+    tbody tr:last-child th,tbody tr:last-child td { border-bottom:0; }
+    .stage-list { display:grid; gap:1rem; }
+    .stage { padding:1rem; border:1px solid var(--line); border-radius:.8rem; }
+    .stage > header { display:flex; justify-content:space-between; gap:1rem; align-items:flex-start; }
+    summary { cursor:pointer; font-weight:800; }
+    details { margin-top:.7rem; }
+    pre { max-width:100%; overflow:auto; padding:1rem; border-radius:.65rem; background:var(--code); color:#f7f8fa; white-space:pre-wrap; word-break:break-word; }
+    .check-list,.persona-grid { padding:0; list-style:none; }
+    .check-list { display:grid; gap:.6rem; }
+    .check-list > li { padding:.8rem; border:1px solid var(--line); border-radius:.65rem; }
+    .check-list p { margin:.35rem 0 0; color:var(--muted); }
+    .persona-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(15rem,1fr)); gap:.8rem; }
+    .persona-grid > li { padding:1rem; border:1px solid var(--line); border-radius:.75rem; }
+    .persona-grid p { margin:.45rem 0; }
+    .reader-mode { padding:.8rem 1rem; border-left:4px solid var(--info); background:var(--bg); }
+    .reader-summary { display:flex; flex-wrap:wrap; justify-content:space-between; gap:.8rem; padding:1rem; margin-bottom:1rem; background:var(--bg); border-radius:.7rem; }
+    .reader-summary p { margin:0; }
+    .critical { margin-top:1rem; padding:1rem; border-left:5px solid var(--fail); background:color-mix(in srgb,var(--fail) 8%,var(--panel)); }
+    .evidence-list li + li { margin-top:.75rem; }
+    .evidence-list p { margin:.15rem 0; color:var(--muted); }
+    .muted { color:var(--muted); }
+    footer { padding:1.5rem 0 3rem; color:var(--muted); text-align:center; }
+    @media (max-width:650px) { .shell { width:min(100% - 1rem,1100px); } .hero { padding:2.5rem 0 1.5rem; } section { border-radius:.7rem; } .stage > header { display:block; } .status { margin-top:.35rem; } }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    @media print { nav,.skip-link { display:none; } body { background:#fff; color:#000; } section { break-inside:avoid; box-shadow:none; } }
+    @media (prefers-color-scheme:dark) { :root { --bg:#101318; --panel:#181d24; --text:#edf1f6; --muted:#aab4c0; --line:#343c47; --accent:#8facff; --pass:#55d69e; --fail:#ff8a80; --warn:#ffd166; --info:#b8c2cc; --code:#080b0f; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <header class="hero">
+    <div class="shell">
+      <p class="eyebrow">Relay10 · 실행 보고서</p>
+      <h1>${escapeHtml(title)}</h1>
+      <div class="hero-summary"><strong>핵심 요약:</strong> ${escapeHtml(summary)}</div>
+      <div class="meta">${statusBadge(overallStatus)}<span>실행 ID ${escapeHtml(runId)}</span><time datetime="${escapeHtml(generatedAt)}">생성 ${escapeHtml(generatedAt)}</time></div>
+    </div>
+  </header>
+  <nav aria-label="보고서 목차"><div class="shell"><ul>
+    <li><a href="#overview">요약</a></li><li><a href="#routing">라우팅</a></li><li><a href="#stages">단계 출력</a></li><li><a href="#verification">검증</a></li><li><a href="#reader10">Reader-10</a></li><li><a href="#evidence">근거</a></li><li><a href="#actions">다음 단계</a></li>
+  </ul></div></nav>
+  <main id="main" class="shell">
+    <section id="overview" aria-labelledby="overview-title"><p class="eyebrow">01 · 한눈에 보기</p><h2 id="overview-title">목적과 결과 요약</h2><p class="muted"><strong>용어:</strong> CLI(명령줄 인터페이스), HTML(웹 문서 형식), ID(식별자), PASS(통과), FAIL(실패).</p><h3>요청 목적</h3>${renderText(task, 'lede')}<h3>최종 결과</h3>${renderText(summary, 'lede')}${renderKeyValue({ 실행상태: STATUS_LABELS[normalizeStatus(overallStatus)], 실행ID: runId, 생성시각: generatedAt })}</section>
+    <section id="routing" aria-labelledby="routing-title"><p class="eyebrow">02 · 의사결정</p><h2 id="routing-title">모델 라우팅</h2><p>실행 전에 정한 프로필과 실제 실행 여부입니다. 프로필은 카탈로그 메타데이터 기반 역할이며 가격이나 성능 순위를 보장하지 않습니다.</p>${renderRouting(data.routing)}</section>
+    <section id="stages" aria-labelledby="stages-title"><p class="eyebrow">03 · 작업 기록</p><h2 id="stages-title">단계별 출력</h2>${renderStages(data)}</section>
+    <section id="verification" aria-labelledby="verification-title"><p class="eyebrow">04 · 품질 확인</p><h2 id="verification-title">검증 결과</h2><p>실패나 오류가 있으면 아래 세부 기록과 다음 단계에서 복구 방법을 확인하세요.</p>${renderVerification(data.verification)}</section>
+    <section id="reader10" aria-labelledby="reader10-title"><p class="eyebrow">05 · 보고서 검수</p><h2 id="reader10-title">Reader-10 검수</h2><p>선택된 모드의 구조 규칙 또는 모델 응답을 집계한 결과이며, 사실성 검증을 대신하지 않습니다.</p>${renderReader10(reader)}</section>
+    <section id="evidence" aria-labelledby="evidence-title"><p class="eyebrow">06 · 추적 가능성</p><h2 id="evidence-title">근거와 출처</h2>${renderEvidence(evidence)}</section>
+    <section id="actions" aria-labelledby="actions-title"><p class="eyebrow">07 · 실행 안내</p><h2 id="actions-title">다음 단계</h2><p>필요한 조치를 순서대로 실행하고, 문제가 생기면 검증 결과의 오류 또는 대안 기록을 먼저 확인하세요.</p>${renderNextSteps(nextSteps)}</section>
+  </main>
+  <footer class="shell"><p>이 파일은 외부 스크립트나 스타일시트 없이 생성된 자체 포함 Relay10 보고서입니다.</p></footer>
+</body>
+</html>`;
+}
+
+export const renderReport = generateReport;

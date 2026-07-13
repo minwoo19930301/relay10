@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/minwoo19930301/relay10/raw/main/schema/config.schema.json",
+  "title": "Relay10 configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version"],
+  "$defs": {
+    "effort": {
+      "enum": ["low", "medium", "high", "xhigh", "max", "ultra"]
+    },
+    "modelName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "modelOverride": {
+      "oneOf": [
+        { "$ref": "#/$defs/modelName" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["model"],
+          "properties": {
+            "model": { "$ref": "#/$defs/modelName" },
+            "effort": { "$ref": "#/$defs/effort" }
+          }
+        }
+      ]
+    },
+    "verificationCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command"],
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "args": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "type": "string",
+            "maxLength": 8192
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "version": { "const": 1 },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "overrides": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "frontier": { "$ref": "#/$defs/modelOverride" },
+            "balanced": { "$ref": "#/$defs/modelOverride" },
+            "economy": { "$ref": "#/$defs/modelOverride" }
+          }
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "$comment": "The runtime additionally requires balancedThreshold < frontierThreshold after defaults are applied.",
+      "properties": {
+        "balancedThreshold": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 29
+        },
+        "frontierThreshold": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        }
+      }
+    },
+    "effort": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scout": { "$ref": "#/$defs/effort" },
+        "architect": { "$ref": "#/$defs/effort" },
+        "maker": { "$ref": "#/$defs/effort" },
+        "reviewer": { "$ref": "#/$defs/effort" },
+        "explainer": { "$ref": "#/$defs/effort" },
+        "reader": { "$ref": "#/$defs/effort" }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "commands": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/verificationCommand" }
+        }
+      }
+    },
+    "readerGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["deterministic", "live"] },
+        "models": {
+          "type": "array",
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/modelName" }
+        },
+        "minPass": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "maxRounds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "concurrency": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "dependentSchemas": {
+        "models": {
+          "if": {
+            "properties": {
+              "models": { "minItems": 1 }
+            },
+            "required": ["models"]
+          },
+          "then": {
+            "properties": {
+              "mode": { "const": "live" }
+            },
+            "required": ["mode"]
+          }
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "$comment": "For live readers, the runtime also requires enough maxModelCalls to finish every configured round.",
+      "properties": {
+        "maxModelCalls": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "stageTimeoutMs": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 3600000
+        },
+        "commandTimeoutMs": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 3600000
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+node_modules/
+.relay10/
+relay10.config.json
+coverage/
+.DS_Store
+work/
+outputs/
+*.log
