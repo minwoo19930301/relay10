@@ -23,6 +23,15 @@ const reportData = {
     { target: 'Codex CLI', status: 'pass', current: '지원', reason: 'Codex 실행기를 사용합니다.', required: '추가 작업 없음' },
     { target: '다른 공급자', status: 'fail', current: '미지원', reason: '공급자 어댑터가 없습니다.', required: '실행 어댑터 구현' },
   ],
+  globalRepos: [
+    { name: 'Global Agent', url: 'https://example.com/agent', signal: '10,000 stars · MIT · active', strengths: '권한 분리', cautions: '큰 runtime', adopted: '단계별 권한', excluded: '상시 daemon' },
+  ],
+  skillPack: [
+    { name: 'relay10-research', job: '읽기 전용 근거 수집', patterns: 'progressive disclosure', boundary: '수정하지 않음', status: 'pass', current: '구현됨' },
+  ],
+  growthPlan: [
+    { period: '30일', product: '실제 예제 3개', proof: '재현 로그', promotion: '짧은 데모', metric: '첫 성공률' },
+  ],
   stages: [
     {
       name: '준비 조건 확인',
@@ -88,6 +97,10 @@ test('generateReport creates a self-contained, accessible Korean HTML report', (
   assert.match(html, /현재 공급자·CLI·앱 지원 범위/);
   assert.match(html, /> 지원<\/span>/);
   assert.match(html, /> 미지원<\/span>/);
+  assert.match(html, /글로벌 상위 저장소에서 무엇을 증류했나/);
+  assert.match(html, /별 수는 인기와 발견 신호일 뿐/);
+  assert.match(html, /여덟 개만 남긴 Relay10 Skill pack/);
+  assert.match(html, /앞으로 30일·60일·90일에 할 일/);
   assert.match(html, /Reader-10 검수/);
   assert.match(html, /10\/10 자동 구조 프로필 통과/);
   assert.match(html, /자동 구조 모드: 모델을 호출하지 않고 HTML 구조/);
@@ -148,6 +161,9 @@ test('generateReport escapes every caller-provided HTML value and drops unsafe l
     stages: [{ name: '<script>bad()</script>', output: '</code><script>bad()</script>' }],
     comparisons: [{ name: '<b>비교</b>', strengths: '<img src=x>', weaknesses: 'x', adopted: 'y', excluded: 'z' }],
     supportMatrix: [{ target: '<svg onload=bad()>', current: '미지원', status: 'fail', reason: '<script>bad()</script>', required: 'adapter' }],
+    globalRepos: [{ name: '<img src=x>', url: 'javascript:bad()', strengths: '<script>bad()</script>' }],
+    skillPack: [{ name: '<b>skill</b>', job: '<svg onload=bad()>' }],
+    growthPlan: [{ period: '<script>bad()</script>', product: '<img src=x>' }],
     evidence: [{ title: '<b>위험 링크</b>', url: 'javascript:alert(1)' }],
   });
   assert.doesNotMatch(html, /<script\b/i);

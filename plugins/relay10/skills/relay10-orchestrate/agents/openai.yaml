@@ -1,0 +1,4 @@
+interface:
+  display_name: "Relay10 Orchestrate"
+  short_description: "Route a task through the smallest safe workflow"
+  default_prompt: "Use $relay10-orchestrate to route this repository task without adding unnecessary stages."

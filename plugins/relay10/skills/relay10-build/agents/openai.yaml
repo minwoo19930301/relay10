@@ -1,0 +1,4 @@
+interface:
+  display_name: "Relay10 Build"
+  short_description: "Implement an authorized change in small slices"
+  default_prompt: "Use $relay10-build to implement this approved change and show verification evidence."

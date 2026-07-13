@@ -73,11 +73,40 @@ multi-provider API client.
 | Codex desktop app or IDE | Indirect shell use only | A task can invoke `r10`, but Relay10 then starts separate Codex CLI subprocesses. There is no native progress UI or current-task model switching. |
 | ChatGPT app/web or a standalone GUI | Not implemented | These need a remote MCP/Apps SDK backend or a local sidecar/App Server client. |
 
-A Codex Skill could make the existing commands easier to invoke from the app,
-but a Skill by itself does not switch the current app task's model for every
-Relay10 stage. A native app surface is planned as a Plugin + local MCP wrapper;
-it is not part of 0.1.1. See the full
+The repo-scoped Codex Skills make the existing commands easier to invoke from
+the app, but a Skill by itself does not switch the current app task's model for
+every Relay10 stage. The current `main` branch includes an eight-Skill
+pack and a valid Codex Plugin bundle as a preview; the immutable `v0.1.1` tag
+does not. The preview has no MCP server or custom UI, so native progress and
+stage execution still use the existing CLI. See the full
 [lineage and portability decision](https://github.com/minwoo19930301/relay10/blob/main/docs/lineage-and-portability.md).
+
+## Relay10 Skill pack
+
+Relay10 distills recurring patterns from current global coding agents and
+Agent Skill collections into eight on-demand skills instead of installing a
+large catalog:
+
+| Skill | Job | Important boundary |
+|---|---|---|
+| `relay10-orchestrate` | choose the smallest useful workflow | does not switch the current Codex task model |
+| `relay10-research` | collect current read-only evidence | does not mutate a repository |
+| `relay10-spec` | define outcome, non-goals, acceptance, and rollback | does not implement plan-only requests |
+| `relay10-build` | implement an authorized change in small slices | does not publish |
+| `relay10-debug` | reproduce and isolate root cause | diagnosis alone does not authorize repair |
+| `relay10-review` | review a fixed baseline and report findings | remains read-only |
+| `relay10-release` | prove package, artifact, hash, and support claims | requires explicit publication authority |
+| `relay10-skill-lab` | tune triggers and compare against no-skill baseline | rejects skills without measured benefit |
+
+The canonical pack lives under `plugins/relay10/skills`. `.agents/skills` is a
+relative symlink to that directory so a cloned repository exposes the same
+skills to Codex App, CLI, and IDE surfaces that support repository skills. The
+Plugin manifest is at `plugins/relay10/.codex-plugin/plugin.json`; it is ready
+for local validation and marketplace packaging but has not been published to a
+marketplace. The pack follows progressive disclosure and contains original
+clean-room text. The Skill-ecosystem source subset and license cautions are
+recorded in `plugins/relay10/provenance/sources.json`; the complete agent,
+harness, workflow, and Skill lineage is recorded in `docs/prior-art.md`.
 
 ## Default pipeline
 
@@ -159,7 +188,8 @@ slugs:
   and Gemini API adapters are not included, and providers cannot be mixed by
   stage.
 - Codex desktop can invoke the CLI indirectly, but there is no Relay10 Skill,
-  Plugin, MCP server, Apps SDK UI, or standalone GUI in this release.
+  Plugin, MCP server, Apps SDK UI, or standalone GUI in the immutable v0.1.1
+  release. Current `main` has a Skill/Plugin preview, without MCP or a custom UI.
 - The scout is a general read/search Codex stage, not a dedicated crawler,
   browser automation system, or site-specific extraction engine.
 - Deterministic Reader-10 checks structure, length, terminology, links, and
@@ -181,10 +211,21 @@ slugs:
 - [Harness trade-offs, selected patterns, provider and app portability](https://github.com/minwoo19930301/relay10/blob/main/docs/lineage-and-portability.md)
 - [Korean harness landscape](https://github.com/minwoo19930301/relay10/blob/main/docs/korea-landscape.md)
 - [Global harness landscape](https://github.com/minwoo19930301/relay10/blob/main/docs/global-landscape.md)
+- [Top global repositories and distilled patterns](https://github.com/minwoo19930301/relay10/blob/main/docs/global-top-repos.md)
+- [Clean-room prior art ledger](https://github.com/minwoo19930301/relay10/blob/main/docs/prior-art.md)
+- [30/60/90 development and promotion playbook](https://github.com/minwoo19930301/relay10/blob/main/docs/growth-playbook.md)
 - [Launch report](https://github.com/minwoo19930301/relay10/blob/main/docs/launch-report.html)
 
-The research snapshot is dated 2026-07-13. Stars and project status change;
+The latest research snapshot is dated 2026-07-14. Stars and project status change;
 follow the linked primary sources before making adoption or licensing choices.
+
+## Contributing and feedback
+
+Use the repository issue forms for reproducible bugs, bounded use cases, and
+Skill proposals. Each proposal asks for observable acceptance evidence and
+clean-room provenance so the core does not grow from feature count alone. See
+[CONTRIBUTING.md](https://github.com/minwoo19930301/relay10/blob/main/CONTRIBUTING.md)
+for the development and review gates.
 
 ## License
 
@@ -192,11 +233,13 @@ Relay10 is MIT licensed and was implemented as a clean-room wrapper with zero
 third-party npm runtime dependencies. No source code from the compared
 harnesses is included.
 
-The design selection is intentionally narrow: role-specific model tiers from
-OMO/OMP, plan-build-review separation from OMC, doctor and inspectable evidence
-from OMX, an external wrapper boundary from GJC, and a short onboarding path
-from LazyCodex. It excludes their agent swarms, nested completion loops,
-tmux/worktree teams, native TUI/runtime stacks, global plugin injection, and
-telemetry. Relay10's risk/verifiability/reversibility router, separation of
-correctness from clarity, hash-bound frozen replay, and Reader-10 gate are its
-own additions.
+The design selection is intentionally narrow. From the Korean projects it keeps
+role-specific model tiers, plan/build/review separation, doctor and inspectable
+evidence, an external wrapper boundary, and short onboarding. From global
+projects it keeps on-demand skills, read-only plan roles, checkpoint and success
+gates, architect/editor separation, stateless transcripts, provider/worker
+ports, and independent review. It excludes swarms, nested completion loops,
+always-on daemons, databases, vector memory, schedulers, native TUI/GUI stacks,
+global injection, and telemetry from the core. Relay10's
+risk/verifiability/reversibility router, separation of correctness from clarity,
+hash-bound frozen replay, and Reader-10 gate are its own additions.

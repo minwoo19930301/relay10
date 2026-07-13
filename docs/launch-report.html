@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
-  <title>Relay10 0.1 출시 결과 보고서</title>
+  <title>Relay10 글로벌 증류·Skill 보강 보고서</title>
   <style>
     :root { color-scheme: light dark; --bg:#f5f6f8; --panel:#fff; --text:#17202a; --muted:#5d6876; --line:#dfe3e8; --accent:#315efb; --pass:#16794b; --fail:#b42318; --warn:#8a5700; --info:#52606d; --code:#101828; }
     * { box-sizing:border-box; }
@@ -77,16 +77,16 @@
   <header class="hero">
     <div class="shell">
       <p class="eyebrow">Relay10 · 실행 보고서</p>
-      <h1>Relay10 0.1 출시 결과 보고서</h1>
-      <div class="hero-summary"><strong>핵심 요약:</strong> Relay10은 여섯 국내 하네스와 해외 선행 패턴에서 역할별 모델·단계 분리·doctor·근거 보존만 골라 독립 구현했다. v0.1.1의 공식 지원은 Codex CLI뿐이며, Grok은 미검증 실험 후보, Claude·Gemini·앱 네이티브 통합은 미지원이다.</div>
-      <div class="meta"><span class="status status--warn"><span aria-hidden="true">▲</span> 주의</span><span>실행 ID relay10-launch-20260713</span><time datetime="2026-07-13T06:36:04.048Z">생성 2026-07-13T06:36:04.048Z</time></div>
+      <h1>Relay10 글로벌 증류·Skill 보강 보고서</h1>
+      <div class="hero-summary"><strong>핵심 요약:</strong> 글로벌 상위 agent·workflow·Skill 저장소를 다시 조사해 권한 분리, checkpoint, 작은 core, 독립 review, progressive disclosure만 여덟 Skill로 압축했다. main에는 Codex Plugin preview가 있지만 고정 v0.1.1의 공식 실행 지원은 여전히 Codex CLI뿐이다.</div>
+      <div class="meta"><span class="status status--warn"><span aria-hidden="true">▲</span> 주의</span><span>실행 ID relay10-launch-20260713</span><time datetime="2026-07-13T15:56:55.473Z">생성 2026-07-13T15:56:55.473Z</time></div>
     </div>
   </header>
   <nav aria-label="보고서 목차"><div class="shell"><ul>
-    <li><a href="#overview">요약</a></li><li><a href="#routing">라우팅</a></li><li><a href="#comparison">장단점·계보</a></li><li><a href="#support">지원 범위</a></li><li><a href="#stages">단계 출력</a></li><li><a href="#verification">검증</a></li><li><a href="#reader10">Reader-10</a></li><li><a href="#evidence">근거</a></li><li><a href="#actions">다음 단계</a></li>
+    <li><a href="#overview">요약</a></li><li><a href="#routing">라우팅</a></li><li><a href="#global">글로벌 증류</a></li><li><a href="#skills">Skill pack</a></li><li><a href="#comparison">국내·계보</a></li><li><a href="#support">지원 범위</a></li><li><a href="#growth">발전·홍보</a></li><li><a href="#stages">단계 출력</a></li><li><a href="#verification">검증</a></li><li><a href="#reader10">Reader-10</a></li><li><a href="#evidence">근거</a></li><li><a href="#actions">다음 단계</a></li>
   </ul></div></nav>
   <main id="main" class="shell">
-    <section id="overview" aria-labelledby="overview-title"><p class="eyebrow">01 · 한눈에 보기</p><h2 id="overview-title">목적과 결과 요약</h2><p class="muted"><strong>용어:</strong> CLI(명령줄 인터페이스), HTML(웹 문서 형식), ID(식별자), PASS(통과), FAIL(실패).</p><h3>요청 목적</h3><p class="lede">국내 OMO·OMP·OMC·OMX·GJC·LazyCodex와 글로벌 코딩 에이전트 프로젝트를 공개 근거로 비교해 각각의 장점과 단점, Relay10이 채택하거나 제외한 설계, 공급자와 CLI·앱 지원 경계를 명확히 밝히고, 단계별 모델·추론 노력 라우팅과 10회 저비용 독자 검수를 갖춘 더 가벼운 하네스를 GitHub에 출시한다.</p><h3>최종 결과</h3><p class="lede">결론부터 말하면 Relay10 v0.1.1의 검증된 공식 실행 경로는 Codex CLI와 현재 로컬 OpenAI 모델뿐이다. Grok은 Codex의 xAI custom provider를 거치는 Responses 호환 실험 후보지만 실제 종단간 검증이 없고 한 실행 안의 단계별 공급자 혼합도 지원하지 않는다. Claude·Gemini API 직접 연결은 지원하지 않는다. Codex 데스크톱에서는 터미널이나 Skill이 r10을 호출하는 간접 사용만 가능하고, 앱의 현재 task 모델을 바꾸는 네이티브 Plugin·MCP·Apps SDK·독립 GUI 통합은 아직 없다. Relay10이 비교 하네스에서 선택한 것은 코드를 복사한 것이 아니라 역할별 모델 배정, plan·build·review 분리, doctor와 inspectable evidence, external wrapper, 간단한 진입 UX라는 설계 패턴이다. 반대로 agent 군집, tmux·worktree team, 장기 loop, TUI·native runtime, 전역 plugin 주입은 경량성을 위해 제외했다. Relay10 고유 부분은 위험·파급·검증 가능성·되돌림 가능성을 함께 쓰는 초기 router, 정확성과 설명 명료성의 분리, hash-bound frozen replay, Reader-10 열 번 검수다. 제품 v0.1.1은 2026-07-13에 GitHub에 공개 완료됐다. 이 HTML의 상태는 생성 시점에 실제 Reader-10 판독 대기이며 제품 출시 보류를 뜻하지 않는다. 최종 전달물은 이 HTML과 별도 Reader-10 JSON이다. JSON의 passedPersonas가 10, criticalCount가 0이고 reportSha256이 이 HTML의 SHA-256과 같으면 사후 판독 통과다. 자동 구조 검사는 제목·링크·접근성을 확인하지만 뜻을 이해하지 못하며, 실제 판독은 economy 역할 모델을 low 노력으로 열 번 호출해 목적, 결과, 근거, 위험, 다음 행동을 다시 말하게 한다. 구현 근거는 74개 자동 테스트, 문법 검사, 실제 모델 탐색, 모델 배정 미리보기, 패키지 검사다. 용어: OMO(Oh My OpenAgent), OMP(Oh My Pi), OMC(Oh My ClaudeCode), OMX(Oh My Codex), GJC(Gajae-Code), CLI(명령줄 인터페이스), GUI(그래픽 화면 인터페이스), TUI(터미널 화면 인터페이스), UI(사용자 화면), UX(사용 경험), IDE(통합 개발 환경), SDK(개발 도구 모음), HTML(웹 문서 형식), HTTP(웹 통신 규격), JSON(구조화 데이터 파일), SHA-256(파일 내용 식별값), URL(웹 주소), MIT(오픈소스 라이선스), LICENSE(라이선스 파일), NOTICE(출처·권리 고지 파일), SUL(지속가능 사용 라이선스), RPC(원격 프로시저 호출), ACP(에이전트 통신 규격), MCP(앱과 도구를 연결하는 규격), DSL(도메인 전용 언어), API(프로그램 연결 규격), LSP(언어 서버 규격), DAP(디버거 연결 규격), AST(코드 문법 트리), PRD(제품 요구사항 문서), QA(품질 검증), HUD(상태 표시 화면), RLM(긴 문맥 처리 연구 방식), E2E(처음부터 끝까지의 통합 검증), SWE(소프트웨어 엔지니어링), Reader-10(열 가지 독자 역할 검수), 하네스(작업 단계를 연결하는 실행 도구), 라우팅 또는 모델 배정(단계별로 쓸 모델을 고르는 것), economy·balanced·frontier(가벼운·중간·고성능 역할 이름), low(낮은 추론 노력), Codex subprocess(현재 프로그램이 별도 Codex 작업을 실행하는 방식), dry-run(파일을 바꾸지 않는 미리보기), npm(자바스크립트 도구 실행·설치 명령).</p><dl class="facts"><div><dt>실행상태</dt><dd>주의</dd></div><div><dt>실행ID</dt><dd>relay10-launch-20260713</dd></div><div><dt>생성시각</dt><dd>2026-07-13T06:36:04.048Z</dd></div></dl></section>
+    <section id="overview" aria-labelledby="overview-title"><p class="eyebrow">01 · 한눈에 보기</p><h2 id="overview-title">목적과 결과 요약</h2><p class="muted"><strong>용어:</strong> CLI(명령줄 인터페이스), HTML(웹 문서 형식), ID(식별자), PASS(통과), FAIL(실패).</p><h3>요청 목적</h3><p class="lede">국내 여섯 하네스뿐 아니라 GitHub의 글로벌 상위 코딩 agent·workflow·Skill 저장소를 최신 공개 근거로 다시 조사하고, 각 장단점과 Relay10의 채택·제외를 밝힌다. 검증된 패턴은 여덟 개의 작은 Codex Skill과 Plugin preview로 독립 구현하고, 공급자·CLI·앱 지원 경계와 사용자가 앞으로 제품을 발전·홍보할 30일·60일·90일 행동 계획까지 하나의 검증된 HTML 보고서로 정리한다.</p><h3>최종 결과</h3><p class="lede">결론부터 말하면 Relay10 main은 글로벌 조사와 여덟 개의 clean-room Skill, 유효한 Codex Plugin manifest, 정적 Skill pack 검증을 추가했다. 상위 저장소에서는 OpenCode의 plan/build 권한 분리, Gemini CLI·Cline의 write 전 checkpoint, Aider의 architect/editor 분리, mini software-engineering agent의 작은 stateless core, Goose의 recipe success gate, Agent Orchestrator의 worker/reviewer adapter, Agent Skills의 progressive disclosure만 골랐다. daemon·DB·GUI·swarm·vector memory·scheduler·tmux를 core에 넣지 않았다. 고정 release v0.1.1의 공식 실행 경로는 여전히 Codex CLI와 현재 로컬 OpenAI 모델뿐이다. main의 repo Skill은 Codex App·CLI·IDE에서 작업 지침을 제공할 수 있지만 현재 task 모델을 단계별로 바꾸지 않으며, Plugin preview에도 MCP server나 custom UI가 없다. Grok은 미검증 후보이고 Claude·Gemini 직접 API와 한 run의 공급자 혼합도 미지원이다. 별 수는 인기·발견 신호일 뿐 품질이나 실사용 점유율의 증거가 아니다. 검증 근거는 82개 자동 테스트, JavaScript 문법, Skill·Plugin 정적 검사, 실제 Codex 모델 탐색, 모델 배정 미리보기, npm package 검사다. 이 HTML은 생성 후 economy 역할 모델을 low 노력으로 열 번 호출하는 Reader-10을 다시 실행한다. 별도 JSON의 passedPersonas 10, criticalCount 0, reportSha256 일치가 최종 판독 조건이다. 제품 발전은 30일 안에 설치·첫 성공 측정과 대표 demo를 만들고, 60일 안에 provider/worker port와 forward eval을 증명하며, 90일 안에 검증된 adapter 또는 local MCP 중 사용자 수요가 큰 하나만 출시하는 순서다. 용어: OMO(Oh My OpenAgent), OMP(Oh My Pi), OMC(Oh My ClaudeCode), OMX(Oh My Codex), GJC(Gajae-Code), CLI(명령줄), GUI(그래픽 화면), TUI(터미널 화면), UI(사용자 화면), UX(사용 경험), IDE(개발 환경), DB(database·데이터베이스), JSON(구조화 데이터), SDK(개발 도구 모음), URL(웹 주소), HTTP(웹 통신 규격), MIT(허용 범위가 넓은 오픈소스 라이선스), LICENSE(라이선스 파일), NOTICE(출처·권리 고지), SKILL(SKILL.md 작업 지침 파일), Skill(필요할 때 불러오는 작업 지침), Plugin(Skill과 선택적 연결 요소의 배포 묶음), MCP(앱과 도구 연결 규격), API(프로그램 연결 규격), RPC(원격 기능 호출), ACP(agent communication protocol·에이전트 통신 규격), LSP(language server protocol·언어 서버 규격), DAP(debug adapter protocol·디버거 규격), AST(abstract syntax tree·코드 문법 트리), PRD(product requirements document·제품 요구 문서), QA(quality assurance·품질 검증), TDD(test-driven development·테스트 주도 개발), SUL(sustainable use license·지속가능 사용 라이선스), DSL(domain-specific language·도메인 전용 언어), HUD(head-up display·상태 표시 화면), RLM(긴 문맥 처리 연구 방식), ADR(architecture decision record·설계 결정 기록), CI(continuous integration·지속 통합), CDC(change data capture·변경 데이터 추적), PR(pull request·변경 제안), HN(Hacker News), D30(30일 재사용 지표), E2E(처음부터 끝까지 검증), Reader-10(열 가지 독자 역할 검수), clean-room(동작 아이디어만 보고 코드·문구를 새로 작성), progressive disclosure(필요한 정보만 단계적으로 로드), dry-run(변경 없는 미리보기), SHA-256(파일 내용 식별값).</p><dl class="facts"><div><dt>실행상태</dt><dd>주의</dd></div><div><dt>실행ID</dt><dd>relay10-launch-20260713</dd></div><div><dt>생성시각</dt><dd>2026-07-13T15:56:55.473Z</dd></div></dl></section>
     <section id="routing" aria-labelledby="routing-title"><p class="eyebrow">02 · 의사결정</p><h2 id="routing-title">모델 라우팅</h2><p>실행 전에 정한 프로필과 실제 실행 여부입니다. 프로필은 카탈로그 메타데이터 기반 역할이며 가격이나 성능 순위를 보장하지 않습니다.</p><div class="table-wrap" tabindex="0" role="region" aria-label="모델 라우팅 표">
     <table>
       <thead><tr><th scope="col">단계</th><th scope="col">실행 여부</th><th scope="col">프로필</th><th scope="col">노력도</th><th scope="col">모델</th><th scope="col">선택 이유</th></tr></thead>
@@ -135,7 +135,151 @@
         </tr></tbody>
     </table>
   </div></section>
-    <section id="comparison" aria-labelledby="comparison-title"><p class="eyebrow">비교 · 설계 계보</p><h2 id="comparison-title">하네스별 장단점과 Relay10 체리피킹</h2><p class="">여기서 체리피킹은 소스 코드 복제가 아니라 공개 문서에서 확인한 동작 패턴의 clean-room 독립 구현을 뜻한다. 국내 여섯 프로젝트에서는 역할별 모델, 단계 분리, doctor·evidence, external wrapper, 단순한 진입 UX만 골랐다. 글로벌 OpenDev·Continue의 역할별 모델 slot, Aider의 architect/editor 분리, mini-SWE-agent의 작은 코어도 참고했다. Relay10은 위험·파급·검증 가능성·되돌림 가능성 router와 correctness·clarity 분리, hash-bound Reader-10을 추가했다.</p> <div class="table-wrap" tabindex="0" role="region" aria-label="하네스 장단점과 Relay10 체리피킹 표">
+    <section id="global" aria-labelledby="global-title"><p class="eyebrow">글로벌 · 2026-07-14 스냅샷</p><h2 id="global-title">글로벌 상위 저장소에서 무엇을 증류했나</h2><p class="">2026-07-14 GitHub API와 각 공식 README를 다시 확인했다. 별 수는 인기·발견 신호일 뿐 품질·시장 점유율·생산성 증거가 아니다. Continue는 별이 많지만 README가 no longer actively maintained/read-only라고 밝혀 역사적 역할 분리 사례로만 남겼고, Roo Code는 archived 상태라 현행 추천에서 제외했다. Relay10은 동작 패턴만 독립 구현했으며, provider runtime·daemon·DB·GUI·swarm·vector memory는 core에 넣지 않았다.</p> <div class="table-wrap" tabindex="0" role="region" aria-label="글로벌 상위 저장소 증류 표">
+    <table class="wide-table">
+      <thead><tr><th scope="col">프로젝트</th><th scope="col">현재 신호</th><th scope="col">강점</th><th scope="col">약점·주의</th><th scope="col">Relay10 채택</th><th scope="col">Relay10 제외</th></tr></thead>
+      <tbody><tr>
+          <th scope="row"><a href="https://github.com/anomalyco/opencode" rel="noreferrer noopener">OpenCode</a></th>
+          <td>185,365★ · MIT · active</td>
+          <td>다중 provider와 plan/build 권한 분리가 명료하다.</td>
+          <td>TUI·desktop·server·인증까지 가진 전체 runtime이다.</td>
+          <td>read-only plan과 단계별 permission 경계.</td>
+          <td>두 번째 runtime·TUI·provider 인증층.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/anthropics/claude-code" rel="noreferrer noopener">Claude Code</a></th>
+          <td>137,686★ · Commercial terms · active</td>
+          <td>CLI·IDE·GitHub·Plugin·Skill 경험이 한 runtime에서 이어진다.</td>
+          <td>오픈소스가 아니며 vendor runtime과 prompt에 결합된다.</td>
+          <td>Plugin anatomy와 전문 reviewer 개념.</td>
+          <td>코드·prompt 복사, 무한 loop, Claude 전용 가정.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/github/spec-kit" rel="noreferrer noopener">Spec Kit</a></th>
+          <td>120,376★ · MIT · active</td>
+          <td>원칙→spec→plan→task→구현을 실행 가능한 산출물로 잇는다.</td>
+          <td>작은 되돌릴 수 있는 변경에는 의식이 너무 크다.</td>
+          <td>outcome·non-goal·acceptance·rollback.</td>
+          <td>모든 작업의 constitution과 큰 artifact tree.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/google-gemini/gemini-cli" rel="noreferrer noopener">Gemini CLI</a></th>
+          <td>105,958★ · Apache-2.0 · active</td>
+          <td>MCP·structured output·GitHub Action·checkpoint/restore가 있다.</td>
+          <td>Gemini 인증·도구·release channel을 포함한 독립 agent다.</td>
+          <td>write 전 checkpoint와 기계 판독 event 원칙.</td>
+          <td>Gemini runtime과 인증 stack.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/openai/codex" rel="noreferrer noopener">OpenAI Codex</a></th>
+          <td>97,655★ · Apache-2.0 · active</td>
+          <td>sandbox·approval과 CLI·App·IDE 표면을 제공하는 검증된 host다.</td>
+          <td>Relay10이 현재 결합된 host이지 provider-neutral contract는 아니다.</td>
+          <td>설치된 runtime·catalog·sandbox 재사용.</td>
+          <td>Codex 내부 구현이나 TUI 재구현.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/OpenHands/OpenHands" rel="noreferrer noopener">OpenHands</a></th>
+          <td>80,656★ · core MIT/enterprise 별도 · active</td>
+          <td>backend·sandbox·SDK·local/remote surface를 분리한다.</td>
+          <td>server·canvas·automation·enterprise까지 운영 표면이 크다.</td>
+          <td>worker/provider port와 sandbox boundary 목표.</td>
+          <td>control plane·always-on server·enterprise stack.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/cline/cline" rel="noreferrer noopener">Cline</a></th>
+          <td>64,613★ · Apache-2.0 · active</td>
+          <td>Plan/Act·checkpoint와 core를 여러 surface에 노출한다.</td>
+          <td>IDE·SDK·CLI 외 scheduler·team 기능까지 커졌다.</td>
+          <td>core/surface 분리와 checkpoint-before-write.</td>
+          <td>editor extension·Kanban·scheduler·messaging.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/ruvnet/ruflo" rel="noreferrer noopener">Ruflo</a></th>
+          <td>64,278★ · MIT · active</td>
+          <td>위험·비용·보안·관측을 plugin으로 모듈화한다.</td>
+          <td>100+ agent·vector memory·swarm·학습 주장은 독립 검증이 필요하다.</td>
+          <td>선택적 readiness와 risk budget 개념.</td>
+          <td>swarm·vector DB·self-learning·federation.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/aaif-goose/goose" rel="noreferrer noopener">Goose</a></th>
+          <td>51,159★ · Apache-2.0 · active</td>
+          <td>portable recipe, JSON schema, retry, success gate, extension allowlist가 있다.</td>
+          <td>Desktop·CLI·API·70+ extension·memory DB를 품은 범용 agent다.</td>
+          <td>recipe success criteria와 capability gate 목표.</td>
+          <td>Desktop·memory DB·extension marketplace.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/Aider-AI/aider" rel="noreferrer noopener">Aider</a></th>
+          <td>47,341★ · Apache-2.0 · push 2026-05</td>
+          <td>architect/editor/weak model 역할과 lint·test feedback을 분리한다.</td>
+          <td>두 번의 model call과 git 중심 pair-programming 의견이 강하다.</td>
+          <td>강한 설계·적당한 구현·싼 요약 역할.</td>
+          <td>interactive UI, 기본 auto-commit, repo map 재구현.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/SWE-agent/mini-swe-agent" rel="noreferrer noopener">mini software-engineering agent</a></th>
+          <td>5,757★ · MIT · active</td>
+          <td>작은 core, stateless subprocess, linear transcript가 이해 가능하다.</td>
+          <td>bash 하나에 안전성과 prompt 부담이 집중되고 UX가 작다.</td>
+          <td>작고 읽히는 core와 append-only evidence.</td>
+          <td>custom tool zoo와 benchmark 우월성 주장.</td>
+        </tr><tr>
+          <th scope="row"><a href="https://github.com/AgentWrapper/agent-orchestrator" rel="noreferrer noopener">Agent Orchestrator</a></th>
+          <td>8,224★ · Apache-2.0 · active</td>
+          <td>agent·worker·runtime·workspace·SCM adapter와 reviewer adapter를 나눈다.</td>
+          <td>Electron·daemon·SQLite·PR watcher·telemetry가 필요하다.</td>
+          <td>worker adapter 경계와 독립 reviewer.</td>
+          <td>daemon·Electron·CDC·상시 polling.</td>
+        </tr></tbody>
+    </table>
+  </div></section>
+    <section id="skills" aria-labelledby="skills-title"><p class="eyebrow">Skill · progressive disclosure</p><h2 id="skills-title">여덟 개만 남긴 Relay10 Skill pack</h2><p class="">Agent Skills 형식과 Codex Plugin 배포 구조를 따르되, 수백 개 catalog 대신 한 가지 일만 맡는 여덟 Skill만 둔다. .agents/skills는 plugin의 canonical skills 폴더를 가리켜 Codex repo surface에서 중복 없이 발견된다. Plugin에는 MCP·hook·app UI가 없고 현재 task 모델을 교체하지 않는다. 모든 문구는 clean-room으로 새로 작성했으며 provenance와 license 주의를 함께 저장했다.</p> <div class="table-wrap" tabindex="0" role="region" aria-label="Relay10 Skill pack 표">
+    <table class="support-table">
+      <thead><tr><th scope="col">Skill</th><th scope="col">한 가지 일</th><th scope="col">증류한 패턴</th><th scope="col">경계</th><th scope="col">현재 상태</th></tr></thead>
+      <tbody><tr>
+          <th scope="row">relay10-orchestrate</th>
+          <td>요청을 가장 작은 안전 workflow로 보낸다.</td>
+          <td>OpenCode plan/build, thin orchestrator, Relay10 risk router</td>
+          <td>현재 Codex task 모델을 바꾸거나 불필요한 stage를 만들지 않는다.</td>
+          <td><span class="status status--pass"><span aria-hidden="true">●</span> main 구현·정적 검증</span></td>
+        </tr><tr>
+          <th scope="row">relay10-research</th>
+          <td>현재 근거를 읽기 전용으로 수집한다.</td>
+          <td>Awesome Copilot evidence, selective grounding</td>
+          <td>근거 수집은 수정 권한이 아니며 별을 품질로 해석하지 않는다.</td>
+          <td><span class="status status--pass"><span aria-hidden="true">●</span> main 구현·정적 검증</span></td>
+        </tr><tr>
+          <th scope="row">relay10-spec</th>
+          <td>outcome·non-goal·acceptance·rollback을 정한다.</td>
+          <td>Spec Kit, OpenSpec, Superpowers planning</td>
+          <td>작은 변경에 큰 constitution을 강제하지 않는다.</td>
+          <td><span class="status status--pass"><span aria-hidden="true">●</span> main 구현·정적 검증</span></td>
+        </tr><tr>
+          <th scope="row">relay10-build</th>
+          <td>승인된 변경을 작은 slice로 구현한다.</td>
+          <td>Superpowers TDD, vertical slice, bounded maker</td>
+          <td>모든 artifact에 TDD를 강제하지 않고 publish하지 않는다.</td>
+          <td><span class="status status--pass"><span aria-hidden="true">●</span> main 구현·정적 검증</span></td>
+        </tr><tr>
+          <th scope="row">relay10-debug</th>
+          <td>재현→경계→가설→최소 실험으로 원인을 찾는다.</td>
+          <td>systematic debugging, stop-and-reassess</td>
+          <td>진단 요청은 수정 권한이 아니며 세 번 같은 실패 뒤 재평가한다.</td>
+          <td><span class="status status--pass"><span aria-hidden="true">●</span> main 구현·정적 검증</span></td>
+        </tr><tr>
+          <th scope="row">relay10-review</th>
+          <td>고정 baseline의 spec·correctness·risk를 검토한다.</td>
+          <td>separate spec/quality review, reviewer adapter</td>
+          <td>read-only이며 maker의 self-review를 독립 증거로 부르지 않는다.</td>
+          <td><span class="status status--pass"><span aria-hidden="true">●</span> main 구현·정적 검증</span></td>
+        </tr><tr>
+          <th scope="row">relay10-release</th>
+          <td>test·package·hash·support claim을 증명한다.</td>
+          <td>verification-before-completion, checkpoint, Reader-10 hash gate</td>
+          <td>명시적 권한 없이 commit·push·tag·release하지 않는다.</td>
+          <td><span class="status status--pass"><span aria-hidden="true">●</span> main 구현·정적 검증</span></td>
+        </tr><tr>
+          <th scope="row">relay10-skill-lab</th>
+          <td>trigger와 no-skill baseline으로 Skill 가치를 평가한다.</td>
+          <td>Agent Skills, Anthropic eval ideas, OpenAI plugin-eval</td>
+          <td>라이선스 불명 문구를 복사하거나 효과 없는 Skill을 늘리지 않는다.</td>
+          <td><span class="status status--pass"><span aria-hidden="true">●</span> main 구현·정적 검증</span></td>
+        </tr></tbody>
+    </table>
+  </div></section>
+    <section id="comparison" aria-labelledby="comparison-title"><p class="eyebrow">비교 · 설계 계보</p><h2 id="comparison-title">하네스별 장단점과 Relay10 체리피킹</h2><p class="">여기서 체리피킹은 소스 코드 복제가 아니라 공개 동작 패턴의 clean-room 독립 구현을 뜻한다. 국내 여섯 프로젝트에서는 역할별 모델, 단계 분리, doctor·evidence, external wrapper, 단순한 진입 UX만 골랐다. 글로벌 저장소에서는 권한 분리, write 전 checkpoint, architect/editor, stateless transcript, recipe success gate, worker/reviewer adapter, progressive disclosure를 보강했다. Relay10은 위험·파급·검증 가능성·되돌림 가능성 router와 correctness·clarity 분리, hash-bound Reader-10을 유지한다.</p> <div class="table-wrap" tabindex="0" role="region" aria-label="하네스 장단점과 Relay10 체리피킹 표">
     <table class="wide-table">
       <thead><tr><th scope="col">하네스</th><th scope="col">장점</th><th scope="col">단점</th><th scope="col">Relay10이 채택한 패턴</th><th scope="col">의도적으로 제외한 부분</th></tr></thead>
       <tbody><tr>
@@ -177,7 +321,7 @@
         </tr></tbody>
     </table>
   </div></section>
-    <section id="support" aria-labelledby="support-title"><p class="eyebrow">지원 · 이식성</p><h2 id="support-title">현재 공급자·CLI·앱 지원 범위</h2><p class="">현재 공식 지원은 Codex CLI뿐이다. 모델은 현재 OpenAI 경로만 실제 검증했다. Grok은 Codex의 xAI custom provider를 거치는 실험 후보이지 지원 완료가 아니며, Claude·Gemini 직접 연결과 한 run의 공급자 혼합은 미지원이다. Codex 앱은 r10을 셸 또는 Skill로 부르는 간접 사용만 가능하다. Plugin·MCP·Apps SDK·독립 GUI는 구현 가능한 다음 단계지만 v0.1.1에 들어 있지 않다. Grok 검증은 @minwoo19930301 담당의 v0.3 후보 작업이며 달력 날짜는 약속하지 않았다. 종단간 검증 전까지 계속 미지원으로 표시한다.</p> <div class="table-wrap" tabindex="0" role="region" aria-label="공급자와 앱 지원 범위 표">
+    <section id="support" aria-labelledby="support-title"><p class="eyebrow">지원 · 이식성</p><h2 id="support-title">현재 공급자·CLI·앱 지원 범위</h2><p class="">고정 v0.1.1 release의 공식 실행 지원은 Codex CLI뿐이고 현재 OpenAI 경로만 실제 검증했다. main은 Codex App·CLI·IDE가 읽을 수 있는 repo-scoped 8 Skill과 Plugin manifest preview를 추가했지만 MCP·custom UI·현재 task model 전환은 없다. Grok은 Codex xAI custom provider를 거치는 실험 후보이지 지원 완료가 아니며, Claude·Gemini 직접 연결과 한 run 공급자 혼합도 미지원이다. surface별 trigger와 종단간 검증 전에는 앱 native 또는 multi-provider 지원으로 표시하지 않는다.</p> <div class="table-wrap" tabindex="0" role="region" aria-label="공급자와 앱 지원 범위 표">
     <table class="support-table">
       <thead><tr><th scope="col">대상</th><th scope="col">현재 상태</th><th scope="col">근거</th><th scope="col">지원하려면 필요한 것</th></tr></thead>
       <tbody><tr>
@@ -211,10 +355,10 @@
           <td>stage config에는 model만 있고 providerId·profile·capability negotiation이 없다.</td>
           <td>stage별 providerId, adapter registry, effort·tool·schema capability 검사.</td>
         </tr><tr>
-          <th scope="row">Codex 데스크톱·IDE</th>
-          <td><span class="status status--warn"><span aria-hidden="true">▲</span> 셸·Skill 간접 사용</span></td>
-          <td>앱 task가 r10을 실행할 수는 있지만 내부에서는 별도 Codex CLI subprocess를 띄운다. 현재 repo에 Skill·Plugin·MCP manifest는 없다.</td>
-          <td>v0.2 Codex Plugin + Skill + local stdio MCP. 앱 task 모델 자체의 stage 전환과는 구분.</td>
+          <th scope="row">Codex App·CLI·IDE Skill</th>
+          <td><span class="status status--warn"><span aria-hidden="true">▲</span> main preview·간접 실행</span></td>
+          <td>main에 repo-scoped 8 Skill과 유효한 Plugin manifest가 있다. Skill이 r10을 안내·호출해도 내부 실행은 별도 Codex CLI이며 현재 task 모델을 바꾸지 않는다.</td>
+          <td>실제 surface별 trigger forward test와 marketplace packaging. native progress는 local MCP가 별도로 필요.</td>
         </tr><tr>
           <th scope="row">ChatGPT 앱·웹</th>
           <td><span class="status status--fail"><span aria-hidden="true">×</span> 미지원</span></td>
@@ -225,6 +369,30 @@
           <td><span class="status status--fail"><span aria-hidden="true">×</span> 미구현</span></td>
           <td>현재 package는 r10·relay10 CLI bin만 제공한다.</td>
           <td>core 분리 뒤 Codex App Server client 또는 provider-neutral local sidecar와 Electron·Tauri·Swift UI.</td>
+        </tr></tbody>
+    </table>
+  </div></section>
+    <section id="growth" aria-labelledby="growth-title"><p class="eyebrow">발전 · 증거 중심 홍보</p><h2 id="growth-title">앞으로 30일·60일·90일에 할 일</h2><p class="">홍보의 중심은 별 요청이나 “최고 모델 자동 배정” 문구가 아니라 재현 가능한 짧은 demo, raw 검증 artifact, 실패·미지원 공개다. 기능은 local MCP와 multi-provider를 동시에 벌이지 말고 60일의 사용자 증거로 하나만 고른다. stars·조회수는 보조 지표로만 보고 첫 성공률, 반복 사용, 외부 기여, 허위 통과 0건을 핵심 지표로 쓴다.</p> <div class="table-wrap" tabindex="0" role="region" aria-label="30일 60일 90일 성장 계획 표">
+    <table class="wide-table">
+      <thead><tr><th scope="col">기간</th><th scope="col">제품</th><th scope="col">증명</th><th scope="col">홍보·커뮤니티</th><th scope="col">판단 지표</th></tr></thead>
+      <tbody><tr>
+          <th scope="row">0~30일 · 첫 성공 증명</th>
+          <td>필수 fixture 4개와 실제 저장소 golden demo 1개를 만들고, stretch로 fixture 12개·demo 3개까지 늘린다.</td>
+          <td>opt-in 관찰의 clone→첫 route 시간, routing set 12개, Skill당 positive/near-miss 각 3개를 공개한다.</td>
+          <td>90초 무편집 terminal demo, 한국어·영어 README, 비교표보다 실제 before/after와 실패 로그를 GitHub Discussion·개발 커뮤니티에 공유한다.</td>
+          <td>필수 tester 5명 중 4명 5분 내 first dry-run, blocker issue 응답 48시간 이내.</td>
+        </tr><tr>
+          <th scope="row">31~60일 · 반복 사용 증명</th>
+          <td>provider·worker·surface port ADR을 확정하고 Skill with/without forward eval, clean install CI, issue template을 운영한다.</td>
+          <td>품질·token·시간·실패 유형을 같은 task에서 비교하고 raw artifact와 재현 명령을 공개한다.</td>
+          <td>주 1회 build log, 한 문제를 해결한 case study, maintainer 대상 피드백 요청. 별·속도 우월성 대신 측정 조건을 먼저 제시한다.</td>
+          <td>재사용자 3명 이상, 외부 issue 10건 중 70% 재현, 문서 PR 또는 외부 PR 1건.</td>
+        </tr><tr>
+          <th scope="row">61~90일 · 하나의 확장만 출시</th>
+          <td>수요가 더 큰 local MCP app surface 또는 검증 가능한 provider adapter 하나만 선택해 E2E gate 뒤 release 후보로 만든다.</td>
+          <td>지원 matrix의 tool·schema·search·workspace·Reader-10 전 항목과 rollback·security test를 통과시킨다.</td>
+          <td>versioned demo와 migration note, 솔직한 unsupported 목록, 동의·비밀 제거를 거친 case study 2개를 채널별로 맞춰 공개한다.</td>
+          <td>60일 이전 opt-in cohort의 D30 재사용 30% 이상, case study 2건, 허위 지원 claim 0건, 외부 contributor 2명.</td>
         </tr></tbody>
     </table>
   </div></section>
@@ -271,38 +439,44 @@
       <details><summary>출력 보기</summary><p class="stage-output">사실: OMO의 Codex Light를 설치·문서·marketplace로 배포하는 레이어이며 core를 submodule로 포함한다. 장점: 도입과 doctor 경험이 단순하다. 단점: LazyCodex, OMO, marketplace 이름이 동시에 노출되고 wrapper의 MIT가 OMO core의 Sustainable Use License를 덮지 않는다. OMO와 별도 엔진처럼 중복 집계하면 안 된다.</p></details>
       <div class="nested-evidence"><h3>단계 근거</h3><ol class="evidence-list"><li><a href="https://github.com/code-yeongyu/lazycodex" rel="noreferrer noopener">LazyCodex 공식 README와 submodule</a></li></ol></div>
     </article><article class="stage" aria-labelledby="stage-7">
-      <header><div><p class="eyebrow">단계 8</p><h3 id="stage-7">글로벌 공개 프로젝트 지형</h3></div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span></header>
-      <div class="stage-summary"><p class="">해외에도 단일 표준은 없으며, multi-CLI runner·workflow pack·독립 runtime·조직형 비동기 플랫폼으로 갈린다.</p></div>
-      <dl class="facts"><div><dt>프로필</dt><dd>해외 조사</dd></div><div><dt>모델</dt><dd>공식 문서</dd></div></dl>
-      <details><summary>출력 보기</summary><p class="stage-output">확인된 선행 사례: OpenDev는 Normal·Thinking·Compact·Self-Critique·vision 역할별 모델 슬롯을 둔다. Continue는 chat·autocomplete·edit·apply·embed·rerank 역할을 나눈다. Aider는 Architect가 해결 방향을 만들고 Editor가 실제 편집을 만든다. Claude Squad와 Agent Orchestrator는 worktree에서 기존 CLI를 병렬 운영한다. mini software-engineering agent는 최소 코어 기준선이고 OpenHands·Open software-engineering agent·Ruflo는 더 큰 플랫폼 축이다. 공개 별은 발견 신호일 뿐 실제 해외 사용 점유율의 증거가 아니다.</p></details>
-      <div class="nested-evidence"><h3>단계 근거</h3><ol class="evidence-list"><li><a href="https://github.com/opendev-to/opendev" rel="noreferrer noopener">OpenDev 공식 저장소</a></li><li><a href="https://aider.chat/2024/09/26/architect.html" rel="noreferrer noopener">Aider Architect와 Editor 문서</a></li><li><a href="https://docs.continue.dev/customize/model-roles" rel="noreferrer noopener">Continue 모델 역할 문서</a></li></ol></div>
+      <header><div><p class="eyebrow">단계 8</p><h3 id="stage-7">글로벌 상위 저장소 재조사</h3></div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span></header>
+      <div class="stage-summary"><p class="">상위 agent runtime뿐 아니라 spec workflow, minimal core, Skill 표준과 현재 Plugin 배포 경로까지 다시 비교했다.</p></div>
+      <dl class="facts"><div><dt>프로필</dt><dd>해외 조사</dd></div><div><dt>모델</dt><dd>GitHub API·공식 README</dd></div></dl>
+      <details><summary>출력 보기</summary><p class="stage-output">2026-07-14 스냅샷의 current core reference 12개는 OpenCode, Claude Code, Spec Kit, Gemini CLI, Codex, OpenHands, Cline, Ruflo, Goose, Aider, Agent Orchestrator, mini software-engineering agent다. Skills는 Superpowers, Anthropic Skills, Awesome Copilot, Vercel Agent Skills, Agent Skills, Microsoft Skills, 현재 OpenAI Plugins를 비교했다. OpenSpec·BMAD는 인접 workflow 사례, openai/skills는 deprecated, Continue는 no longer actively maintained/read-only, Roo Code는 archived로 구분했다. 별은 발견 신호일 뿐 품질·시장점유율·생산성 증거가 아니다.</p></details>
+      <div class="nested-evidence"><h3>단계 근거</h3><ol class="evidence-list"><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/global-top-repos.md" rel="noreferrer noopener">글로벌 상위 저장소 증류표</a></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/prior-art.md" rel="noreferrer noopener">Clean-room prior art ledger</a></li></ol></div>
     </article><article class="stage" aria-labelledby="stage-8">
-      <header><div><p class="eyebrow">단계 9</p><h3 id="stage-8">Relay10 라우팅 설계</h3></div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span></header>
+      <header><div><p class="eyebrow">단계 9</p><h3 id="stage-8">여덟 개 Skill·Plugin preview</h3></div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span></header>
+      <div class="stage-summary"><p class="">수백 개 catalog 대신 research·spec·build·debug·review·release·orchestrate·skill-lab 여덟 개만 필요할 때 로드한다.</p></div>
+      <dl class="facts"><div><dt>프로필</dt><dd>progressive disclosure</dd></div><div><dt>모델</dt><dd>Agent Skills·Codex Plugin 규격</dd></div></dl>
+      <details><summary>출력 보기</summary><p class="stage-output">main에 plugins/relay10/.codex-plugin/plugin.json과 여덟 SKILL.md, UI metadata, provenance, third-party notice를 구현했다. .agents/skills는 canonical plugin skills 폴더를 가리킨다. npm run validate:skills와 전체 회귀 테스트가 manifest·frontmatter·UI metadata·상대 링크·placeholder를 검사해 통과했다. Skill은 Codex App·CLI·IDE에서 작업 지침을 제공할 수 있지만 현재 task model을 바꾸지 않으며 Plugin에는 MCP server·hook·custom UI가 없다. trigger recall과 with/without baseline은 다음 forward-eval 단계다.</p></details>
+      <div class="nested-evidence"><h3>단계 근거</h3><ol class="evidence-list"><li><a href="https://github.com/minwoo19930301/relay10/tree/main/plugins/relay10" rel="noreferrer noopener">Relay10 Plugin preview</a></li><li><a href="https://learn.chatgpt.com/docs/build-skills" rel="noreferrer noopener">Codex Skill 공식 문서</a></li><li><a href="https://learn.chatgpt.com/docs/build-plugins" rel="noreferrer noopener">Codex Plugin 공식 문서</a></li></ol></div>
+    </article><article class="stage" aria-labelledby="stage-9">
+      <header><div><p class="eyebrow">단계 10</p><h3 id="stage-9">Relay10 라우팅 설계</h3></div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span></header>
       <div class="stage-summary"><p class="">사용자 아이디어를 난이도 하나가 아니라 오류 파급·검증 가능성·되돌림 가능성과 결합했다.</p></div>
       <dl class="facts"><div><dt>프로필</dt><dd>frontier</dd></div><div><dt>모델</dt><dd>gpt-5.6-sol / max 원칙</dd></div></dl>
       <details><summary>출력 보기</summary><p class="stage-output">기본 정책: 읽기·검색은 economy/low, 분석·계획은 frontier/max, 구현은 balanced/medium, 사실 검토는 frontier/high, 쉬운 설명은 balanced/low, 마지막 독자 검수는 economy/low 10회다. 복잡성, 위험, 영향 범위, 검증 가능성, 되돌림 가능성을 0~3으로 기록한다. 이 점수는 실행 전 초기 모델 배정이며 0.1은 실패 후 자동 승격하지 않는다. Codex task-level /goal로 이번 출시 목표를 추적했지만 Relay10 자체에는 /goal 명령 문법이 없다.</p></details>
       
-    </article><article class="stage" aria-labelledby="stage-9">
-      <header><div><p class="eyebrow">단계 10</p><h3 id="stage-9">경량·안전 구현</h3></div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span></header>
+    </article><article class="stage" aria-labelledby="stage-10">
+      <header><div><p class="eyebrow">단계 11</p><h3 id="stage-10">경량·안전 구현</h3></div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span></header>
       <div class="stage-summary"><p class="">별도 데이터베이스·터미널 화면·runtime npm 패키지 없이 Codex subprocess와 파일 계약만 둔다.</p></div>
       <dl class="facts"><div><dt>프로필</dt><dd>balanced</dd></div><div><dt>모델</dt><dd>Node 20+ 내장 모듈</dd></div></dl>
       <details><summary>출력 보기</summary><p class="stage-output">명령: init, doctor, route, run, inspect, report, replay. 안전 경계: 프로젝트가 모델 목록 확인 명령을 바꾸지 못함, 검증은 실행 파일과 인수 목록을 사람이 승인한 경우만 허용, 명령 해석기 없이 실행, 시간 초과 시 자식 실행 묶음 종료, 출력 크기 제한, 변경 실행 잠금, 실행 식별자 경로 제한, 안전한 파일 교체, 검토 근거 요구, 누락 검증은 통과 대신 주의, 파일 해시가 바뀌면 동결 재생 거부.</p></details>
       
-    </article><article class="stage" aria-labelledby="stage-10">
-      <header><div><p class="eyebrow">단계 11</p><h3 id="stage-10">출시·운영 안내</h3></div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span></header>
+    </article><article class="stage" aria-labelledby="stage-11">
+      <header><div><p class="eyebrow">단계 12</p><h3 id="stage-11">출시·운영 안내</h3></div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span></header>
       <div class="stage-summary"><p class="">v0.1.1은 공개됐고 v0.1.0의 예제 설정 누락을 바로잡은 현재 배포본이다.</p></div>
       <dl class="facts"><div><dt>프로필</dt><dd>공개 릴리스</dd></div><div><dt>모델</dt><dd>@minwoo19930301</dd></div></dl>
-      <details><summary>출력 보기</summary><p class="stage-output">현재 상태: 저장소 공개 완료. v0.1.0은 예제 설정 누락 때문에 대체됨. v0.1.1은 2026-07-13T05:15:21Z에 공개됨.<br>저장소: https://github.com/minwoo19930301/relay10<br>공개 릴리스: https://github.com/minwoo19930301/relay10/releases/tag/v0.1.1<br>로컬 설치: git clone https://github.com/minwoo19930301/relay10.git &amp;&amp; cd relay10 &amp;&amp; npm link<br>검증: npm test &amp;&amp; npm run lint &amp;&amp; r10 doctor<br>모델 배정 확인: r10 route &quot;research and build a small CLI&quot; --json<br>실행 전 미리보기: r10 run &quot;your task&quot; --dry-run<br>실제 독자 검수 기록: docs/launch-reader-live.json 및 outputs/relay10-launch-reader-live.json. reportSha256으로 검수 대상 HTML과 연결함.<br>수정·검수 실행·최종 확인·GitHub 게시 담당: @minwoo19930301. 0.1 평가 제안은 읽기 10건, 구현 10건, 고위험 미리보기 10건에서 기대 모델 배정과 실패 상태를 기록하는 것이다. 완료 기준은 30건 전체에 기대 배정 라벨, 허위 통과 0건, 치명적 독자 문제 0건이다. 비교 코드 재사용이나 OMO 계열 상업 사용이 생기면 별도 라이선스 검토를 연다.</p></details>
+      <details><summary>출력 보기</summary><p class="stage-output">현재 상태: v0.1.1 고정 release 공개 완료, main에 글로벌 문서와 Skill·Plugin preview 보강. 기존 tag는 움직이지 않는다.<br>저장소: https://github.com/minwoo19930301/relay10<br>공개 릴리스: https://github.com/minwoo19930301/relay10/releases/tag/v0.1.1<br>로컬 설치: git clone https://github.com/minwoo19930301/relay10.git &amp;&amp; cd relay10 &amp;&amp; npm link<br>검증: npm test &amp;&amp; npm run lint &amp;&amp; npm run validate:skills &amp;&amp; r10 doctor<br>모델 배정 확인: r10 route &quot;research and build a small CLI&quot; --json<br>실행 전 미리보기: r10 run &quot;your task&quot; --dry-run<br>실제 독자 검수 기록: docs/launch-reader-live.json 및 outputs/relay10-launch-reader-live.json. reportSha256으로 검수 대상 HTML과 연결함.<br>수정·검수 실행·최종 확인·GitHub 게시 담당: @minwoo19930301. 0.1 평가 제안은 읽기 10건, 구현 10건, 고위험 미리보기 10건에서 기대 모델 배정과 실패 상태를 기록하는 것이다. 완료 기준은 30건 전체에 기대 배정 라벨, 허위 통과 0건, 치명적 독자 문제 0건이다. 비교 코드 재사용이나 OMO 계열 상업 사용이 생기면 별도 라이선스 검토를 연다.</p></details>
       
     </article></div></section>
-    <section id="verification" aria-labelledby="verification-title"><p class="eyebrow">04 · 품질 확인</p><h2 id="verification-title">검증 결과</h2><p>실패나 오류가 있으면 아래 세부 기록과 다음 단계에서 복구 방법을 확인하세요.</p><ul class="check-list"><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>74개 Node 자동 테스트</strong></div><p>npm test; 시작 2026-07-13T06:36:02.312Z; 종료 코드 0; 1214ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>전체 JavaScript 문법 검사</strong></div><p>npm run lint; 시작 2026-07-13T06:36:03.527Z; 종료 코드 0; 145ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>실제 Codex 모델 탐색</strong></div><p>node src/cli.mjs doctor --json; 시작 2026-07-13T06:36:03.672Z; 종료 코드 0; 78ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>출시 작업 모델 배정 미리보기</strong></div><p>node src/cli.mjs route research current coding harnesses, build a lightweight CLI, verify it, and prepare a release --json; 시작 2026-07-13T06:36:03.750Z; 종료 코드 0; 58ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>npm 배포 파일 검사</strong></div><p>npm pack --dry-run --json; 시작 2026-07-13T06:36:03.808Z; 종료 코드 0; 146ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>HTML 안전·접근성 구조</strong></div><p>외부 스크립트 없음, 출력 이스케이프, URL 허용목록, 콘텐츠 보안 정책, 모바일 viewport, main/h1/표 머리글 검사.</p></li><li><div><span class="status status--warn"><span aria-hidden="true">▲</span> 주의</span><strong>현재 HTML 실제 모델 판독</strong></div><p>생성 시점에는 대기 상태다. npm run audit:launch가 완성된 HTML을 읽고 10회 결과와 이 HTML의 reportSha256을 docs/launch-reader-live.json에 기록한다. 제품 v0.1.1 공개 상태와는 별개다.</p></li></ul></section>
+    <section id="verification" aria-labelledby="verification-title"><p class="eyebrow">04 · 품질 확인</p><h2 id="verification-title">검증 결과</h2><p>실패나 오류가 있으면 아래 세부 기록과 다음 단계에서 복구 방법을 확인하세요.</p><ul class="check-list"><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>Node 자동 테스트</strong></div><p>npm test; 시작 2026-07-13T15:56:42.753Z; 종료 코드 0; 1203ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>전체 JavaScript 문법 검사</strong></div><p>npm run lint; 시작 2026-07-13T15:56:43.957Z; 종료 코드 0; 139ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>Codex Plugin·8 Skill 정적 검사</strong></div><p>npm run validate:skills; 시작 2026-07-13T15:56:44.096Z; 종료 코드 0; 108ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>실제 Codex 모델 탐색</strong></div><p>node src/cli.mjs doctor --json; 시작 2026-07-13T15:56:44.204Z; 종료 코드 0; 80ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>출시 작업 모델 배정 미리보기</strong></div><p>node src/cli.mjs route research current coding harnesses, build a lightweight CLI, verify it, and prepare a release --json; 시작 2026-07-13T15:56:44.284Z; 종료 코드 0; 60ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>npm 배포 파일 목록 검사</strong></div><p>npm pack --dry-run --json; 시작 2026-07-13T15:56:44.344Z; 종료 코드 0; 173ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>npm 설치본 전체 검사</strong></div><p>npm run verify:package; 시작 2026-07-13T15:56:44.517Z; 종료 코드 0; 1979ms; 전체 stdout/stderr는 docs/launch-verification.json에 기록.</p></li><li><div><span class="status status--pass"><span aria-hidden="true">●</span> 통과</span><strong>HTML 안전·접근성 구조</strong></div><p>외부 스크립트 없음, 출력 이스케이프, URL 허용목록, 콘텐츠 보안 정책, 모바일 viewport, main/h1/표 머리글 검사.</p></li><li><div><span class="status status--warn"><span aria-hidden="true">▲</span> 주의</span><strong>현재 HTML 실제 모델 판독</strong></div><p>생성 시점에는 대기 상태다. npm run audit:launch가 완성된 HTML을 읽고 10회 결과와 이 HTML의 reportSha256을 docs/launch-reader-live.json에 기록한다. 제품 v0.1.1 공개 상태와는 별개다.</p></li></ul></section>
     <section id="reader10" aria-labelledby="reader10-title"><p class="eyebrow">05 · 보고서 검수</p><h2 id="reader10-title">Reader-10 검수</h2><p>선택된 모드의 구조 규칙 또는 모델 응답을 집계한 결과이며, 사실성 검증을 대신하지 않습니다.</p><p class="reader-mode"><strong>검수 방식:</strong> 판독 대기 모드: 이 HTML이 완성된 뒤 실제 모델 독자 10회 판독을 실행합니다. 이 상태는 제품 출시 보류를 뜻하지 않습니다. 최종 결과는 reportSha256으로 이 HTML과 연결한 별도 JSON에 기록합니다.</p>
     <div class="reader-summary">
       <div><span class="status status--warn"><span aria-hidden="true">▲</span> 주의</span><strong>실제 모델 10회 판독 전</strong></div>
       <p>완료 조건 10/10 이해 · 치명적 문제 0개 · HTML 해시 일치</p>
     </div></section>
-    <section id="evidence" aria-labelledby="evidence-title"><p class="eyebrow">06 · 추적 가능성</p><h2 id="evidence-title">근거와 출처</h2><ol class="evidence-list"><li><a href="https://github.com/minwoo19930301/relay10" rel="noreferrer noopener">Relay10 공개 저장소</a><p>GitHub CLI로 게시한 공식 저장소다.</p></li><li><a href="https://github.com/minwoo19930301/relay10/releases/tag/v0.1.1" rel="noreferrer noopener">Relay10 v0.1.1 공개 릴리스</a><p>2026-07-13T05:15:21Z에 공개된 고정 배포본 주소다.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/launch-reader-live.json" rel="noreferrer noopener">Reader-10 결과 저장 위치</a><p>이 HTML 생성 뒤 판독 명령이 10회 결과와 reportSha256으로 갱신한다. 링크의 결과는 reportSha256이 현재 HTML과 같을 때만 유효하다.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/launch-verification.json" rel="noreferrer noopener">출시 검증 원본 명령 로그</a><p>실행 시각 2026-07-13T06:36:03.954Z. 테스트·문법·모델 탐색·모델 배정·패키지 검사의 명령, 종료 코드, stdout, stderr 원문.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/launch-reader-deterministic.json" rel="noreferrer noopener">자동 구조 검사 원본</a><p>내용 구조와 최종 HTML 렌더를 각각 검사하고 치명적 문제 수를 기록한다.</p></li><li><a href="https://github.com/minwoo19930301/relay10/tree/main/test" rel="noreferrer noopener">자동 테스트</a><p>74개 회귀 테스트: 모델 배정, 구성, 하위 프로세스, 파이프라인, 동결 재생, 보고서 안전성.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/korea-landscape.md" rel="noreferrer noopener">한국 하네스 조사 원문</a><p>사실·추론·명칭 혼선을 분리한 2026-07-13 스냅샷.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/global-landscape.md" rel="noreferrer noopener">글로벌 오픈소스 조사 원문</a><p>실사용 점유율이 아닌 공개 프로젝트 지형과 선행 패턴.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/lineage-and-portability.md" rel="noreferrer noopener">Relay10 설계 계보와 이식성 판정</a><p>여섯 하네스의 장단점·채택·제외와 공급자·앱별 현재 지원 경계.</p></li><li><a href="https://developers.openai.com/api/docs/guides/latest-model.md" rel="noreferrer noopener">OpenAI 최신 모델 가이드</a><p>현재 모델 계열과 추론 노력 안내.</p></li><li><a href="https://learn.chatgpt.com/docs/config-file/config-reference" rel="noreferrer noopener">Codex 설정 참고</a><p>모델 노력도와 읽기·쓰기 격리 권한 설정.</p></li><li><a href="https://learn.chatgpt.com/docs/build-skills" rel="noreferrer noopener">Codex Skill 공식 문서</a><p>Codex 앱·CLI·IDE에서 재사용 가능한 지침과 스크립트의 지원 표면.</p></li><li><a href="https://learn.chatgpt.com/docs/build-plugins" rel="noreferrer noopener">Codex Plugin 공식 문서</a><p>Skill, MCP app, manifest를 묶는 앱 배포 경로.</p></li><li><a href="https://learn.chatgpt.com/docs/app-server" rel="noreferrer noopener">Codex App Server 공식 문서</a><p>Codex 기반 custom client의 thread·turn·model API.</p></li><li><a href="https://docs.x.ai/developers/quickstart" rel="noreferrer noopener">xAI Responses API</a><p>Grok의 Responses-compatible 실험 가능성을 판단한 공식 근거.</p></li><li><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk" rel="noreferrer noopener">Anthropic OpenAI SDK compatibility</a><p>Claude 호환 계층과 현재 Codex Responses-only 경계의 차이.</p></li><li><a href="https://ai.google.dev/gemini-api/docs/openai" rel="noreferrer noopener">Gemini OpenAI compatibility</a><p>Gemini 호환 계층과 네이티브 adapter 필요성을 판단한 공식 근거.</p></li><li><a href="https://github.com/code-yeongyu/oh-my-openagent" rel="noreferrer noopener">OMO · Oh My OpenAgent</a></li><li><a href="https://github.com/can1357/oh-my-pi" rel="noreferrer noopener">OMP · Oh My Pi</a></li><li><a href="https://github.com/Yeachan-Heo/oh-my-claudecode" rel="noreferrer noopener">OMC · Oh My ClaudeCode</a></li><li><a href="https://github.com/Yeachan-Heo/oh-my-codex" rel="noreferrer noopener">OMX · Oh My Codex</a></li><li><a href="https://github.com/Yeachan-Heo/gajae-code" rel="noreferrer noopener">GJC · Gajae-Code</a></li><li><a href="https://github.com/code-yeongyu/lazycodex" rel="noreferrer noopener">LazyCodex</a></li><li><a href="https://github.com/opendev-to/opendev" rel="noreferrer noopener">OpenDev</a><p>실행·사고·압축·자기검토 모델 슬롯을 나누는 직접 선행 사례.</p></li><li><a href="https://aider.chat/2024/09/26/architect.html" rel="noreferrer noopener">Aider Architect와 Editor</a><p>추론과 편집 모델을 분리한 선행 사례.</p></li><li><a href="https://docs.continue.dev/customize/model-roles" rel="noreferrer noopener">Continue 모델 역할</a><p>채팅·자동완성·편집·적용·임베딩·재순위화 역할 분리.</p></li><li><a href="https://github.com/SWE-agent/mini-swe-agent" rel="noreferrer noopener">mini software-engineering agent</a><p>작고 이해 가능한 코딩 에이전트 기준선.</p></li></ol></section>
-    <section id="actions" aria-labelledby="actions-title"><p class="eyebrow">07 · 실행 안내</p><h2 id="actions-title">다음 단계</h2><p>필요한 조치를 순서대로 실행하고, 문제가 생기면 검증 결과의 오류 또는 대안 기록을 먼저 확인하세요.</p><ol><li>설치: git clone https://github.com/minwoo19930301/relay10.git &amp;&amp; cd relay10 &amp;&amp; npm link</li><li>검증: npm test &amp;&amp; npm run lint &amp;&amp; r10 doctor</li><li>안전한 첫 확인: r10 route &quot;research and build a small CLI&quot; --json 후 --dry-run 옵션으로 실제 변경 없이 계획만 확인한다.</li><li>담당자 @minwoo19930301이 clone한 relay10 저장소의 최상위 폴더에서 npm run audit:launch를 실행해 이 HTML을 10회 판독한다. 10/10 미만 또는 치명적 구조 문제 1개 이상이면 최종 보고를 통과 처리하지 않는다.</li><li>실패하면 outputs/relay10-launch-reader-live.json의 “막힌 모호점” 목록을 고치고 HTML을 다시 생성한 뒤 10회 전체를 재실행한다.</li><li>공개 상태 확인: gh repo view minwoo19930301/relay10 및 gh release view v0.1.1 --repo minwoo19930301/relay10. 릴리스 주소는 이미 공개됐으며 결과 파일은 reportSha256으로 현재 HTML과 일치 여부를 확인한다.</li><li>30개 라우팅 평가 세트를 @minwoo19930301이 관리한다. 실측 전에는 비용·속도·품질 우월성을 광고하지 않는다.</li><li>v0.2: Codex Plugin + Skill + local MCP wrapper로 route, run, status, inspect, report를 Codex 앱·CLI·IDE에 노출한다. Skill만으로 현재 앱 task의 모델이 바뀐다고 표현하지 않는다.</li><li>v0.3 후보(@minwoo19930301 담당, 달력 날짜 미정): CatalogAdapter와 ExecutorAdapter를 분리하고 stage별 providerId·model·effort·capability를 검증한다. xAI/Grok 종단간 테스트를 통과한 뒤에만 Grok 지원으로 표시한다.</li><li>v0.4: ChatGPT용 Apps SDK UI와 remote worker 또는 독립 GUI용 local sidecar를 추가한다. Claude·Gemini는 native adapter나 검증된 Responses proxy가 생기기 전까지 미지원으로 둔다.</li></ol></section>
+    <section id="evidence" aria-labelledby="evidence-title"><p class="eyebrow">06 · 추적 가능성</p><h2 id="evidence-title">근거와 출처</h2><ol class="evidence-list"><li><a href="https://github.com/minwoo19930301/relay10" rel="noreferrer noopener">Relay10 공개 저장소</a><p>GitHub CLI로 게시한 공식 저장소다.</p></li><li><a href="https://github.com/minwoo19930301/relay10/releases/tag/v0.1.1" rel="noreferrer noopener">Relay10 v0.1.1 공개 릴리스</a><p>2026-07-13T05:15:21Z에 공개된 고정 배포본 주소다.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/launch-reader-live.json" rel="noreferrer noopener">Reader-10 결과 저장 위치</a><p>이 HTML 생성 뒤 판독 명령이 10회 결과와 reportSha256으로 갱신한다. 링크의 결과는 reportSha256이 현재 HTML과 같을 때만 유효하다.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/launch-verification.json" rel="noreferrer noopener">출시 검증 원본 명령 로그</a><p>실행 시각 2026-07-13T15:56:46.496Z. 테스트·문법·모델 탐색·모델 배정·패키지 검사의 명령, 종료 코드, stdout, stderr 원문.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/launch-reader-deterministic.json" rel="noreferrer noopener">자동 구조 검사 원본</a><p>내용 구조와 최종 HTML 렌더를 각각 검사하고 치명적 문제 수를 기록한다.</p></li><li><a href="https://github.com/minwoo19930301/relay10/tree/main/test" rel="noreferrer noopener">자동 테스트</a><p>82개 회귀 테스트: 모델 배정, 구성, 하위 프로세스, 파이프라인, 동결 재생, 보고서 안전성, Skill·Plugin 검증.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/korea-landscape.md" rel="noreferrer noopener">한국 하네스 조사 원문</a><p>사실·추론·명칭 혼선을 분리한 2026-07-13 스냅샷.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/global-landscape.md" rel="noreferrer noopener">글로벌 오픈소스 조사 원문</a><p>실사용 점유율이 아닌 공개 프로젝트 지형과 선행 패턴.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/global-top-repos.md" rel="noreferrer noopener">글로벌 상위 저장소 증류표</a><p>2026-07-14 GitHub API 스냅샷, 장단점, Relay10 채택·제외, archive·deprecated·라이선스 주의.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/prior-art.md" rel="noreferrer noopener">Clean-room prior art ledger</a><p>어떤 동작 패턴을 참고했고 어떤 코드·문구·자산도 복사하지 않았는지 기록.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/growth-playbook.md" rel="noreferrer noopener">30·60·90 발전·홍보 playbook</a><p>개발 우선순위, 측정 지표, demo와 커뮤니티 홍보 원칙.</p></li><li><a href="https://github.com/minwoo19930301/relay10/tree/main/plugins/relay10" rel="noreferrer noopener">Relay10 Codex Plugin preview</a><p>여덟 Skill, manifest, provenance, third-party pattern notice. MCP와 custom UI는 없음.</p></li><li><a href="https://github.com/minwoo19930301/relay10/blob/main/docs/lineage-and-portability.md" rel="noreferrer noopener">Relay10 설계 계보와 이식성 판정</a><p>여섯 하네스의 장단점·채택·제외와 공급자·앱별 현재 지원 경계.</p></li><li><a href="https://developers.openai.com/api/docs/guides/latest-model.md" rel="noreferrer noopener">OpenAI 최신 모델 가이드</a><p>현재 모델 계열과 추론 노력 안내.</p></li><li><a href="https://learn.chatgpt.com/docs/config-file/config-reference" rel="noreferrer noopener">Codex 설정 참고</a><p>모델 노력도와 읽기·쓰기 격리 권한 설정.</p></li><li><a href="https://learn.chatgpt.com/docs/build-skills" rel="noreferrer noopener">Codex Skill 공식 문서</a><p>Codex 앱·CLI·IDE에서 재사용 가능한 지침과 스크립트의 지원 표면.</p></li><li><a href="https://learn.chatgpt.com/docs/build-plugins" rel="noreferrer noopener">Codex Plugin 공식 문서</a><p>Skill, MCP app, manifest를 묶는 앱 배포 경로.</p></li><li><a href="https://github.com/openai/plugins" rel="noreferrer noopener">현재 OpenAI Plugin 예제</a><p>deprecated openai/skills 대신 현재 참고한 공식 plugin 구조.</p></li><li><a href="https://github.com/agentskills/agentskills" rel="noreferrer noopener">Agent Skills 표준</a><p>SKILL.md 폴더와 progressive disclosure의 이식 가능한 기준.</p></li><li><a href="https://github.com/obra/superpowers" rel="noreferrer noopener">Superpowers</a><p>spec, systematic debugging, verification-before-completion 패턴. 문구와 코드는 복사하지 않음.</p></li><li><a href="https://learn.chatgpt.com/docs/app-server" rel="noreferrer noopener">Codex App Server 공식 문서</a><p>Codex 기반 custom client의 thread·turn·model API.</p></li><li><a href="https://docs.x.ai/developers/quickstart" rel="noreferrer noopener">xAI Responses API</a><p>Grok의 Responses-compatible 실험 가능성을 판단한 공식 근거.</p></li><li><a href="https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk" rel="noreferrer noopener">Anthropic OpenAI SDK compatibility</a><p>Claude 호환 계층과 현재 Codex Responses-only 경계의 차이.</p></li><li><a href="https://ai.google.dev/gemini-api/docs/openai" rel="noreferrer noopener">Gemini OpenAI compatibility</a><p>Gemini 호환 계층과 네이티브 adapter 필요성을 판단한 공식 근거.</p></li><li><a href="https://github.com/code-yeongyu/oh-my-openagent" rel="noreferrer noopener">OMO · Oh My OpenAgent</a></li><li><a href="https://github.com/can1357/oh-my-pi" rel="noreferrer noopener">OMP · Oh My Pi</a></li><li><a href="https://github.com/Yeachan-Heo/oh-my-claudecode" rel="noreferrer noopener">OMC · Oh My ClaudeCode</a></li><li><a href="https://github.com/Yeachan-Heo/oh-my-codex" rel="noreferrer noopener">OMX · Oh My Codex</a></li><li><a href="https://github.com/Yeachan-Heo/gajae-code" rel="noreferrer noopener">GJC · Gajae-Code</a></li><li><a href="https://github.com/code-yeongyu/lazycodex" rel="noreferrer noopener">LazyCodex</a></li><li><a href="https://github.com/opendev-to/opendev" rel="noreferrer noopener">OpenDev</a><p>실행·사고·압축·자기검토 모델 슬롯을 나누는 직접 선행 사례.</p></li><li><a href="https://aider.chat/2024/09/26/architect.html" rel="noreferrer noopener">Aider Architect와 Editor</a><p>추론과 편집 모델을 분리한 선행 사례.</p></li><li><a href="https://docs.continue.dev/customize/model-roles" rel="noreferrer noopener">Continue 모델 역할</a><p>채팅·자동완성·편집·적용·임베딩·재순위화 역할 분리.</p></li><li><a href="https://github.com/SWE-agent/mini-swe-agent" rel="noreferrer noopener">mini software-engineering agent</a><p>작고 이해 가능한 코딩 에이전트 기준선.</p></li></ol></section>
+    <section id="actions" aria-labelledby="actions-title"><p class="eyebrow">07 · 실행 안내</p><h2 id="actions-title">다음 단계</h2><p>필요한 조치를 순서대로 실행하고, 문제가 생기면 검증 결과의 오류 또는 대안 기록을 먼저 확인하세요.</p><ol><li>설치: git clone https://github.com/minwoo19930301/relay10.git &amp;&amp; cd relay10 &amp;&amp; npm link</li><li>검증: npm test &amp;&amp; npm run lint &amp;&amp; r10 doctor</li><li>안전한 첫 확인: r10 route &quot;research and build a small CLI&quot; --json 후 --dry-run 옵션으로 실제 변경 없이 계획만 확인한다.</li><li>담당자 @minwoo19930301이 clone한 relay10 저장소의 최상위 폴더에서 npm run audit:launch를 실행해 이 HTML을 10회 판독한다. 10/10 미만 또는 치명적 구조 문제 1개 이상이면 최종 보고를 통과 처리하지 않는다.</li><li>실패하면 outputs/relay10-launch-reader-live.json의 “막힌 모호점” 목록을 고치고 HTML을 다시 생성한 뒤 10회 전체를 재실행한다.</li><li>공개 상태 확인: gh repo view minwoo19930301/relay10 및 gh release view v0.1.1 --repo minwoo19930301/relay10. 릴리스 주소는 이미 공개됐으며 결과 파일은 reportSha256으로 현재 HTML과 일치 여부를 확인한다.</li><li>30개 라우팅 평가 세트를 @minwoo19930301이 관리한다. 실측 전에는 비용·속도·품질 우월성을 광고하지 않는다.</li><li>main의 8 Skill은 npm run validate:skills로 검사하고, 각 Skill에 should-trigger 10개·near-miss 10개와 no-skill baseline을 추가해 Codex App·CLI·IDE에서 forward test한다.</li><li>30일 필수: 공개 fixture 4개와 실제 저장소 golden demo 1개를 만들고, opt-in tester 5명 중 4명이 5분 안에 first dry-run을 끝내는지 관찰한다. fixture 12개·demo 3개는 stretch다.</li><li>60일: CatalogAdapter·ExecutorAdapter·SurfaceAdapter 설계와 Skill with/without 결과를 공개한다. local MCP와 provider adapter 중 사용자 수요가 큰 하나를 선택한다.</li><li>90일: 선택한 확장 하나만 E2E tool·schema·search·workspace·Reader-10 gate 뒤 release 후보로 만든다. 통과 전에는 Grok·Claude·Gemini 또는 앱 native 지원으로 광고하지 않는다.</li><li>홍보: 기능 목록이나 별 요청보다 무편집 demo, 재현 명령, 실패 로그, unsupported 목록, 실제 사용자 case study를 한국어·영어로 나눠 공유한다.</li></ol></section>
   </main>
   <footer class="shell"><p>이 파일은 외부 스크립트나 스타일시트 없이 생성된 자체 포함 Relay10 보고서입니다.</p></footer>
 </body>

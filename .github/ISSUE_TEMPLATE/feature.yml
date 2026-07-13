@@ -1,0 +1,45 @@
+name: Use case or feature proposal
+description: Propose a bounded improvement backed by a real workflow.
+title: "proposal: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Describe the task that is difficult today, not just the desired implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current workaround and evidence
+      description: How do you handle it now, and where does that path fail or cost too much?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Observable acceptance criteria
+      description: What command, artifact, or user-visible result would prove the proposal works?
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Primary surface
+      options:
+        - Core routing or artifacts
+        - Codex CLI
+        - Codex App, IDE, or Skill
+        - Provider or worker adapter
+        - Report or Reader-10
+        - Documentation or onboarding
+    validations:
+      required: true
+  - type: textarea
+    id: limits
+    attributes:
+      label: Risks and non-goals
+      description: Include mutation authority, provider claims, compatibility, privacy, and what should remain out of scope.
+    validations:
+      required: true

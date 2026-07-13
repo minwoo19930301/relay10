@@ -8,10 +8,12 @@
     "r10": "./src/cli.mjs"
   },
   "scripts": {
-    "check": "npm run test && npm run lint",
-    "test": "node --test",
+    "check": "npm run test && npm run lint && npm run validate:skills",
+    "test": "node --test test/*.test.mjs",
     "lint": "node --check src/*.mjs && node --check test/*.mjs && node --check scripts/*.mjs",
     "smoke": "node src/cli.mjs doctor && node src/cli.mjs route \"research and build a small CLI\" --json",
+    "validate:skills": "node scripts/validate-skill-pack.mjs",
+    "verify:package": "node scripts/verify-packed-package.mjs",
     "report:launch": "node scripts/build-launch-report.mjs",
     "audit:launch": "node scripts/audit-launch-report.mjs",
     "verify:launch": "node scripts/verify-launch.mjs"
@@ -39,6 +41,10 @@
     "src",
     "schema",
     "examples",
+    "test",
+    "scripts",
+    "docs",
+    "plugins/relay10",
     "README.md",
     "LICENSE",
     "SECURITY.md"

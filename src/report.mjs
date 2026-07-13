@@ -153,6 +153,71 @@ function renderSupportMatrix(matrix) {
   </div>`;
 }
 
+function renderGlobalRepos(repositories) {
+  const rows = normalizeList(repositories);
+  if (!rows.length) return '<p class="muted">글로벌 저장소 조사 기록이 없습니다.</p>';
+  return `<div class="table-wrap" tabindex="0" role="region" aria-label="글로벌 상위 저장소 증류 표">
+    <table class="wide-table">
+      <thead><tr><th scope="col">프로젝트</th><th scope="col">현재 신호</th><th scope="col">강점</th><th scope="col">약점·주의</th><th scope="col">Relay10 채택</th><th scope="col">Relay10 제외</th></tr></thead>
+      <tbody>${rows.map((row, index) => {
+        const item = row && typeof row === 'object' ? row : { name: row };
+        const rawUrl = item.url ?? item.repository;
+        const safeUrl = sanitizeUrl(rawUrl);
+        const label = escapeHtml(item.name ?? item.project ?? `프로젝트 ${index + 1}`);
+        const project = safeUrl === '#' ? label : `<a href="${escapeHtml(safeUrl)}" rel="noreferrer noopener">${label}</a>`;
+        return `<tr>
+          <th scope="row">${project}</th>
+          <td>${escapeHtml(item.signal ?? item.stars ?? item.status ?? '-')}</td>
+          <td>${escapeHtml(item.strengths ?? item.pros ?? '-')}</td>
+          <td>${escapeHtml(item.cautions ?? item.weaknesses ?? item.cons ?? '-')}</td>
+          <td>${escapeHtml(item.adopted ?? item.distilled ?? '-')}</td>
+          <td>${escapeHtml(item.excluded ?? item.rejected ?? '-')}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+function renderSkillPack(skills) {
+  const rows = normalizeList(skills);
+  if (!rows.length) return '<p class="muted">Skill pack 기록이 없습니다.</p>';
+  return `<div class="table-wrap" tabindex="0" role="region" aria-label="Relay10 Skill pack 표">
+    <table class="support-table">
+      <thead><tr><th scope="col">Skill</th><th scope="col">한 가지 일</th><th scope="col">증류한 패턴</th><th scope="col">경계</th><th scope="col">현재 상태</th></tr></thead>
+      <tbody>${rows.map((row, index) => {
+        const item = row && typeof row === 'object' ? row : { name: row };
+        return `<tr>
+          <th scope="row">${escapeHtml(item.name ?? item.skill ?? `Skill ${index + 1}`)}</th>
+          <td>${escapeHtml(item.job ?? item.purpose ?? '-')}</td>
+          <td>${escapeHtml(item.patterns ?? item.sources ?? '-')}</td>
+          <td>${escapeHtml(item.boundary ?? item.limit ?? '-')}</td>
+          <td>${statusBadge(item.status ?? 'neutral', item.current ?? item.label)}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+function renderGrowthPlan(plan) {
+  const rows = normalizeList(plan);
+  if (!rows.length) return '<p class="muted">성장 계획이 없습니다.</p>';
+  return `<div class="table-wrap" tabindex="0" role="region" aria-label="30일 60일 90일 성장 계획 표">
+    <table class="wide-table">
+      <thead><tr><th scope="col">기간</th><th scope="col">제품</th><th scope="col">증명</th><th scope="col">홍보·커뮤니티</th><th scope="col">판단 지표</th></tr></thead>
+      <tbody>${rows.map((row, index) => {
+        const item = row && typeof row === 'object' ? row : { period: row };
+        return `<tr>
+          <th scope="row">${escapeHtml(item.period ?? item.name ?? `${index + 1}단계`)}</th>
+          <td>${escapeHtml(item.product ?? '-')}</td>
+          <td>${escapeHtml(item.proof ?? item.evidence ?? '-')}</td>
+          <td>${escapeHtml(item.promotion ?? item.community ?? '-')}</td>
+          <td>${escapeHtml(item.metric ?? item.kpi ?? '-')}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
 function renderEvidence(evidence) {
   const rows = normalizeList(evidence, 'url');
   if (!rows.length) return '<p class="muted">연결된 근거가 없습니다.</p>';
@@ -280,8 +345,14 @@ export function generateReport(data = {}, options = {}) {
   const nextSteps = data.nextSteps ?? data.actions;
   const comparisons = data.comparisons ?? data.harnessComparison;
   const supportMatrix = data.supportMatrix ?? data.portability;
+  const globalRepos = data.globalRepos ?? data.globalRepositories;
+  const skillPack = data.skillPack ?? data.skills;
+  const growthPlan = data.growthPlan ?? data.roadmap;
   const hasComparisons = normalizeList(comparisons).length > 0;
   const hasSupportMatrix = normalizeList(supportMatrix).length > 0;
+  const hasGlobalRepos = normalizeList(globalRepos).length > 0;
+  const hasSkillPack = normalizeList(skillPack).length > 0;
+  const hasGrowthPlan = normalizeList(growthPlan).length > 0;
 
   return `<!doctype html>
 <html lang="ko">
@@ -368,13 +439,16 @@ export function generateReport(data = {}, options = {}) {
     </div>
   </header>
   <nav aria-label="보고서 목차"><div class="shell"><ul>
-    <li><a href="#overview">요약</a></li><li><a href="#routing">라우팅</a></li>${hasComparisons ? '<li><a href="#comparison">장단점·계보</a></li>' : ''}${hasSupportMatrix ? '<li><a href="#support">지원 범위</a></li>' : ''}<li><a href="#stages">단계 출력</a></li><li><a href="#verification">검증</a></li><li><a href="#reader10">Reader-10</a></li><li><a href="#evidence">근거</a></li><li><a href="#actions">다음 단계</a></li>
+    <li><a href="#overview">요약</a></li><li><a href="#routing">라우팅</a></li>${hasGlobalRepos ? '<li><a href="#global">글로벌 증류</a></li>' : ''}${hasSkillPack ? '<li><a href="#skills">Skill pack</a></li>' : ''}${hasComparisons ? '<li><a href="#comparison">국내·계보</a></li>' : ''}${hasSupportMatrix ? '<li><a href="#support">지원 범위</a></li>' : ''}${hasGrowthPlan ? '<li><a href="#growth">발전·홍보</a></li>' : ''}<li><a href="#stages">단계 출력</a></li><li><a href="#verification">검증</a></li><li><a href="#reader10">Reader-10</a></li><li><a href="#evidence">근거</a></li><li><a href="#actions">다음 단계</a></li>
   </ul></div></nav>
   <main id="main" class="shell">
     <section id="overview" aria-labelledby="overview-title"><p class="eyebrow">01 · 한눈에 보기</p><h2 id="overview-title">목적과 결과 요약</h2><p class="muted"><strong>용어:</strong> CLI(명령줄 인터페이스), HTML(웹 문서 형식), ID(식별자), PASS(통과), FAIL(실패).</p><h3>요청 목적</h3>${renderText(task, 'lede')}<h3>최종 결과</h3>${renderText(summary, 'lede')}${renderKeyValue({ 실행상태: STATUS_LABELS[normalizeStatus(overallStatus)], 실행ID: runId, 생성시각: generatedAt })}</section>
     <section id="routing" aria-labelledby="routing-title"><p class="eyebrow">02 · 의사결정</p><h2 id="routing-title">모델 라우팅</h2><p>실행 전에 정한 프로필과 실제 실행 여부입니다. 프로필은 카탈로그 메타데이터 기반 역할이며 가격이나 성능 순위를 보장하지 않습니다.</p>${renderRouting(data.routing)}</section>
+    ${hasGlobalRepos ? `<section id="global" aria-labelledby="global-title"><p class="eyebrow">글로벌 · 2026-07-14 스냅샷</p><h2 id="global-title">글로벌 상위 저장소에서 무엇을 증류했나</h2>${renderText(data.globalSummary ?? '별 수는 인기와 발견 신호일 뿐 품질, 사용량, 성능을 증명하지 않습니다. 현재성, 구조, 테스트, 라이선스를 함께 봤습니다.')} ${renderGlobalRepos(globalRepos)}</section>` : ''}
+    ${hasSkillPack ? `<section id="skills" aria-labelledby="skills-title"><p class="eyebrow">Skill · progressive disclosure</p><h2 id="skills-title">여덟 개만 남긴 Relay10 Skill pack</h2>${renderText(data.skillSummary ?? 'Skill은 한 가지 일을 맡고 필요할 때만 로드됩니다. Plugin은 이 Skill들을 배포하는 묶음이며 현재 task 모델을 바꾸지 않습니다.')} ${renderSkillPack(skillPack)}</section>` : ''}
     ${hasComparisons ? `<section id="comparison" aria-labelledby="comparison-title"><p class="eyebrow">비교 · 설계 계보</p><h2 id="comparison-title">하네스별 장단점과 Relay10 체리피킹</h2>${renderText(data.comparisonSummary ?? 'Relay10은 비교 대상의 코드를 복사하지 않고, 검증 가능한 동작 패턴만 선택적으로 독립 구현했습니다.')} ${renderHarnessComparison(comparisons)}</section>` : ''}
     ${hasSupportMatrix ? `<section id="support" aria-labelledby="support-title"><p class="eyebrow">지원 · 이식성</p><h2 id="support-title">현재 공급자·CLI·앱 지원 범위</h2>${renderText(data.supportSummary ?? '현재 작동하는 범위와 향후 구현 가능한 범위를 구분합니다.')} ${renderSupportMatrix(supportMatrix)}</section>` : ''}
+    ${hasGrowthPlan ? `<section id="growth" aria-labelledby="growth-title"><p class="eyebrow">발전 · 증거 중심 홍보</p><h2 id="growth-title">앞으로 30일·60일·90일에 할 일</h2>${renderText(data.growthSummary ?? '기능 수보다 재현 가능한 성공 사례, 실패 공개, 사용자 유지율을 우선합니다.')} ${renderGrowthPlan(growthPlan)}</section>` : ''}
     <section id="stages" aria-labelledby="stages-title"><p class="eyebrow">03 · 작업 기록</p><h2 id="stages-title">단계별 출력</h2>${renderStages(data)}</section>
     <section id="verification" aria-labelledby="verification-title"><p class="eyebrow">04 · 품질 확인</p><h2 id="verification-title">검증 결과</h2><p>실패나 오류가 있으면 아래 세부 기록과 다음 단계에서 복구 방법을 확인하세요.</p>${renderVerification(data.verification)}</section>
     <section id="reader10" aria-labelledby="reader10-title"><p class="eyebrow">05 · 보고서 검수</p><h2 id="reader10-title">Reader-10 검수</h2><p>선택된 모드의 구조 규칙 또는 모델 응답을 집계한 결과이며, 사실성 검증을 대신하지 않습니다.</p>${renderReader10(reader)}</section>

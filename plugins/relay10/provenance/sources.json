@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "retrievedAt": "2026-07-14T00:24:00+09:00",
+  "policy": "behavior-pattern-only clean-room implementation; no prompt, code, or asset copied",
+  "sources": [
+    {
+      "repository": "https://github.com/obra/superpowers",
+      "commit": "d884ae0",
+      "license": "MIT",
+      "patterns": ["specification before high-impact implementation", "systematic debugging", "verification before completion"],
+      "copied": false
+    },
+    {
+      "repository": "https://github.com/agentskills/agentskills",
+      "commit": "38a2ff8",
+      "license": "Apache-2.0 code; CC-BY-4.0 documentation",
+      "patterns": ["SKILL.md structure", "progressive disclosure", "portable skill metadata"],
+      "copied": false
+    },
+    {
+      "repository": "https://github.com/openai/plugins",
+      "commit": "bd2122c",
+      "license": "per plugin; verify before reuse",
+      "patterns": ["plugin as distribution unit", "static and before-after skill evaluation"],
+      "copied": false
+    },
+    {
+      "repository": "https://github.com/anthropics/skills",
+      "commit": "9d2f1ae",
+      "license": "per skill; some source-available restrictions",
+      "patterns": ["reader testing", "deterministic scripts", "references loaded on demand"],
+      "copied": false
+    },
+    {
+      "repository": "https://github.com/github/awesome-copilot",
+      "commit": "0aaced5",
+      "license": "MIT repository; inspect contributed item provenance",
+      "patterns": ["evidence contracts", "codebase mapping", "security review references"],
+      "copied": false
+    },
+    {
+      "repository": "https://github.com/vercel-labs/agent-skills",
+      "commit": "f8a72b9",
+      "license": "per skill",
+      "patterns": ["focused rule packs", "large optional references"],
+      "copied": false
+    },
+    {
+      "repository": "https://github.com/microsoft/skills",
+      "commit": "c33193b",
+      "license": "MIT",
+      "patterns": ["selective installation", "test and evaluation harnesses"],
+      "copied": false
+    }
+  ]
+}

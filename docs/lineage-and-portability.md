@@ -99,9 +99,10 @@ base URL만 바꾸면 text endpoint는 연결될 수 있어도 이 코딩-agent 
 | 표면 | 현재 | 가능한 경로 | 중요한 제한 |
 |---|---|---|---|
 | Codex CLI | **지원** | 현재 `r10` binary | v0.1.1의 공식 표면. |
-| Codex 데스크톱·IDE | **간접 사용만 가능** | 앱 task의 shell 호출 또는 향후 Skill | 현재도 내부 실행은 별도 Codex CLI다. 앱의 현재 task model을 단계별로 바꾸지 않는다. |
-| Codex Skill | **미포장** | `SKILL.md`가 `r10 route/run/inspect`를 호출 | Skill은 재사용 지침·script이지 강제 router나 전용 UI가 아니다. |
-| Codex Plugin + local MCP | **미구현, v0.2 권장** | `relay10.route/run/status/inspect/report` 도구 | 앱 안의 native tool 경험은 만들 수 있지만 stage model execution은 Relay10 server가 맡아야 한다. |
+| Codex 데스크톱·IDE | **main Skill preview, 실행은 간접** | repo-scoped Skill 또는 앱 task의 shell 호출 | 내부 실행은 별도 Codex CLI다. 앱의 현재 task model을 단계별로 바꾸지 않는다. |
+| Codex Skill | **main에 8개 구현·정적 검증** | `.agents/skills`가 Plugin의 canonical Skill pack을 가리킴 | Skill은 재사용 지침이지 강제 router나 전용 UI가 아니다. surface별 trigger forward eval은 아직 필요하다. |
+| Codex Plugin | **main manifest·Skill bundle preview** | `plugins/relay10/.codex-plugin/plugin.json` | marketplace에 게시하지 않았고 MCP·hook·custom UI가 없다. 고정 v0.1.1 tag에는 포함되지 않는다. |
+| Codex Plugin + local MCP | **MCP 미구현** | `relay10.route/run/status/inspect/report` 도구 | 앱 안의 native progress 경험은 만들 수 있지만 stage model execution은 Relay10 server가 맡아야 한다. |
 | ChatGPT 앱·웹 | **미지원** | remote MCP + Apps SDK UI | ChatGPT 웹이 이 Mac의 local repo를 직접 실행하는 구조가 아니므로 remote worker 또는 안전한 sidecar가 필요하다. |
 | 독립 Electron·Tauri·Swift GUI | **미구현** | provider-neutral local sidecar | path allowlist, 인증, 취소, concurrency lock, approval UI가 필요하다. |
 | Codex 전용 custom GUI | **미구현** | Codex App Server | thread·turn·model·approval·event를 앱에 연결할 수 있지만 provider-neutral GUI와는 다른 경로다. |
@@ -143,8 +144,9 @@ workflow core
 
 ## 출시 순서 제안
 
-1. **v0.2 — 앱 노출:** Codex Plugin + Skill + local stdio MCP. 기존 CLI
-   engine을 재사용해 Codex 데스크톱·CLI·IDE에서 같은 명령을 부른다.
+1. **v0.2 후보 — 앱 노출:** main의 Plugin manifest와 8 Skill은 구현됐다.
+   surface별 forward eval과 marketplace packaging 뒤 local stdio MCP로 기존 CLI의
+   `route/run/status/inspect/report`를 노출한다.
 2. **v0.3 — 공급자 분리:** `CatalogAdapter`, `ExecutorAdapter`, stage별
    `{ providerId, model, effort }`, capability negotiation을 추가한다. xAI/Grok
    E2E를 통과한 뒤에만 공식 지원으로 표시한다.
@@ -155,7 +157,8 @@ workflow core
 ## 표현상 주의
 
 - “Grok 지원”이 아니라 “Codex custom-provider 경유 실험 후보, 미검증”이다.
-- “Codex 앱 지원”이 아니라 “앱에서 shell로 간접 실행 가능, native 통합 없음”이다.
+- “Codex 앱 native 지원”이 아니라 “repo Skill preview와 shell 간접 실행 가능,
+  MCP·custom UI·현재 task model 전환 없음”이다.
 - “10개의 가장 멍청한 모델”이 아니라 “economy 역할 모델을 low 노력으로
   열 번 호출”이다. catalog label은 실제 지능·가격 순위를 증명하지 않는다.
 - “체리피킹”은 코드 복제가 아니라 공개된 동작 패턴의 clean-room 독립 구현이다.

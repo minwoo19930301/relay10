@@ -1,0 +1,46 @@
+name: Skill proposal
+description: Propose or improve a focused Skill with trigger and provenance evidence.
+title: "skill: "
+body:
+  - type: input
+    id: job
+    attributes:
+      label: One job for the Skill
+      placeholder: Gather read-only release evidence for a Node package.
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: Trigger and non-trigger boundary
+      description: Give representative should-trigger and near-miss prompts.
+    validations:
+      required: true
+  - type: textarea
+    id: baseline
+    attributes:
+      label: Baseline and expected improvement
+      description: How will you compare with-Skill against no-Skill on quality, tokens, time, and failures?
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Tools and mutation authority
+      description: List network, shell, file, publication, and external-service permissions.
+    validations:
+      required: true
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Prior art and license review
+      description: List source URL, commit, exact files inspected, license, and whether anything is copied. Inspiration-only is preferred.
+    validations:
+      required: true
+  - type: checkboxes
+    id: cleanroom
+    attributes:
+      label: Clean-room confirmation
+      options:
+        - label: The proposed instructions and scripts are original and do not copy unlicensed third-party content.
+          required: true

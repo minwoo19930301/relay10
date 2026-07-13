@@ -1,0 +1,173 @@
+import assert from 'node:assert/strict';
+import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import test from 'node:test';
+
+import {
+  main,
+  parseYamlScalars,
+  validateSkillPack,
+} from '../scripts/validate-skill-pack.mjs';
+
+function captureOutput() {
+  let value = '';
+  return {
+    stream: { write: (chunk) => { value += String(chunk); } },
+    read: () => value,
+  };
+}
+
+async function writeFixture(overrides = {}) {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'relay10-skill-pack-'));
+  const skillName = overrides.skillName ?? 'relay10-example';
+  const skillRoot = path.join(root, 'skills', skillName);
+  await mkdir(path.join(root, '.codex-plugin'), { recursive: true });
+  await mkdir(path.join(skillRoot, 'agents'), { recursive: true });
+  await mkdir(path.join(skillRoot, 'references'), { recursive: true });
+
+  const manifest = {
+    name: 'relay10',
+    version: '0.1.1',
+    description: 'A focused workflow skill pack.',
+    author: { name: 'Relay10 contributors' },
+    skills: './skills/',
+    interface: {
+      displayName: 'Relay10',
+      shortDescription: 'Focused engineering workflows.',
+      longDescription: 'A portable, evidence-first engineering workflow skill pack.',
+      developerName: 'Relay10 contributors',
+      category: 'Productivity',
+      capabilities: [],
+      defaultPrompt: ['Use Relay10 to choose the smallest safe workflow.'],
+    },
+    ...overrides.manifest,
+  };
+  await writeFile(
+    path.join(root, '.codex-plugin', 'plugin.json'),
+    `${JSON.stringify(manifest, null, 2)}\n`,
+    'utf8',
+  );
+  await writeFile(
+    path.join(skillRoot, 'SKILL.md'),
+    overrides.skill ?? `---\nname: ${skillName}\ndescription: Use this skill when a bounded example workflow needs verification.\n---\n\n# Example\n\nRead [the reference](./references/example.md).\n`,
+    'utf8',
+  );
+  await writeFile(
+    path.join(skillRoot, 'references', 'example.md'),
+    '# Example reference\n',
+    'utf8',
+  );
+  await writeFile(
+    path.join(skillRoot, 'agents', 'openai.yaml'),
+    overrides.agent ?? `interface:\n  display_name: "Relay10 Example"\n  short_description: "Run a bounded and verified example workflow"\n  default_prompt: "Use $${skillName} to verify this bounded workflow."\n`,
+    'utf8',
+  );
+  return root;
+}
+
+test('small YAML parser extracts quoted nested interface values', () => {
+  const result = parseYamlScalars(`interface:\n  display_name: "Relay10 Build"\n  default_prompt: 'Use $relay10-build now.'\n`);
+  assert.equal(result.get('interface.display_name'), 'Relay10 Build');
+  assert.equal(result.get('interface.default_prompt'), 'Use $relay10-build now.');
+});
+
+test('small YAML parser rejects malformed syntax instead of silently accepting it', () => {
+  const malformed = [
+    ['unclosed double quote', 'interface:\n  display_name: "Relay10 Build\n'],
+    ['unmatched line', 'interface:\n  - display_name: Relay10 Build\n'],
+    ['duplicate key', 'interface:\n  display_name: First\n  display_name: Second\n'],
+    ['odd indentation', 'interface:\n   display_name: Relay10 Build\n'],
+    ['indentation jump', 'interface:\n    display_name: Relay10 Build\n'],
+    ['flow scalar', 'name: [relay10-build]\n'],
+  ];
+
+  for (const [label, source] of malformed) {
+    assert.throws(
+      () => parseYamlScalars(source),
+      { name: 'SyntaxError' },
+      `expected ${label} to fail`,
+    );
+  }
+});
+
+test('validator returns itemized YAML errors for malformed skill and agent metadata', async () => {
+  const root = await writeFixture({
+    skill: `---\nname: relay10-example\ndescription: [unfinished\n---\n\n# Example\n`,
+    agent: `interface:\n  display_name: "Relay10 Example\n  short_description: "Run a bounded and verified example workflow"\n  default_prompt: "Use $relay10-example to verify this workflow."\n`,
+  });
+  const result = await validateSkillPack(root);
+
+  assert.equal(result.passed, false);
+  assert.ok(result.errors.some((error) => (
+    error.code === 'skill-frontmatter-yaml'
+      && error.line === 2
+      && /flow collections/.test(error.message)
+  )), JSON.stringify(result.errors, null, 2));
+  assert.ok(result.errors.some((error) => (
+    error.code === 'agent-yaml'
+      && error.line === 2
+      && /not closed/.test(error.message)
+  )), JSON.stringify(result.errors, null, 2));
+});
+
+test('valid skill pack passes manifest, skill, agent, and relative-link checks', async () => {
+  const root = await writeFixture();
+  const result = await validateSkillPack(root);
+  assert.equal(result.passed, true, JSON.stringify(result.errors, null, 2));
+  assert.equal(result.skillCount, 1);
+  assert.deepEqual(result.errors, []);
+});
+
+test('validator reports placeholders, personalized paths, broken links, and agent metadata separately', async () => {
+  const root = await writeFixture({
+    skill: `---\nname: wrong-name\ndescription: TODO replace this description\n---\n\nRead [missing evidence](./references/missing.md).\n\nNever depend on /Users/alice/private/config.json.\n`,
+    agent: `interface:\n  display_name: "Relay10 Example"\n  default_prompt: "Invoke the example without its skill token."\n`,
+  });
+  const result = await validateSkillPack(root);
+  const codes = new Set(result.errors.map((error) => error.code));
+
+  assert.equal(result.passed, false);
+  for (const code of [
+    'absolute-user-path',
+    'agent-default-prompt',
+    'agent-required-field',
+    'relative-link-missing',
+    'skill-name-mismatch',
+    'todo-marker',
+  ]) {
+    assert.ok(codes.has(code), `missing ${code}: ${JSON.stringify(result.errors, null, 2)}`);
+  }
+  assert.ok(result.errors.every((error) => error.path && error.message));
+});
+
+test('manifest paths must start with ./ and cannot traverse outside the plugin', async () => {
+  const root = await writeFixture({ manifest: { skills: '../skills' } });
+  const result = await validateSkillPack(root);
+  assert.ok(result.errors.some((error) => error.code === 'manifest-path'));
+});
+
+test('CLI help is side-effect free and JSON failure returns a nonzero status with itemized errors', async () => {
+  const helpOutput = captureOutput();
+  assert.equal(await main(['--help'], { stdout: helpOutput.stream }), 0);
+  assert.match(helpOutput.read(), /Usage:/);
+
+  const root = await writeFixture({
+    agent: `interface:\n  display_name: "Relay10 Example"\n  short_description: "Run a bounded and verified example workflow"\n  default_prompt: "Missing the required literal token."\n`,
+  });
+  const stdout = captureOutput();
+  const stderr = captureOutput();
+  const code = await main([root, '--json'], { stdout: stdout.stream, stderr: stderr.stream });
+  const payload = JSON.parse(stdout.read());
+  assert.equal(code, 1);
+  assert.equal(payload.passed, false);
+  assert.ok(payload.errors.some((error) => error.code === 'agent-default-prompt'));
+  assert.equal(stderr.read(), '');
+});
+
+test('repository Relay10 plugin and all bundled skills pass the static validator', async () => {
+  const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
+  const result = await validateSkillPack(path.join(repositoryRoot, 'plugins', 'relay10'));
+  assert.equal(result.passed, true, JSON.stringify(result.errors, null, 2));
+  assert.ok(result.skillCount >= 8);
+});

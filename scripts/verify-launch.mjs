@@ -5,15 +5,17 @@ import { writeJson } from '../src/utils.mjs';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const specifications = [
-  { label: '74개 Node 자동 테스트', command: 'npm', args: ['test'] },
+  { label: 'Node 자동 테스트', command: 'npm', args: ['test'] },
   { label: '전체 JavaScript 문법 검사', command: 'npm', args: ['run', 'lint'] },
+  { label: 'Codex Plugin·8 Skill 정적 검사', command: 'npm', args: ['run', 'validate:skills'] },
   { label: '실제 Codex 모델 탐색', command: 'node', args: ['src/cli.mjs', 'doctor', '--json'] },
   {
     label: '출시 작업 모델 배정 미리보기',
     command: 'node',
     args: ['src/cli.mjs', 'route', 'research current coding harnesses, build a lightweight CLI, verify it, and prepare a release', '--json'],
   },
-  { label: 'npm 배포 파일 검사', command: 'npm', args: ['pack', '--dry-run', '--json'] },
+  { label: 'npm 배포 파일 목록 검사', command: 'npm', args: ['pack', '--dry-run', '--json'] },
+  { label: 'npm 설치본 전체 검사', command: 'npm', args: ['run', 'verify:package'] },
 ];
 
 const commands = [];

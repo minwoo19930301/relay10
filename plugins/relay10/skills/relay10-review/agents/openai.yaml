@@ -1,0 +1,4 @@
+interface:
+  display_name: "Relay10 Review"
+  short_description: "Review a fixed change set without editing"
+  default_prompt: "Use $relay10-review to review this change for correctness, risk, and evidence gaps."
