@@ -59,6 +59,26 @@ turns, tokens, or currency cost.
 
 The report is written under `.relay10/runs/<run-id>/report.html`.
 
+## Current provider and app support
+
+Relay10 0.1.1 is a **Codex CLI runtime harness**, not a direct
+multi-provider API client.
+
+| Target | Current status | What that means |
+|---|---|---|
+| Codex CLI with the locally discovered OpenAI models | Supported and tested | This is the release path. Every model stage launches `codex exec`, and model discovery uses `codex debug models`. |
+| Codex with an xAI/Grok custom provider | Experimental candidate, untested | Codex and xAI both expose a Responses-compatible path, but Relay10 cannot select providers per stage and has not completed end-to-end tool, schema, search, or Reader-10 tests. Do not treat this as released Grok support. |
+| Anthropic/Claude or Google Gemini APIs directly | Unsupported | Their native APIs and current OpenAI-compatibility surfaces need provider-specific executors or a verified translation layer plus an agent tool runtime. |
+| Mixed providers in one run | Unsupported | Stage configuration contains a model, not a provider or profile. |
+| Codex desktop app or IDE | Indirect shell use only | A task can invoke `r10`, but Relay10 then starts separate Codex CLI subprocesses. There is no native progress UI or current-task model switching. |
+| ChatGPT app/web or a standalone GUI | Not implemented | These need a remote MCP/Apps SDK backend or a local sidecar/App Server client. |
+
+A Codex Skill could make the existing commands easier to invoke from the app,
+but a Skill by itself does not switch the current app task's model for every
+Relay10 stage. A native app surface is planned as a Plugin + local MCP wrapper;
+it is not part of 0.1.1. See the full
+[lineage and portability decision](https://github.com/minwoo19930301/relay10/blob/main/docs/lineage-and-portability.md).
+
 ## Default pipeline
 
 | Stage | Capability label | Effort | Access | Purpose |
@@ -135,6 +155,11 @@ slugs:
 
 ## Version 0.1 limits
 
+- The verified runtime is Codex CLI. Direct OpenAI, xAI/Grok, Anthropic/Claude,
+  and Gemini API adapters are not included, and providers cannot be mixed by
+  stage.
+- Codex desktop can invoke the CLI indirectly, but there is no Relay10 Skill,
+  Plugin, MCP server, Apps SDK UI, or standalone GUI in this release.
 - The scout is a general read/search Codex stage, not a dedicated crawler,
   browser automation system, or site-specific extraction engine.
 - Deterministic Reader-10 checks structure, length, terminology, links, and
@@ -153,6 +178,7 @@ slugs:
 ## Design and research
 
 - [Architecture](https://github.com/minwoo19930301/relay10/blob/main/docs/architecture.md)
+- [Harness trade-offs, selected patterns, provider and app portability](https://github.com/minwoo19930301/relay10/blob/main/docs/lineage-and-portability.md)
 - [Korean harness landscape](https://github.com/minwoo19930301/relay10/blob/main/docs/korea-landscape.md)
 - [Global harness landscape](https://github.com/minwoo19930301/relay10/blob/main/docs/global-landscape.md)
 - [Launch report](https://github.com/minwoo19930301/relay10/blob/main/docs/launch-report.html)
@@ -165,3 +191,12 @@ follow the linked primary sources before making adoption or licensing choices.
 Relay10 is MIT licensed and was implemented as a clean-room wrapper with zero
 third-party npm runtime dependencies. No source code from the compared
 harnesses is included.
+
+The design selection is intentionally narrow: role-specific model tiers from
+OMO/OMP, plan-build-review separation from OMC, doctor and inspectable evidence
+from OMX, an external wrapper boundary from GJC, and a short onboarding path
+from LazyCodex. It excludes their agent swarms, nested completion loops,
+tmux/worktree teams, native TUI/runtime stacks, global plugin injection, and
+telemetry. Relay10's risk/verifiability/reversibility router, separation of
+correctness from clarity, hash-bound frozen replay, and Reader-10 gate are its
+own additions.

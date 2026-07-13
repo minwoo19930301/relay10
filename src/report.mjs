@@ -114,6 +114,45 @@ function renderRouting(routing) {
   </div>`;
 }
 
+function renderHarnessComparison(comparison) {
+  const rows = normalizeList(comparison);
+  if (!rows.length) return '<p class="muted">하네스 비교 기록이 없습니다.</p>';
+  return `<div class="table-wrap" tabindex="0" role="region" aria-label="하네스 장단점과 Relay10 체리피킹 표">
+    <table class="wide-table">
+      <thead><tr><th scope="col">하네스</th><th scope="col">장점</th><th scope="col">단점</th><th scope="col">Relay10이 채택한 패턴</th><th scope="col">의도적으로 제외한 부분</th></tr></thead>
+      <tbody>${rows.map((row, index) => {
+        const item = row && typeof row === 'object' ? row : { name: row };
+        return `<tr>
+          <th scope="row">${escapeHtml(item.name ?? item.harness ?? item.project ?? `하네스 ${index + 1}`)}</th>
+          <td>${escapeHtml(item.strengths ?? item.pros ?? '-')}</td>
+          <td>${escapeHtml(item.weaknesses ?? item.cons ?? '-')}</td>
+          <td>${escapeHtml(item.adopted ?? item.cherryPicked ?? '-')}</td>
+          <td>${escapeHtml(item.excluded ?? item.rejected ?? '-')}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
+function renderSupportMatrix(matrix) {
+  const rows = normalizeList(matrix);
+  if (!rows.length) return '<p class="muted">공급자와 앱 지원 기록이 없습니다.</p>';
+  return `<div class="table-wrap" tabindex="0" role="region" aria-label="공급자와 앱 지원 범위 표">
+    <table class="support-table">
+      <thead><tr><th scope="col">대상</th><th scope="col">현재 상태</th><th scope="col">근거</th><th scope="col">지원하려면 필요한 것</th></tr></thead>
+      <tbody>${rows.map((row, index) => {
+        const item = row && typeof row === 'object' ? row : { target: row };
+        return `<tr>
+          <th scope="row">${escapeHtml(item.target ?? item.surface ?? item.provider ?? `대상 ${index + 1}`)}</th>
+          <td>${statusBadge(item.status, item.current ?? item.label)}</td>
+          <td>${escapeHtml(item.reason ?? item.evidence ?? '-')}</td>
+          <td>${escapeHtml(item.required ?? item.path ?? item.next ?? '-')}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+  </div>`;
+}
+
 function renderEvidence(evidence) {
   const rows = normalizeList(evidence, 'url');
   if (!rows.length) return '<p class="muted">연결된 근거가 없습니다.</p>';
@@ -231,6 +270,7 @@ function renderNextSteps(nextSteps) {
 export function generateReport(data = {}, options = {}) {
   const title = data.title ?? options.title ?? 'Relay10 실행 보고서';
   const summary = data.summary ?? data.resultSummary ?? '요약이 아직 기록되지 않았습니다.';
+  const heroSummary = data.heroSummary ?? summary;
   const task = data.task ?? data.request ?? data.goal ?? '요청 내용이 기록되지 않았습니다.';
   const runId = data.runId ?? data.id ?? 'unknown';
   const generatedAt = normalizeDate(data.generatedAt ?? options.generatedAt);
@@ -238,6 +278,10 @@ export function generateReport(data = {}, options = {}) {
   const reader = data.reader10 ?? data.readerResults ?? data.reader;
   const evidence = data.evidence ?? data.sources ?? data.provenance;
   const nextSteps = data.nextSteps ?? data.actions;
+  const comparisons = data.comparisons ?? data.harnessComparison;
+  const supportMatrix = data.supportMatrix ?? data.portability;
+  const hasComparisons = normalizeList(comparisons).length > 0;
+  const hasSupportMatrix = normalizeList(supportMatrix).length > 0;
 
   return `<!doctype html>
 <html lang="ko">
@@ -281,6 +325,8 @@ export function generateReport(data = {}, options = {}) {
     .facts dd { margin:.16rem 0 0; white-space:pre-wrap; }
     .table-wrap { max-width:100%; overflow:auto; border:1px solid var(--line); border-radius:.7rem; }
     table { width:100%; border-collapse:collapse; min-width:44rem; }
+    .wide-table { min-width:76rem; }
+    .support-table { min-width:62rem; }
     th,td { padding:.7rem .8rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
     thead th { background:var(--bg); }
     tbody tr:last-child th,tbody tr:last-child td { border-bottom:0; }
@@ -317,16 +363,18 @@ export function generateReport(data = {}, options = {}) {
     <div class="shell">
       <p class="eyebrow">Relay10 · 실행 보고서</p>
       <h1>${escapeHtml(title)}</h1>
-      <div class="hero-summary"><strong>핵심 요약:</strong> ${escapeHtml(summary)}</div>
+      <div class="hero-summary"><strong>핵심 요약:</strong> ${escapeHtml(heroSummary)}</div>
       <div class="meta">${statusBadge(overallStatus)}<span>실행 ID ${escapeHtml(runId)}</span><time datetime="${escapeHtml(generatedAt)}">생성 ${escapeHtml(generatedAt)}</time></div>
     </div>
   </header>
   <nav aria-label="보고서 목차"><div class="shell"><ul>
-    <li><a href="#overview">요약</a></li><li><a href="#routing">라우팅</a></li><li><a href="#stages">단계 출력</a></li><li><a href="#verification">검증</a></li><li><a href="#reader10">Reader-10</a></li><li><a href="#evidence">근거</a></li><li><a href="#actions">다음 단계</a></li>
+    <li><a href="#overview">요약</a></li><li><a href="#routing">라우팅</a></li>${hasComparisons ? '<li><a href="#comparison">장단점·계보</a></li>' : ''}${hasSupportMatrix ? '<li><a href="#support">지원 범위</a></li>' : ''}<li><a href="#stages">단계 출력</a></li><li><a href="#verification">검증</a></li><li><a href="#reader10">Reader-10</a></li><li><a href="#evidence">근거</a></li><li><a href="#actions">다음 단계</a></li>
   </ul></div></nav>
   <main id="main" class="shell">
     <section id="overview" aria-labelledby="overview-title"><p class="eyebrow">01 · 한눈에 보기</p><h2 id="overview-title">목적과 결과 요약</h2><p class="muted"><strong>용어:</strong> CLI(명령줄 인터페이스), HTML(웹 문서 형식), ID(식별자), PASS(통과), FAIL(실패).</p><h3>요청 목적</h3>${renderText(task, 'lede')}<h3>최종 결과</h3>${renderText(summary, 'lede')}${renderKeyValue({ 실행상태: STATUS_LABELS[normalizeStatus(overallStatus)], 실행ID: runId, 생성시각: generatedAt })}</section>
     <section id="routing" aria-labelledby="routing-title"><p class="eyebrow">02 · 의사결정</p><h2 id="routing-title">모델 라우팅</h2><p>실행 전에 정한 프로필과 실제 실행 여부입니다. 프로필은 카탈로그 메타데이터 기반 역할이며 가격이나 성능 순위를 보장하지 않습니다.</p>${renderRouting(data.routing)}</section>
+    ${hasComparisons ? `<section id="comparison" aria-labelledby="comparison-title"><p class="eyebrow">비교 · 설계 계보</p><h2 id="comparison-title">하네스별 장단점과 Relay10 체리피킹</h2>${renderText(data.comparisonSummary ?? 'Relay10은 비교 대상의 코드를 복사하지 않고, 검증 가능한 동작 패턴만 선택적으로 독립 구현했습니다.')} ${renderHarnessComparison(comparisons)}</section>` : ''}
+    ${hasSupportMatrix ? `<section id="support" aria-labelledby="support-title"><p class="eyebrow">지원 · 이식성</p><h2 id="support-title">현재 공급자·CLI·앱 지원 범위</h2>${renderText(data.supportSummary ?? '현재 작동하는 범위와 향후 구현 가능한 범위를 구분합니다.')} ${renderSupportMatrix(supportMatrix)}</section>` : ''}
     <section id="stages" aria-labelledby="stages-title"><p class="eyebrow">03 · 작업 기록</p><h2 id="stages-title">단계별 출력</h2>${renderStages(data)}</section>
     <section id="verification" aria-labelledby="verification-title"><p class="eyebrow">04 · 품질 확인</p><h2 id="verification-title">검증 결과</h2><p>실패나 오류가 있으면 아래 세부 기록과 다음 단계에서 복구 방법을 확인하세요.</p>${renderVerification(data.verification)}</section>
     <section id="reader10" aria-labelledby="reader10-title"><p class="eyebrow">05 · 보고서 검수</p><h2 id="reader10-title">Reader-10 검수</h2><p>선택된 모드의 구조 규칙 또는 모델 응답을 집계한 결과이며, 사실성 검증을 대신하지 않습니다.</p>${renderReader10(reader)}</section>

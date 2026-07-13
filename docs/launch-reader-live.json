@@ -3,8 +3,8 @@
   "mode": "live",
   "model": "gpt-5.6-luna",
   "effort": "low",
-  "reportSha256": "1373c67aaf7b3054331e44968f4883fb24735d81ffcd089bef9d1d851c2c3dd7",
-  "generatedAt": "2026-07-13T05:28:22.666Z",
+  "reportSha256": "54f213a563e7d56411afe02df3d9b42ed224c7f0d5ee70ade808b8e79d868506",
+  "generatedAt": "2026-07-13T06:37:28.543Z",
   "passed": true,
   "pass": true,
   "status": "pass",
@@ -20,7 +20,7 @@
       "name": "30초 독자",
       "description": "제목, 목적, 핵심 결과만 훑어보는 독자",
       "passed": true,
-      "restatement": "목적: Relay10을 구현·출시하고 비교 근거와 단계별 모델 배정을 검증한다. 결과: v0.1.1은 공개됐고 74개 테스트 등 자동 검사는 통과했다. Reader-10 판독은 아직 미완료다. 위험: 모델 배정 정확도, 판단 상관성, 비교 자료의 빠른 변경. 다음: audit:launch를 실행해 10회 판독하고 JSON 해시를 확인한다.",
+      "restatement": "목적: 가벼운 코딩 하네스 Relay10을 비교·설계·출시. 결과: v0.1.1 공개 완료, 공식 검증 경로는 Codex CLI뿐. 근거: 74개 테스트, 린트·모델 탐색·패키지 검사를 통과. 남은 위험: Reader-10 실제 판독과 Grok 종단간 검증이 미완료. 다음 행동: audit:launch를 실행해 10회 판독하고 별도 JSON의 점수·해시를 확인.",
       "checks": [
         {
           "id": "live-understanding",
@@ -32,16 +32,16 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적: Relay10을 구현·출시하고 비교 근거와 단계별 모델 배정을 검증한다. 결과: v0.1.1은 공개됐고 74개 테스트 등 자동 검사는 통과했다. Reader-10 판독은 아직 미완료다. 위험: 모델 배정 정확도, 판단 상관성, 비교 자료의 빠른 변경. 다음: audit:launch를 실행해 10회 판독하고 JSON 해시를 확인한다.",
+        "restatement": "목적: 가벼운 코딩 하네스 Relay10을 비교·설계·출시. 결과: v0.1.1 공개 완료, 공식 검증 경로는 Codex CLI뿐. 근거: 74개 테스트, 린트·모델 탐색·패키지 검사를 통과. 남은 위험: Reader-10 실제 판독과 Grok 종단간 검증이 미완료. 다음 행동: audit:launch를 실행해 10회 판독하고 별도 JSON의 점수·해시를 확인.",
         "blocking_ambiguities": [],
         "jargon": [
-          "Reader-10",
+          "하네스",
           "라우팅",
-          "Codex subprocess",
-          "reportSha256",
-          "SHA-256"
+          "Reader-10",
+          "종단간 검증",
+          "reportSha256"
         ],
-        "action": "담당자가 저장소에서 npm run audit:launch를 실행하고, passedPersonas 10·criticalCount 0·해시 일치를 확인한다."
+        "action": "담당자가 relay10 저장소에서 npm run audit:launch를 실행하고 docs/launch-reader-live.json의 10/10·치명적 문제 0·HTML 해시 일치를 확인한다."
       }
     },
     {
@@ -49,34 +49,33 @@
       "name": "도메인 초보자",
       "description": "전문용어 배경지식이 없는 독자",
       "passed": true,
-      "restatement": "목적: Relay10을 만들고 관련 프로젝트와 비교해 출시한다. 결과: v0.1.1은 공개됐고 자동 검사는 통과했다. 근거: 74개 테스트, 문법·모델·패키지 검사가 통과했다. 남은 위험: 모델 배정 정확도와 판단 편향이다. 다음 행동: 완성된 HTML에 Reader-10 검수를 실행한다.",
+      "restatement": "목적은 여러 코딩 도구를 비교해 가벼운 Relay10을 출시하는 것, 결과는 Codex CLI용 v0.1.1 공개 완료, 근거는 자동 테스트·검사 기록과 출처 링크, 남은 위험은 Reader-10 판독과 Grok 등 미지원 범위, 다음 행동은 audit:launch 실행 후 별도 JSON과 HTML 해시를 확인하는 것이다.",
       "checks": [
         {
           "id": "live-understanding",
           "label": "목적·결과·근거·위험·다음 행동을 재진술한다",
           "passed": true,
           "severity": "warning",
-          "detail": "Reader-10 실제 결과가 아직 없어 보고서 최종 통과 여부를 알 수 없다."
+          "detail": "이해도 문제 없음"
         }
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적: Relay10을 만들고 관련 프로젝트와 비교해 출시한다. 결과: v0.1.1은 공개됐고 자동 검사는 통과했다. 근거: 74개 테스트, 문법·모델·패키지 검사가 통과했다. 남은 위험: 모델 배정 정확도와 판단 편향이다. 다음 행동: 완성된 HTML에 Reader-10 검수를 실행한다.",
-        "blocking_ambiguities": [
-          "Reader-10 실제 결과가 아직 없어 보고서 최종 통과 여부를 알 수 없다."
-        ],
+        "restatement": "목적은 여러 코딩 도구를 비교해 가벼운 Relay10을 출시하는 것, 결과는 Codex CLI용 v0.1.1 공개 완료, 근거는 자동 테스트·검사 기록과 출처 링크, 남은 위험은 Reader-10 판독과 Grok 등 미지원 범위, 다음 행동은 audit:launch 실행 후 별도 JSON과 HTML 해시를 확인하는 것이다.",
+        "blocking_ambiguities": [],
         "jargon": [
           "하네스",
-          "모델 라우팅",
+          "라우팅",
+          "subprocess",
+          "Responses API",
+          "E2E",
           "Reader-10",
-          "economy·balanced·frontier",
-          "추론 노력",
-          "Codex subprocess",
-          "dry-run",
-          "SHA-256",
-          "OMO·OMP·OMC·OMX·GJC"
+          "reportSha256",
+          "MCP",
+          "SDK",
+          "provider"
         ],
-        "action": "보고서의 목적·출시 결과·검사 근거·남은 위험·다음 조치를 정확히 파악했다."
+        "action": "담당자가 npm run audit:launch를 실행하고 10회 판독 결과와 reportSha256을 확인한다."
       }
     },
     {
@@ -84,36 +83,33 @@
       "name": "쉬운 문장 독자",
       "description": "짧고 직접적인 문장을 선호하는 독자",
       "passed": true,
-      "restatement": "목적은 Relay10을 만들고 출시하는 것이다. 제품 v0.1.1은 공개됐다. 테스트 74개와 여러 검사를 통과했다. Reader-10 검수는 아직 남았다. 다음은 10회 검수를 실행하고 별도 JSON과 HTML 해시를 확인하는 것이다.",
+      "restatement": "목적은 가벼운 코딩 하네스 Relay10을 비교·구현해 출시하는 것이다. v0.1.1은 공개됐고 Codex CLI와 현재 OpenAI 모델만 검증됐다. 근거는 74개 테스트, 문법·패키지 검사, 모델 탐색·라우팅 기록이다. 위험은 Reader-10 판독과 Grok 종단간 검증이 아직 끝나지 않은 점이다. 다음 행동은 담당자가 audit:launch를 실행하고 별도 JSON의 10회 결과와 HTML 해시를 확인하는 것이다.",
       "checks": [
         {
           "id": "live-understanding",
           "label": "목적·결과·근거·위험·다음 행동을 재진술한다",
           "passed": true,
           "severity": "warning",
-          "detail": "Reader-10 결과가 아직 없어 최종 보고서 통과 여부를 알 수 없다. · 별도 JSON 파일이 실제로 생성됐는지 보고서만으로 확인할 수 없다."
+          "detail": "이해도 문제 없음"
         }
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 Relay10을 만들고 출시하는 것이다. 제품 v0.1.1은 공개됐다. 테스트 74개와 여러 검사를 통과했다. Reader-10 검수는 아직 남았다. 다음은 10회 검수를 실행하고 별도 JSON과 HTML 해시를 확인하는 것이다.",
-        "blocking_ambiguities": [
-          "Reader-10 결과가 아직 없어 최종 보고서 통과 여부를 알 수 없다.",
-          "별도 JSON 파일이 실제로 생성됐는지 보고서만으로 확인할 수 없다."
-        ],
+        "restatement": "목적은 가벼운 코딩 하네스 Relay10을 비교·구현해 출시하는 것이다. v0.1.1은 공개됐고 Codex CLI와 현재 OpenAI 모델만 검증됐다. 근거는 74개 테스트, 문법·패키지 검사, 모델 탐색·라우팅 기록이다. 위험은 Reader-10 판독과 Grok 종단간 검증이 아직 끝나지 않은 점이다. 다음 행동은 담당자가 audit:launch를 실행하고 별도 JSON의 10회 결과와 HTML 해시를 확인하는 것이다.",
+        "blocking_ambiguities": [],
         "jargon": [
-          "Relay10",
-          "Reader-10",
+          "하네스",
           "라우팅",
+          "종단간 검증",
+          "Reader-10",
           "Codex subprocess",
-          "dry-run",
-          "SHA-256",
-          "HTML",
-          "JSON",
-          "npm",
-          "CLI"
+          "reportSha256",
+          "Responses API",
+          "provider",
+          "MCP",
+          "Apps SDK"
         ],
-        "action": "npm run audit:launch를 실행한 뒤 10/10 이해, 치명적 문제 0개, HTML 해시 일치를 확인한다."
+        "action": "담당자는 저장소에서 npm run audit:launch를 실행한다. 10/10 통과와 해시 일치를 확인한 뒤 최종 보고를 확정한다."
       }
     },
     {
@@ -121,7 +117,7 @@
       "name": "비원어민 독자",
       "description": "명시적 구조와 용어 설명이 필요한 독자",
       "passed": true,
-      "restatement": "목적은 경량 Codex 하네스 Relay10을 구현·출시하고 비교 근거를 기록하는 것이다. 제품 v0.1.1은 공개됐고 74개 테스트 등은 통과했다. 다만 이 보고서의 Reader-10 판독은 아직 대기 중이다. 남은 위험은 모델 배정 정확도와 모델 판단의 상관성이다. 다음 행동은 audit:launch를 실행해 10회 판독하고 별도 JSON의 해시를 확인하는 것이다.",
+      "restatement": "목적: 비교 자료를 바탕으로 가벼운 Relay10 하네스를 출시한다. 결과: v0.1.1이 공개되었고 Codex CLI와 현재 OpenAI 모델만 검증되었다. 근거: 74개 테스트, 문법·모델·패키지 검사와 출처 링크가 있다. 남은 위험: Reader-10 판독과 Grok 종단간 검증이 아직 미완료이며 Claude·Gemini·앱 통합은 미지원이다. 다음 행동: 담당자가 npm run audit:launch를 실행하고 별도 JSON의 점수와 HTML 해시를 확인한다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -133,16 +129,17 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 경량 Codex 하네스 Relay10을 구현·출시하고 비교 근거를 기록하는 것이다. 제품 v0.1.1은 공개됐고 74개 테스트 등은 통과했다. 다만 이 보고서의 Reader-10 판독은 아직 대기 중이다. 남은 위험은 모델 배정 정확도와 모델 판단의 상관성이다. 다음 행동은 audit:launch를 실행해 10회 판독하고 별도 JSON의 해시를 확인하는 것이다.",
+        "restatement": "목적: 비교 자료를 바탕으로 가벼운 Relay10 하네스를 출시한다. 결과: v0.1.1이 공개되었고 Codex CLI와 현재 OpenAI 모델만 검증되었다. 근거: 74개 테스트, 문법·모델·패키지 검사와 출처 링크가 있다. 남은 위험: Reader-10 판독과 Grok 종단간 검증이 아직 미완료이며 Claude·Gemini·앱 통합은 미지원이다. 다음 행동: 담당자가 npm run audit:launch를 실행하고 별도 JSON의 점수와 HTML 해시를 확인한다.",
         "blocking_ambiguities": [],
         "jargon": [
+          "하네스",
+          "라우팅",
+          "Codex subprocess",
+          "종단간 검증",
           "Reader-10",
-          "reportSha256",
-          "audit:launch",
-          "economy·balanced·frontier",
-          "Codex subprocess"
+          "reportSha256"
         ],
-        "action": "판독 대기 상태와 제품 출시 완료 상태를 분리해 설명한 점이 명확하다. 담당자와 실행 명령도 제시되어 있어 다음 행동을 알 수 있다."
+        "action": "비원어민 독자도 보고서의 목적, 출시 결과, 증거, 제한 범위, 미완료 검증, 후속 담당 작업을 추측 없이 파악할 수 있다."
       }
     },
     {
@@ -150,7 +147,7 @@
       "name": "문자 그대로 읽는 독자",
       "description": "모호한 지시어를 추측하지 않는 독자",
       "passed": true,
-      "restatement": "목적은 Relay10을 구현·출시하는 것이다. v0.1.1은 공개됐고, 74개 테스트 등은 통과했다. 남은 위험은 모델 배정 정확도와 판단 상관성이다. 다음은 audit:launch로 HTML을 10회 판독하고 해시를 확인하는 것이다.",
+      "restatement": "목적은 여러 코딩 하네스를 비교해 경량 Relay10을 출시하는 것이다. 결과는 v0.1.1 공개 완료이며 공식 검증 경로는 Codex CLI와 현재 OpenAI 모델뿐이다. 근거는 74개 테스트, 문법·모델·패키지 검사와 출처 문서다. 남은 위험은 Reader-10 실제 판독, Grok 검증, 앱·타 공급자 미지원이다. 다음 행동은 담당자가 audit:launch를 실행하고 별도 JSON의 10/10·치명적 문제 0·해시 일치를 확인하는 것이다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -162,16 +159,18 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 Relay10을 구현·출시하는 것이다. v0.1.1은 공개됐고, 74개 테스트 등은 통과했다. 남은 위험은 모델 배정 정확도와 판단 상관성이다. 다음은 audit:launch로 HTML을 10회 판독하고 해시를 확인하는 것이다.",
+        "restatement": "목적은 여러 코딩 하네스를 비교해 경량 Relay10을 출시하는 것이다. 결과는 v0.1.1 공개 완료이며 공식 검증 경로는 Codex CLI와 현재 OpenAI 모델뿐이다. 근거는 74개 테스트, 문법·모델·패키지 검사와 출처 문서다. 남은 위험은 Reader-10 실제 판독, Grok 검증, 앱·타 공급자 미지원이다. 다음 행동은 담당자가 audit:launch를 실행하고 별도 JSON의 10/10·치명적 문제 0·해시 일치를 확인하는 것이다.",
         "blocking_ambiguities": [],
         "jargon": [
           "Reader-10",
           "reportSha256",
-          "라우팅",
-          "Codex subprocess",
-          "dry-run"
+          "Codex CLI",
+          "Grok",
+          "provider",
+          "stage",
+          "audit:launch"
         ],
-        "action": "담당자가 audit:launch를 실행해 10/10 판독과 HTML 해시 일치를 확인한다."
+        "action": "판독 대기 상태와 후속 명령·결과 파일이 명시되어 있어, 명확성 판단은 통과다."
       }
     },
     {
@@ -179,7 +178,7 @@
       "name": "모바일 독자",
       "description": "좁은 화면에서 제목과 목록을 훑는 독자",
       "passed": true,
-      "restatement": "Relay10 compares coding-agent projects, implements a lightweight routed Codex harness, and reports its v0.1.1 release. Evidence includes 74 tests and other checks. Reader-10 is still pending. Next action: run npm run audit:launch and verify the JSON hash.",
+      "restatement": "목적: 경량 코딩 하네스 Relay10을 비교·구현·출시. 결과: v0.1.1 공개, 공식 검증 경로는 Codex CLI와 현재 OpenAI 모델뿐. 근거: 74개 테스트, 린트·doctor·route·패키지 검사와 출처 링크. 위험: Reader-10 실제 판독과 Grok·앱 통합은 미완료·미지원. 다음: 담당자가 audit:launch를 실행하고 별도 JSON의 10/10 및 HTML 해시 일치를 확인.",
       "checks": [
         {
           "id": "live-understanding",
@@ -191,17 +190,17 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "Relay10 compares coding-agent projects, implements a lightweight routed Codex harness, and reports its v0.1.1 release. Evidence includes 74 tests and other checks. Reader-10 is still pending. Next action: run npm run audit:launch and verify the JSON hash.",
+        "restatement": "목적: 경량 코딩 하네스 Relay10을 비교·구현·출시. 결과: v0.1.1 공개, 공식 검증 경로는 Codex CLI와 현재 OpenAI 모델뿐. 근거: 74개 테스트, 린트·doctor·route·패키지 검사와 출처 링크. 위험: Reader-10 실제 판독과 Grok·앱 통합은 미완료·미지원. 다음: 담당자가 audit:launch를 실행하고 별도 JSON의 10/10 및 HTML 해시 일치를 확인.",
         "blocking_ambiguities": [],
         "jargon": [
-          "OMO/OMP/OMC/OMX/GJC",
-          "Reader-10",
+          "하네스",
           "라우팅",
-          "Codex subprocess",
-          "reportSha256",
-          "dry-run"
+          "subprocess",
+          "Responses API",
+          "Reader-10",
+          "reportSha256"
         ],
-        "action": "모바일에서는 목적과 출시 완료는 파악되지만, 긴 반복 요약과 대기 상태 설명이 핵심 결과를 가린다. Reader-10 결과와 다음 명령을 상단에 더 짧게 배치하라."
+        "action": "모바일에서는 긴 용어집과 표를 줄이고, 목적·출시 결과·현재 한계·다음 조치를 상단에 더 압축해 배치하세요."
       }
     },
     {
@@ -209,7 +208,7 @@
       "name": "스크린리더 독자",
       "description": "문서 의미 구조와 대체 텍스트에 의존하는 독자",
       "passed": true,
-      "restatement": "목적은 Relay10을 구현하고 출시하는 것이다. v0.1.1은 GitHub에 공개됐고 자동 검증은 통과했다. 근거는 74개 테스트, 문법·모델·패키지 검사와 비교 출처다. 남은 위험은 라우팅 정확도, 판단 상관성, 빠르게 변하는 비교 대상이다. 다음은 HTML을 Reader-10으로 10회 판독하고 해시를 확인하는 것이다.",
+      "restatement": "목적: Relay10을 비교·설계·출시한다. 결과: v0.1.1이 공개됐고 공식 검증 경로는 Codex CLI와 현재 OpenAI 모델이다. 근거: 74개 테스트, 문법·구조·모델·패키지 검사를 통과했으며 출처와 로그가 연결돼 있다. 남은 위험: Reader-10 실제 10회 판독과 해시 확인이 아직 대기 중이고 Grok·Claude·Gemini·앱 통합은 미지원 또는 미검증이다. 다음 행동: 담당자가 audit:launch를 실행하고 별도 JSON의 10/10, 치명적 문제 0개, reportSha256 일치를 확인한다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -221,18 +220,21 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 Relay10을 구현하고 출시하는 것이다. v0.1.1은 GitHub에 공개됐고 자동 검증은 통과했다. 근거는 74개 테스트, 문법·모델·패키지 검사와 비교 출처다. 남은 위험은 라우팅 정확도, 판단 상관성, 빠르게 변하는 비교 대상이다. 다음은 HTML을 Reader-10으로 10회 판독하고 해시를 확인하는 것이다.",
+        "restatement": "목적: Relay10을 비교·설계·출시한다. 결과: v0.1.1이 공개됐고 공식 검증 경로는 Codex CLI와 현재 OpenAI 모델이다. 근거: 74개 테스트, 문법·구조·모델·패키지 검사를 통과했으며 출처와 로그가 연결돼 있다. 남은 위험: Reader-10 실제 10회 판독과 해시 확인이 아직 대기 중이고 Grok·Claude·Gemini·앱 통합은 미지원 또는 미검증이다. 다음 행동: 담당자가 audit:launch를 실행하고 별도 JSON의 10/10, 치명적 문제 0개, reportSha256 일치를 확인한다.",
         "blocking_ambiguities": [],
         "jargon": [
-          "OMO·OMP·OMC·OMX·GJC",
-          "Codex 하네스",
+          "하네스",
           "라우팅",
+          "Codex subprocess",
           "Reader-10",
-          "economy·balanced·frontier",
-          "SHA-256",
-          "Codex subprocess"
+          "reportSha256",
+          "Responses API",
+          "provider",
+          "E2E",
+          "MCP",
+          "Apps SDK"
         ],
-        "action": "보고서 생성 후 Reader-10 판독을 실행하고 별도 JSON의 passedPersonas 10, criticalCount 0, reportSha256 일치를 확인한다."
+        "action": "내용 구조만으로도 목적, 출시 결과, 검증 근거, 경계와 위험, 후속 조치를 정확히 파악할 수 있다."
       }
     },
     {
@@ -240,31 +242,28 @@
       "name": "근거 확인 독자",
       "description": "수치와 결론의 검증 근거를 찾는 독자",
       "passed": true,
-      "restatement": "목적은 Relay10을 구현·출시하고 조사와 검증 결과를 보고하는 것이다. v0.1.1은 공개됐고 74개 테스트 등은 통과했지만 Reader-10 판독은 아직 대기 중이다. 다음 행동은 audit:launch 실행과 해시 확인이다.",
+      "restatement": "목적은 Relay10을 비교·설계·출시하는 것이다. v0.1.1은 Codex CLI와 현재 OpenAI 모델 경로로 공개됐고, 자동 검증 74개와 관련 로그가 근거다. Reader-10 실제 판독과 Grok 종단간 검증은 아직 남아 있다. 다음 조치는 audit:launch를 실행해 10회 판독하고 별도 JSON의 해시를 확인하는 것이다.",
       "checks": [
         {
           "id": "live-understanding",
           "label": "목적·결과·근거·위험·다음 행동을 재진술한다",
           "passed": true,
           "severity": "warning",
-          "detail": "74개 테스트의 개별 결과와 실제 검증 범위가 보고서만으로는 제한적이다. · Reader-10 JSON의 현재 존재 여부와 최종 판독 결과가 아직 제시되지 않았다."
+          "detail": "이해도 문제 없음"
         }
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 Relay10을 구현·출시하고 조사와 검증 결과를 보고하는 것이다. v0.1.1은 공개됐고 74개 테스트 등은 통과했지만 Reader-10 판독은 아직 대기 중이다. 다음 행동은 audit:launch 실행과 해시 확인이다.",
-        "blocking_ambiguities": [
-          "74개 테스트의 개별 결과와 실제 검증 범위가 보고서만으로는 제한적이다.",
-          "Reader-10 JSON의 현재 존재 여부와 최종 판독 결과가 아직 제시되지 않았다."
-        ],
+        "restatement": "목적은 Relay10을 비교·설계·출시하는 것이다. v0.1.1은 Codex CLI와 현재 OpenAI 모델 경로로 공개됐고, 자동 검증 74개와 관련 로그가 근거다. Reader-10 실제 판독과 Grok 종단간 검증은 아직 남아 있다. 다음 조치는 audit:launch를 실행해 10회 판독하고 별도 JSON의 해시를 확인하는 것이다.",
+        "blocking_ambiguities": [],
         "jargon": [
-          "Reader-10",
+          "하네스",
           "라우팅",
-          "Codex subprocess",
-          "SHA-256",
-          "dry-run"
+          "Reader-10",
+          "종단간 검증",
+          "reportSha256"
         ],
-        "action": "npm run audit:launch를 실행하고 10/10 통과, criticalCount 0, reportSha256 일치를 확인한다."
+        "action": "@minwoo19930301이 relay10 저장소에서 npm run audit:launch를 실행하고, 10/10 판독·치명적 문제 0개·HTML 해시 일치를 확인한다."
       }
     },
     {
@@ -272,7 +271,7 @@
       "name": "실행 담당자",
       "description": "보고서를 읽고 바로 행동해야 하는 독자",
       "passed": true,
-      "restatement": "Relay10은 단계별 모델 라우팅을 갖춘 경량 Codex 하네스다. v0.1.1은 공개됐고, 74개 테스트·문법·모델·패키지 검사가 통과했다. 근거는 검증 로그와 비교 프로젝트 출처다. 남은 위험은 라우팅 정확도, 모델 판단 상관성, 비교 자료의 변경이다. 다음은 담당자가 audit:launch를 실행해 Reader-10 판독을 완료하고 해시를 확인하는 것이다.",
+      "restatement": "목적: Relay10을 비교·설계·출시한다. 결과: v0.1.1이 공개됐고 Codex CLI/OpenAI 경로만 검증됐다. 근거: 74개 테스트, lint, doctor, route, 패키지 검사와 출처 문서. 위험: Reader-10 실제 판독과 Grok 종단간 검증이 미완료이며 Claude·Gemini·앱 네이티브 통합은 미지원이다. 다음: 담당자가 audit:launch를 실행하고 JSON의 10/10·criticalCount 0·해시 일치를 확인한다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -284,15 +283,15 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "Relay10은 단계별 모델 라우팅을 갖춘 경량 Codex 하네스다. v0.1.1은 공개됐고, 74개 테스트·문법·모델·패키지 검사가 통과했다. 근거는 검증 로그와 비교 프로젝트 출처다. 남은 위험은 라우팅 정확도, 모델 판단 상관성, 비교 자료의 변경이다. 다음은 담당자가 audit:launch를 실행해 Reader-10 판독을 완료하고 해시를 확인하는 것이다.",
+        "restatement": "목적: Relay10을 비교·설계·출시한다. 결과: v0.1.1이 공개됐고 Codex CLI/OpenAI 경로만 검증됐다. 근거: 74개 테스트, lint, doctor, route, 패키지 검사와 출처 문서. 위험: Reader-10 실제 판독과 Grok 종단간 검증이 미완료이며 Claude·Gemini·앱 네이티브 통합은 미지원이다. 다음: 담당자가 audit:launch를 실행하고 JSON의 10/10·criticalCount 0·해시 일치를 확인한다.",
         "blocking_ambiguities": [],
         "jargon": [
           "Reader-10",
           "reportSha256",
-          "모델 라우팅",
-          "Codex subprocess"
+          "Codex subprocess",
+          "종단간 검증"
         ],
-        "action": "clone한 저장소에서 npm run audit:launch를 실행하고, 10/10·criticalCount 0·HTML 해시 일치를 확인한다."
+        "action": "npm run audit:launch 실행 후 launch-reader-live.json에서 10/10, 치명적 문제 0, HTML 해시 일치를 확인한다."
       }
     },
     {
@@ -300,7 +299,7 @@
       "name": "결론 우선 독자",
       "description": "본문보다 요약과 최종 상태를 먼저 읽는 독자",
       "passed": true,
-      "restatement": "목적은 Relay10 출시와 단계별 모델 라우팅을 설명하는 것. 제품 v0.1.1은 공개 완료됐고, 74개 테스트 등은 통과했다. 남은 위험은 모델 배정 정확도와 동일 계열 모델 편향이다. 다음 행동은 audit:launch를 실행해 Reader-10 JSON과 HTML 해시를 확인하는 것이다.",
+      "restatement": "목적은 여러 코딩 하네스를 비교해 경량 Relay10을 출시하는 것이다. v0.1.1은 2026-07-13 공개됐고 Codex CLI·현재 OpenAI 모델만 검증됐다. 근거는 74개 테스트, lint·doctor·route·패키지 검사와 출처 문서다. Reader-10 실제 판독은 아직 대기 중이며 Grok·앱 통합도 미검증 또는 미지원이다. 다음은 담당자가 audit:launch를 실행하고 별도 JSON의 10/10·해시 일치를 확인하는 것이다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -312,16 +311,19 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 Relay10 출시와 단계별 모델 라우팅을 설명하는 것. 제품 v0.1.1은 공개 완료됐고, 74개 테스트 등은 통과했다. 남은 위험은 모델 배정 정확도와 동일 계열 모델 편향이다. 다음 행동은 audit:launch를 실행해 Reader-10 JSON과 HTML 해시를 확인하는 것이다.",
+        "restatement": "목적은 여러 코딩 하네스를 비교해 경량 Relay10을 출시하는 것이다. v0.1.1은 2026-07-13 공개됐고 Codex CLI·현재 OpenAI 모델만 검증됐다. 근거는 74개 테스트, lint·doctor·route·패키지 검사와 출처 문서다. Reader-10 실제 판독은 아직 대기 중이며 Grok·앱 통합도 미검증 또는 미지원이다. 다음은 담당자가 audit:launch를 실행하고 별도 JSON의 10/10·해시 일치를 확인하는 것이다.",
         "blocking_ambiguities": [],
         "jargon": [
+          "하네스",
+          "라우팅",
           "Reader-10",
-          "reportSha256",
-          "frontier",
           "Codex subprocess",
-          "dry-run"
+          "frozen replay",
+          "reportSha256",
+          "Responses API",
+          "provider"
         ],
-        "action": "명확하지만 핵심 요약이 매우 길다. 제품 출시 완료와 보고서 검수 대기를 짧은 상태 표로 먼저 제시하면 더 빠르게 이해된다."
+        "action": "docs/launch-reader-live.json을 확인해 Reader-10 판독 결과와 HTML 해시 일치를 검증한다."
       }
     }
   ]

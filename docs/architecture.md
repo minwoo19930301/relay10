@@ -5,6 +5,29 @@ zero third-party npm runtime dependencies. It does not replace the agent
 runtime, provide a second terminal interface, or maintain a hidden memory
 database. A run writes inspectable artifacts beneath `.relay10/runs/<id>/`.
 
+## Current Codex runtime coupling
+
+Version 0.1.1 is intentionally, and concretely, Codex-runtime-only:
+
+- `src/executor.mjs` starts `codex exec` for every model stage;
+- `src/catalog.mjs` discovers models with `codex debug models`;
+- `r10 doctor` checks `codex --version`;
+- stage arguments use Codex sandbox, search, output-schema, ephemeral, and
+  reasoning-effort flags;
+- configuration has model overrides, but no `providerId`, base URL, API key,
+  provider profile, or capability negotiation.
+
+This means the verified release path is Codex CLI with the local OpenAI model
+catalog. An xAI/Grok Responses endpoint may be reachable experimentally through
+a user-level Codex custom provider, but Relay10 does not configure or validate
+that path and cannot mix providers by stage. Direct OpenAI API, Anthropic,
+Gemini, and xAI executors are not implemented.
+
+Protocol compatibility alone is insufficient. Codex currently supplies the
+workspace file tools, shell execution, sandbox and approval behavior, search,
+tool-call loop, schema output, and catalog. A direct provider adapter must also
+supply or connect to that workspace-agent runtime.
+
 ```text
 request
   -> deterministic initial task assessment
@@ -97,8 +120,46 @@ Codex installation, configuration, hooks, MCP servers, credentials, and
 operating system; Relay10 cannot independently constrain capabilities supplied
 outside its subprocess arguments.
 
+## Target portability boundary
+
+Multi-provider and app support should preserve the artifact and safety contract
+by separating four layers:
+
+```text
+workflow core
+  -> provider/catalog adapter
+  -> workspace-agent executor adapter
+  -> common StageResult + artifact contract
+  -> CLI / MCP / App Server / GUI surface adapter
+```
+
+The first useful extraction is a `CodexProfileAdapter`: discover a catalog and
+execute a stage through a named Codex provider profile while validating model
+effort, tool, search, and schema capabilities. Native xAI, Anthropic, or Gemini
+adapters should only be labelled supported after end-to-end workspace tests,
+not merely after a text response succeeds.
+
+For app surfaces:
+
+- a Skill can document and call `r10 route/run/inspect`, but cannot by itself
+  force the current Codex desktop task to switch models per stage;
+- a Codex Plugin with a local stdio MCP server can expose `route`, `run`,
+  `status`, `inspect`, and `report` as app tools while reusing the CLI engine;
+- ChatGPT requires a remote MCP backend and optional Apps SDK UI; a web client
+  does not gain direct access to a local Mac repository;
+- a provider-neutral desktop GUI needs a local sidecar, while a Codex-native
+  custom client can use Codex App Server.
+
+These are roadmap boundaries, not features present in 0.1.1. See
+[`lineage-and-portability.md`](./lineage-and-portability.md) for the complete
+support matrix and official references.
+
 ## Version 0.1 omissions
 
+- There are no direct provider adapters, per-stage provider selection, or
+  mixed-provider runs.
+- There is no Skill, Plugin, MCP server, Apps SDK UI, App Server client, or
+  standalone GUI.
 - Scout is not a dedicated crawler or browser-automation engine.
 - There is no resume/checkpoint engine, `/goal` DSL, workflow scheduler, or
   durable state database.

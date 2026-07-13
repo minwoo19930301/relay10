@@ -6,6 +6,7 @@ import { escapeHtml, generateReport, renderReport, sanitizeUrl } from '../src/re
 
 const reportData = {
   title: 'Relay10 배포 준비',
+  heroSummary: 'Codex CLI 지원, 다른 공급자와 앱 네이티브 통합은 아직 미지원입니다.',
   task: '이 보고서의 목적은 경량 하네스의 배포 준비 상태를 검증하고 다음 실행 단계를 안내하는 것입니다.',
   summary: '핵심 기능과 검증 10개가 통과했습니다. 담당자는 준비 조건을 확인한 뒤 게시 명령을 실행할 수 있습니다.',
   status: 'passed',
@@ -14,6 +15,13 @@ const reportData = {
   routing: [
     { stage: '자료 읽기', enabled: true, profile: 'economy', effort: 'low', model: 'scout', reason: '구조화된 입력이라 자동 검증이 가능합니다.' },
     { stage: '분석과 계획', enabled: false, profile: 'frontier', effort: 'high', model: 'architect', reason: '출시 판단의 영향이 큽니다.' },
+  ],
+  comparisons: [
+    { name: '예제 하네스', strengths: '설치가 쉽습니다.', weaknesses: '기능이 많습니다.', adopted: '진단 명령', excluded: '상시 실행 서버' },
+  ],
+  supportMatrix: [
+    { target: 'Codex CLI', status: 'pass', current: '지원', reason: 'Codex 실행기를 사용합니다.', required: '추가 작업 없음' },
+    { target: '다른 공급자', status: 'fail', current: '미지원', reason: '공급자 어댑터가 없습니다.', required: '실행 어댑터 구현' },
   ],
   stages: [
     {
@@ -70,10 +78,16 @@ test('generateReport creates a self-contained, accessible Korean HTML report', (
   assert.match(html, /Content-Security-Policy/);
   assert.match(html, /<main id="main"/);
   assert.match(html, /<h1>Relay10 배포 준비<\/h1>/);
+  assert.match(html, /핵심 요약:<\/strong> Codex CLI 지원, 다른 공급자와 앱 네이티브 통합은 아직 미지원입니다/);
   assert.match(html, /<th scope="col">단계<\/th>/);
   assert.match(html, /<th scope="col">실행 여부<\/th>/);
   assert.match(html, /> 실행<\/span>/);
   assert.match(html, /> 건너뜀<\/span>/);
+  assert.match(html, /하네스별 장단점과 Relay10 체리피킹/);
+  assert.match(html, /Relay10이 채택한 패턴/);
+  assert.match(html, /현재 공급자·CLI·앱 지원 범위/);
+  assert.match(html, /> 지원<\/span>/);
+  assert.match(html, /> 미지원<\/span>/);
   assert.match(html, /Reader-10 검수/);
   assert.match(html, /10\/10 자동 구조 프로필 통과/);
   assert.match(html, /자동 구조 모드: 모델을 호출하지 않고 HTML 구조/);
@@ -132,6 +146,8 @@ test('generateReport escapes every caller-provided HTML value and drops unsafe l
     ...reportData,
     title: '<img src=x onerror=alert(1)>',
     stages: [{ name: '<script>bad()</script>', output: '</code><script>bad()</script>' }],
+    comparisons: [{ name: '<b>비교</b>', strengths: '<img src=x>', weaknesses: 'x', adopted: 'y', excluded: 'z' }],
+    supportMatrix: [{ target: '<svg onload=bad()>', current: '미지원', status: 'fail', reason: '<script>bad()</script>', required: 'adapter' }],
     evidence: [{ title: '<b>위험 링크</b>', url: 'javascript:alert(1)' }],
   });
   assert.doesNotMatch(html, /<script\b/i);

@@ -20,5 +20,5 @@ export function explainerPrompt(task, runDir, feedbackFile = '') {
 }
 
 export function liveReaderPrompt(reportFile, persona) {
-  return `You are Reader ${persona.id}: ${persona.name}. ${persona.description}\n\nRead only this report: ${reportFile}\nJudge clarity, not technical correctness. Return JSON matching the required schema. "understood" is true only if you can accurately restate the purpose, outcome, evidence, remaining risk, and next action without guessing. Blocking ambiguities must be concrete. Keep each string short.`;
+  return `You are Reader ${persona.id}: ${persona.name}. ${persona.description}\n\nRead only this report: ${reportFile}\nJudge clarity, not technical correctness. Return JSON matching the required schema. "understood" is true only if you can accurately restate the purpose, outcome, evidence, remaining risk, and next action without guessing. An explicitly stated pending, unsupported, unverified, or no-committed-date status is information, not a blocking ambiguity; judge whether the report clearly identifies that boundary and the authoritative follow-up artifact or action. Do not require a future result or calendar deadline that the report explicitly says does not yet exist. Blocking ambiguities must be concrete contradictions or missing information that prevents the five-part restatement. Keep each string short.`;
 }
