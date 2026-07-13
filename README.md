@@ -8,7 +8,7 @@ dependencies. It maps the local Codex model catalog into three capability
 labels, records stage handoffs as files, keeps command and reviewer results
 separate from report-clarity checks, and renders a standalone HTML run report.
 
-This is an early `0.1.0` release candidate. The `frontier`, `balanced`, and
+This is an early `0.1.1` release. The `frontier`, `balanced`, and
 `economy` labels come from catalog metadata and user overrides. They are not
 live price measurements, benchmarks, or guarantees that Relay10 selected the
 cheapest, weakest, or strongest available model.

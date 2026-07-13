@@ -9,14 +9,14 @@ const outputs = path.join(root, 'outputs');
 await mkdir(outputs, { recursive: true });
 
 const repository = 'https://github.com/minwoo19930301/relay10';
-const releaseTarget = `${repository}/releases/tag/v0.1.0`;
+const releaseTarget = `${repository}/releases/tag/v0.1.1`;
 const task = '국내 OMO·OMP·OMC·OMX·GJC·LazyCodex와 글로벌 코딩 에이전트 프로젝트를 공개 근거로 비교하고, 단계별 모델·추론 노력 라우팅과 10회 저비용 독자 검수를 갖춘 더 가벼운 Codex 하네스를 구현해 GitHub 출시를 준비한다.';
-const summary = '현재 상태: 공개 저장소와 코드는 준비됐지만 v0.1.0 릴리스는 보류 중이다. 이 HTML은 새 수정본이며 아직 실제 모델 판독을 받지 않았다. 바로 전 수정본의 실제 판독은 8/10으로 실패했다. @minwoo19930301이 이 HTML을 npm run audit:launch로 10회 판독하고, 9/10 이상이며 치명적 구조 문제가 0개이면 같은 담당자가 릴리스를 승인한다. 자동 구조 검사의 10/10은 모델을 호출하지 않는 별도 형식 검사이므로 실제 판독 8/10과 합치거나 평균내지 않는다. 구현 근거는 73개 자동 테스트, 문법 검사, 실제 모델 탐색, 모델 배정 미리보기, 패키지 검사다. 남은 위험은 초기 규칙 기반 모델 배정의 실전 정확도, 같은 모델 계열 판단의 상관성, 비교 프로젝트의 빠른 변경이다. 용어: OMO(Oh My OpenAgent), OMP(Oh My Pi), OMC(Oh My ClaudeCode), OMX(Oh My Codex), GJC(Gajae-Code), CLI(명령줄 인터페이스), HTML(웹 문서 형식), URL(웹 주소), MIT(오픈소스 라이선스), LICENSE(라이선스 파일), RPC(원격 프로시저 호출), DSL(도메인 전용 언어), Reader-10(열 가지 독자 역할 검수), 하네스(작업 단계를 연결하는 실행 도구), 라우팅(단계별 모델 배정), economy(가벼운 역할), balanced(중간 역할), frontier(고성능 역할), low(낮은 추론 노력).';
+const summary = '현재 상태: 공개 저장소와 코드는 준비됐지만 v0.1.1 릴리스는 보류 중이다. 이 HTML은 새 수정본이며 아직 실제 모델 판독을 받지 않았다. 바로 전 수정본의 실제 판독은 10/10으로 통과했다. 이후 깨끗한 v0.1.0 clone에서 예제 설정 파일이 빠진 문제를 발견해 무시 규칙을 고쳤고, v0.1.0은 대체 대상으로 표시한다. @minwoo19930301이 이 v0.1.1 HTML을 npm run audit:launch로 10회 판독하고, 9/10 이상이며 치명적 구조 문제가 0개이면 같은 담당자가 릴리스를 승인한다. 자동 구조 검사의 10/10은 모델을 호출하지 않는 별도 형식 검사이므로 실제 판독과 합치거나 평균내지 않는다. 구현 근거는 73개 자동 테스트, 문법 검사, 실제 모델 탐색, 모델 배정 미리보기, 패키지 검사다. 남은 위험은 초기 규칙 기반 모델 배정의 실전 정확도, 같은 모델 계열 판단의 상관성, 비교 프로젝트의 빠른 변경이다. 용어: OMO(Oh My OpenAgent), OMP(Oh My Pi), OMC(Oh My ClaudeCode), OMX(Oh My Codex), GJC(Gajae-Code), CLI(명령줄 인터페이스), HTML(웹 문서 형식), URL(웹 주소), MIT(오픈소스 라이선스), LICENSE(라이선스 파일), RPC(원격 프로시저 호출), DSL(도메인 전용 언어), Reader-10(열 가지 독자 역할 검수), 하네스(작업 단계를 연결하는 실행 도구), 라우팅(단계별 모델 배정), economy(가벼운 역할), balanced(중간 역할), frontier(고성능 역할), low(낮은 추론 노력).';
 
 const evidence = [
   { title: 'Relay10 공개 저장소', url: repository, note: 'GitHub CLI로 게시한 공식 저장소다.' },
-  { title: 'Relay10 v0.1.0 릴리스 예정 주소', url: releaseTarget, note: '최종 실제 독자 검수 통과 전에는 존재하지 않는 것이 정상이다.' },
-  { title: '직전 실제 Reader-10 실패 기록', url: `${repository}/blob/main/docs/launch-reader-live.json`, note: 'gpt-5.6-luna/low 10회 중 8회 통과. 이번 HTML의 판독 전 입력이며, 최종 실행 시 같은 파일이 새 결과로 교체된다.' },
+  { title: 'Relay10 v0.1.1 릴리스 예정 주소', url: releaseTarget, note: '최종 실제 독자 검수와 깨끗한 clone 검증 통과 전에는 존재하지 않는 것이 정상이다.' },
+  { title: '직전 실제 Reader-10 통과 기록', url: `${repository}/blob/main/docs/launch-reader-live.json`, note: 'gpt-5.6-luna/low 10회 모두 통과, 치명적 문제 0개. 이번 v0.1.1 HTML의 판독 전 입력이며 최종 실행 시 같은 파일이 새 결과로 교체된다.' },
   { title: '자동 테스트', url: `${repository}/tree/main/test`, note: '73개 회귀 테스트: 모델 배정, 구성, 하위 프로세스, 파이프라인, 동결 재생, 보고서 안전성.' },
   { title: '한국 하네스 조사 원문', url: `${repository}/blob/main/docs/korea-landscape.md`, note: '사실·추론·명칭 혼선을 분리한 2026-07-13 스냅샷.' },
   { title: '글로벌 오픈소스 조사 원문', url: `${repository}/blob/main/docs/global-landscape.md`, note: '실사용 점유율이 아닌 공개 프로젝트 지형과 선행 패턴.' },
@@ -49,14 +49,14 @@ const verificationChecks = [
   { name: '라우팅 스모크', passed: true, detail: '출시 성격의 요청을 frontier 위험도로 분류하고 5개 모델 단계와 구조 Reader-10 계획을 출력.' },
   { name: '패키지 검사', passed: true, detail: 'npm pack --dry-run: 19개 파일, 약 45 kB 압축, third-party npm runtime dependency 0개.' },
   { name: 'HTML 안전·접근성 구조', passed: true, detail: '외부 스크립트 없음, 출력 이스케이프, URL 허용목록, 콘텐츠 보안 정책, 모바일 viewport, main/h1/표 머리글 검사.' },
-  { name: '직전 실제 저비용 독자 검수', passed: false, detail: 'gpt-5.6-luna/low 10회 중 8회 통과. 초보자와 쉬운 문장 독자가 점수 비교, 치명적 문제 기준, 수정·승인 담당자를 더 명확히 쓰라고 지적했다. 이 HTML은 그 지적을 반영한 판독 전 수정본이다.' },
+  { name: '직전 실제 저비용 독자 검수', passed: true, detail: 'gpt-5.6-luna/low 10회 모두 통과, 치명적 문제 0개. 그 뒤 깨끗한 clone 검증이 예제 설정 누락을 찾아 v0.1.1 수정본을 다시 검수한다.' },
 ];
 
 const stages = [
   {
     title: '검수 상태를 읽는 법', status: 'warn', profile: '출시 게이트', model: '@minwoo19930301',
     summary: '자동 형식 검사, 직전 실제 판독, 이번 판독 입력을 서로 다른 상태로 분리한다.',
-    output: '자동 구조 검사: 10/10 통과. 모델 호출 없음. HTML 형식과 접근성만 검사.\n직전 실제 모델 판독: 8/10 실패. 이 HTML을 만들기 전 결과.\n현재 HTML: 판독 전 입력. npm run audit:launch가 같은 저비용 모델을 열 가지 역할로 호출.\n출시 기준: 실제 판독 9/10 이상, 치명적 구조 문제 0개.\n치명적 구조 문제: 본문 없음, 실행 가능한 위험 링크, 활성 외부 삽입, 이미지 설명 누락처럼 읽기나 안전을 막는 문제.\n수정 담당: @minwoo19930301. 검수 실행 담당: @minwoo19930301. 최종 릴리스 승인과 GitHub 게시 담당: @minwoo19930301.',
+    output: '자동 구조 검사: 10/10 통과. 모델 호출 없음. HTML 형식과 접근성만 검사.\n직전 실제 모델 판독: 10/10 통과. v0.1.0 문서 결과.\n현재 v0.1.1 HTML: 판독 전 입력. npm run audit:launch가 같은 저비용 모델을 열 가지 역할로 호출.\n출시 기준: 실제 판독 9/10 이상, 치명적 구조 문제 0개, 깨끗한 clone 자동 테스트 전부 통과.\n치명적 구조 문제: 본문 없음, 실행 가능한 위험 링크, 활성 외부 삽입, 이미지 설명 누락처럼 읽기나 안전을 막는 문제.\n수정 담당: @minwoo19930301. 검수 실행 담당: @minwoo19930301. 최종 릴리스 승인과 GitHub 게시 담당: @minwoo19930301.',
   },
   {
     title: 'OMO(Oh My OpenAgent)', status: 'pass', profile: '국내 비교', model: '공식 저장소',
@@ -105,8 +105,8 @@ const stages = [
   },
   {
     title: '출시·운영 안내', status: 'warn', profile: '사람 승인 필요', model: '@minwoo19930301',
-    summary: '공개 저장소는 준비됐고 v0.1.0 릴리스는 보류다. 최종 실제 Reader-10 재검수 통과 뒤 릴리스를 게시한다.',
-    output: `현재 상태: 저장소 공개 완료, v0.1.0 릴리스 보류.\n저장소: ${repository}\n릴리스 예정 주소: ${releaseTarget}\n로컬 설치: git clone ${repository}.git && cd relay10 && npm link\n검증: npm test && npm run lint && r10 doctor\n모델 배정 확인: r10 route "research and build a small CLI" --json\n실행 전 미리보기: r10 run "your task" --dry-run\n실제 독자 검수 기록: docs/launch-reader-live.json 및 outputs/relay10-launch-reader-live.json\n수정·검수 실행·최종 승인·GitHub 게시 담당: @minwoo19930301. 0.1 평가 제안은 읽기 10건, 구현 10건, 고위험 미리보기 10건에서 기대 모델 배정과 실패 상태를 기록하는 것이다. 완료 기준은 30건 전체에 기대 배정 라벨, 허위 통과 0건, 치명적 독자 문제 0건이다. 비교 코드 재사용이나 OMO 계열 상업 사용이 생기면 릴리스 전에 별도 라이선스 검토를 연다.`,
+    summary: '공개 저장소는 준비됐고 v0.1.1 릴리스는 보류다. 최종 실제 Reader-10과 깨끗한 clone 검증 뒤 릴리스를 게시한다.',
+    output: `현재 상태: 저장소 공개 완료, v0.1.0은 예제 설정 누락으로 대체 예정, v0.1.1 릴리스 보류.\n저장소: ${repository}\n릴리스 예정 주소: ${releaseTarget}\n로컬 설치: git clone ${repository}.git && cd relay10 && npm link\n검증: npm test && npm run lint && r10 doctor\n모델 배정 확인: r10 route "research and build a small CLI" --json\n실행 전 미리보기: r10 run "your task" --dry-run\n실제 독자 검수 기록: docs/launch-reader-live.json 및 outputs/relay10-launch-reader-live.json\n수정·검수 실행·최종 승인·GitHub 게시 담당: @minwoo19930301. 0.1 평가 제안은 읽기 10건, 구현 10건, 고위험 미리보기 10건에서 기대 모델 배정과 실패 상태를 기록하는 것이다. 완료 기준은 30건 전체에 기대 배정 라벨, 허위 통과 0건, 치명적 독자 문제 0건이다. 비교 코드 재사용이나 OMO 계열 상업 사용이 생기면 릴리스 전에 별도 라이선스 검토를 연다.`,
   },
 ];
 
@@ -116,7 +116,7 @@ const nextSteps = [
   '안전한 첫 확인: r10 route "research and build a small CLI" --json 후 --dry-run 옵션으로 실제 변경 없이 계획만 확인한다.',
   '담당자 @minwoo19930301이 이 HTML을 npm run audit:launch로 최종 10회 판독한다. 9/10 미만 또는 치명적 구조 문제 1개 이상이면 출시하지 않는다.',
   '실패하면 outputs/relay10-launch-reader-live.json의 “막힌 모호점” 목록을 고치고 HTML을 다시 생성한 뒤 10회 전체를 재실행한다.',
-  '검수 통과 후 같은 담당자가 gh repo view minwoo19930301/relay10, gh release view v0.1.0 --repo minwoo19930301/relay10로 공개 상태를 확인하고 릴리스를 승인한다.',
+  '검수와 깨끗한 clone 테스트 통과 후 같은 담당자가 gh repo view minwoo19930301/relay10, gh release view v0.1.1 --repo minwoo19930301/relay10로 공개 상태를 확인하고 릴리스를 승인한다.',
   '30개 라우팅 평가 세트를 @minwoo19930301이 관리한다. 실측 전에는 비용·속도·품질 우월성을 광고하지 않는다.',
 ];
 
