@@ -1,0 +1,14 @@
+{
+  "name": "relay10",
+  "displayName": "Relay10",
+  "version": "0.1.1",
+  "description": "Eight small, on-demand skills for evidence-led repository work with Relay10.",
+  "author": {
+    "name": "minwoo19930301",
+    "url": "https://github.com/minwoo19930301"
+  },
+  "homepage": "https://github.com/minwoo19930301/relay10#relay10-skill-pack",
+  "repository": "https://github.com/minwoo19930301/relay10",
+  "license": "MIT",
+  "keywords": ["claude-code", "agent-skills", "model-routing", "release-evidence"]
+}

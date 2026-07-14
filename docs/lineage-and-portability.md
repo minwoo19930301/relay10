@@ -11,14 +11,19 @@ Codex CLI와 이 환경에서 발견된 OpenAI 모델이다.
   provider와 xAI의 Responses API를 조합하는 실험 경로는 성립할 가능성이
   있지만, 파일 도구·검색·structured output·Reader-10까지 종단간 검증하지
   않았으므로 현재 릴리스에서 지원으로 표시하지 않는다.
-- Claude와 Gemini API 직접 연결은 지원하지 않는다.
+- Claude와 Gemini API 직접 연결은 지원하지 않는다. 이는 stage 실행기
+  이야기다. main의 Skill/Plugin preview는 Claude Code가 Relay10 스킬을
+  로드하고 `r10` CLI를 부르는 표면을 제공하지만, stage 실행은 여전히
+  Codex CLI subprocess다.
 - 한 실행에서 scout는 Grok, architect는 OpenAI, maker는 Claude처럼
   공급자를 섞는 기능도 없다.
 - Codex 데스크톱 task에서 shell로 `r10`을 부를 수는 있지만 이는 앱
   네이티브 통합이 아니라 별도 Codex CLI subprocess를 다시 실행하는
   간접 사용이다.
 - Codex Plugin·Skill·MCP, ChatGPT Apps SDK, 독립 GUI는 가능한 다음
-  배포 표면이지만 v0.1.1에는 구현돼 있지 않다.
+  배포 표면이지만 v0.1.1에는 구현돼 있지 않다. main에는 Codex와
+  Claude Code 두 host용 Skill pack·plugin manifest preview가 있고,
+  MCP·custom UI는 여전히 없다.
 
 이 문서에서 **채택**은 비교 프로젝트의 코드를 가져왔다는 뜻이 아니다.
 Relay10은 비교 대상 소스 코드를 포함하지 않는 clean-room MIT 구현이며,
@@ -102,6 +107,8 @@ base URL만 바꾸면 text endpoint는 연결될 수 있어도 이 코딩-agent 
 | Codex 데스크톱·IDE | **main Skill preview, 실행은 간접** | repo-scoped Skill 또는 앱 task의 shell 호출 | 내부 실행은 별도 Codex CLI다. 앱의 현재 task model을 단계별로 바꾸지 않는다. |
 | Codex Skill | **main에 8개 구현·정적 검증** | `.agents/skills`가 Plugin의 canonical Skill pack을 가리킴 | Skill은 재사용 지침이지 강제 router나 전용 UI가 아니다. surface별 trigger forward eval은 아직 필요하다. |
 | Codex Plugin | **main manifest·Skill bundle preview** | `plugins/relay10/.codex-plugin/plugin.json` | marketplace에 게시하지 않았고 MCP·hook·custom UI가 없다. 고정 v0.1.1 tag에는 포함되지 않는다. |
+| Claude Code Skill | **main에 8개 공유 pack·로컬 검증** | `.claude/skills` symlink가 Plugin의 canonical Skill pack을 가리키고, repo를 연 Claude Code 세션이 8개 skill을 로드함을 확인 | Skill은 재사용 지침이지 stage 실행이 아니다. `r10` model stage는 여전히 인증된 Codex CLI가 필요하다. |
+| Claude Code Plugin + marketplace | **main manifest preview·`claude plugin validate` 통과** | `plugins/relay10/.claude-plugin/plugin.json`과 루트 `.claude-plugin/marketplace.json` | curated marketplace에 게시하지 않았고 MCP·hook·custom UI가 없다. 고정 v0.1.1 tag에는 포함되지 않는다. |
 | Codex Plugin + local MCP | **MCP 미구현** | `relay10.route/run/status/inspect/report` 도구 | 앱 안의 native progress 경험은 만들 수 있지만 stage model execution은 Relay10 server가 맡아야 한다. |
 | ChatGPT 앱·웹 | **미지원** | remote MCP + Apps SDK UI | ChatGPT 웹이 이 Mac의 local repo를 직접 실행하는 구조가 아니므로 remote worker 또는 안전한 sidecar가 필요하다. |
 | 독립 Electron·Tauri·Swift GUI | **미구현** | provider-neutral local sidecar | path allowlist, 인증, 취소, concurrency lock, approval UI가 필요하다. |
@@ -144,9 +151,9 @@ workflow core
 
 ## 출시 순서 제안
 
-1. **v0.2 후보 — 앱 노출:** main의 Plugin manifest와 8 Skill은 구현됐다.
-   surface별 forward eval과 marketplace packaging 뒤 local stdio MCP로 기존 CLI의
-   `route/run/status/inspect/report`를 노출한다.
+1. **v0.2 후보 — 앱 노출:** main의 Codex·Claude Code plugin manifest와 8 Skill은
+   구현됐다. surface별 forward eval과 marketplace packaging 뒤 local stdio MCP로
+   기존 CLI의 `route/run/status/inspect/report`를 노출한다.
 2. **v0.3 — 공급자 분리:** `CatalogAdapter`, `ExecutorAdapter`, stage별
    `{ providerId, model, effort }`, capability negotiation을 추가한다. xAI/Grok
    E2E를 통과한 뒤에만 공식 지원으로 표시한다.

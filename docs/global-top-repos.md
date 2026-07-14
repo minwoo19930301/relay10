@@ -89,7 +89,8 @@ influences, not copied text or code.
 | `relay10-release` | Verify version, package, artifacts, documentation, hashes, and release notes. | Proof-before-completion and targeted release/reader QA. | It never tags, pushes, deploys, or publishes without authorization. |
 | `relay10-skill-lab` | Design, validate, and forward-test a focused skill or plugin change. | Progressive disclosure, precise triggers, selective loading, before/after evaluation. | It rejects unlicensed copying and “more skills is better” expansion. |
 
-These skills improve how a Codex task finds and operates Relay10. They do not
+These skills improve how a Codex or Claude Code task finds and operates
+Relay10. They do not
 change the runtime support matrix: the verified execution engine remains Codex
 CLI, and a skill or manifest alone does not add Grok, Claude, Gemini, mixed
 providers, native app progress, or in-task model switching.
