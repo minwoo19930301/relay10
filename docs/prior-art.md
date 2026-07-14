@@ -25,6 +25,7 @@ popular—does not grant permission to copy it.
 | 2026-07-13 | OMO, OMP, OMC, OMX, GJC, LazyCodex and adjacent Korean discussions/projects | Product shape, role routing, workflow stages, diagnostics, wrapper boundaries, onboarding, and trade-offs. | [`korea-landscape.md`](./korea-landscape.md), [`lineage-and-portability.md`](./lineage-and-portability.md) |
 | 2026-07-13 | Global wrappers, workflow packs, independent runtimes, and asynchronous agent platforms | Category boundaries, closest routing prior art, portability, activity status, and reusable overseas patterns. | [`global-landscape.md`](./global-landscape.md) |
 | 2026-07-14 | 12 current core/harness references plus 12 skill/workflow repositories and adjacent historical cases | GitHub API stars, `pushed_at`, archive state, repository-level license signal, strengths, weaknesses, adopted patterns, and exclusions. | [`global-top-repos.md`](./global-top-repos.md) |
+| 2026-07-14 | Anthropic advisor/orchestrator experiments, OpenAI BrowseComp and Parameter Golf, and Artificial Analysis Coding Agent Index v1.1 | Role correction, task-dependent coordination overhead, checkpoint timing, benchmark limits, and a measurable conditional-advisor policy. | [`conditional-advisor-routing.md`](./conditional-advisor-routing.md) |
 
 The 2026-07-14 metadata came from GitHub REST repository responses and the
 linked repositories' current READMEs. Counts are intentionally frozen in the
@@ -90,6 +91,7 @@ the first or only source of the idea.
 | Skill systems benefit from focused triggers and progressive disclosure. | Eight one-job `relay10-*` skill folders plus a current Codex plugin manifest; only relevant instructions should load. | Hundreds of default skills, copied vendor rules, unknown hooks, telemetry, and context-heavy global injection. |
 | Portability needs an adapter contract rather than an endpoint claim. | The documented target separates workflow, catalog/provider, workspace executor, result/artifact, and UI surfaces. | Claiming Grok, Claude, Gemini, or app-native support before end-to-end tool and schema tests. |
 | Durable handoffs help inspection and replay. | Per-run files, events, hashes, model-free report regeneration, and a hash-checked frozen report copy. | A hidden memory database, full machine snapshot claims, or an unimplemented resume scheduler. |
+| Premium judgment can be wasteful before simple work and useful after evidence exposes a direction choice. | The default architect is an evidence-gated advisor: economy/no-question runs record a skip, while non-economy or unresolved-question runs invoke it and record the budget. | Hard-coded provider pairings, universal percentage-savings claims, automatic fan-out, and an unimplemented mid-maker resume loop. |
 
 ## Locally authored implementation evidence
 

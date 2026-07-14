@@ -54,6 +54,45 @@ function executionBadge(enabled) {
   return statusBadge('neutral', '미기록');
 }
 
+function routingDecisionBadge(item) {
+  const decision = item?.decision;
+  if (decision === 'invoke') return statusBadge('pass', '호출');
+  if (decision === 'skip') return statusBadge('skipped', '생략');
+  if (decision === 'budget-blocked') return statusBadge('fail', '예산 부족');
+  if (decision === 'pending') return statusBadge('warn', '판단 대기');
+  return executionBadge(item?.enabled);
+}
+
+function routingBudget(value) {
+  if (!value || typeof value !== 'object') return '-';
+  const parts = [];
+  if (Number.isInteger(value.usedBefore) && Number.isInteger(value.budget)) {
+    parts.push(`판단 전 ${value.usedBefore}/${value.budget}회`);
+  }
+  if (Number.isInteger(value.mandatoryRemaining)) {
+    parts.push(`필수 잔여 ${value.mandatoryRemaining}회`);
+  }
+  if (Number.isInteger(value.advisorInvocations)) {
+    parts.push(`고급 조언 ${value.advisorInvocations}회`);
+  }
+  if (Number.isInteger(value.requiredTotal)) {
+    parts.push(`필요 합계 ${value.requiredTotal}회`);
+  }
+  return parts.join(' · ') || '-';
+}
+
+function routingEvidence(item) {
+  const value = item?.evidence;
+  const parts = [];
+  if (item?.reasonCode) parts.push(`코드 ${item.reasonCode}`);
+  if (value?.assessment?.role) parts.push(`초기 역할 ${value.assessment.role}`);
+  if (Number.isFinite(value?.assessment?.score)) parts.push(`점수 ${value.assessment.score}`);
+  if (Number.isInteger(value?.scout?.openQuestionCount)) {
+    parts.push(`미해결 질문 ${value.scout.openQuestionCount}개`);
+  }
+  return parts.join(' · ') || '-';
+}
+
 function normalizeList(value, valueKey = 'value') {
   if (Array.isArray(value)) return value;
   if (!value || typeof value !== 'object') return value == null ? [] : [value];
@@ -98,15 +137,17 @@ function renderRouting(routing) {
   if (!rows.length) return '<p class="muted">라우팅 기록이 없습니다.</p>';
   return `<div class="table-wrap" tabindex="0" role="region" aria-label="모델 라우팅 표">
     <table>
-      <thead><tr><th scope="col">단계</th><th scope="col">실행 여부</th><th scope="col">프로필</th><th scope="col">노력도</th><th scope="col">모델</th><th scope="col">선택 이유</th></tr></thead>
+      <thead><tr><th scope="col">단계</th><th scope="col">라우팅 판단</th><th scope="col">프로필</th><th scope="col">노력도</th><th scope="col">모델</th><th scope="col">판단 근거</th><th scope="col">호출 예산</th><th scope="col">선택 이유</th></tr></thead>
       <tbody>${rows.map((row, index) => {
         const item = row && typeof row === 'object' ? row : { value: row };
         return `<tr>
           <th scope="row">${escapeHtml(item.stage ?? item.name ?? item.id ?? `단계 ${index + 1}`)}</th>
-          <td>${executionBadge(item.enabled)}</td>
+          <td>${routingDecisionBadge(item)}</td>
           <td>${escapeHtml(item.profile ?? item.tier ?? item.capability ?? '-')}</td>
           <td>${escapeHtml(item.effort ?? item.reasoning ?? '-')}</td>
           <td>${escapeHtml(item.model ?? item.providerModel ?? '-')}</td>
+          <td>${escapeHtml(routingEvidence(item))}</td>
+          <td>${escapeHtml(routingBudget(item.budget))}</td>
           <td>${escapeHtml(item.reason ?? item.rationale ?? item.value ?? '-')}</td>
         </tr>`;
       }).join('')}</tbody>

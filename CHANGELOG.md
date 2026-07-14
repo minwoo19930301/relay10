@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Gate the frontier architect after scout evidence for economy-tier work while
+  preserving always/never controls and the existing artifact contract.
+- Record advisor decisions, reason codes, evidence counts, and invocation
+  budgets in run events, manifests, and HTML reports.
+- Document the Fable/Sonnet role correction, source limitations, Artificial
+  Analysis graph caveats, and a forward evaluation protocol without claiming
+  unmeasured token or currency savings.
+
 ## 0.1.1 - 2026-07-13
 
 - Include `examples/relay10.config.json` in the Git repository and release tag.

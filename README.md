@@ -15,9 +15,9 @@ cheapest, weakest, or strongest available model.
 
 ## What it does
 
-- **Deterministic initial routing:** five task dimensions select stage profiles
-  before a run starts. Version 0.1 does not automatically escalate a failed
-  stage to another model.
+- **Evidence-gated advisor routing:** five task dimensions select stage
+  profiles, then the scout evidence decides whether an economy task needs the
+  frontier architect. Version 0.1 still does not escalate after a failed stage.
 - **Small execution surface:** one Node CLI, built-in Node modules, and the
   installed Codex CLI.
 - **Inspectable handoffs:** each completed stage has a declared role, effort,
@@ -113,7 +113,7 @@ harness, workflow, and Skill lineage is recorded in `docs/prior-art.md`.
 | Stage | Capability label | Effort | Access | Purpose |
 |---|---|---:|---|---|
 | scout | economy | low | read-only + optional search | inspect sources and collect context |
-| architect | frontier | max | read-only | produce a plan |
+| architect/advisor | frontier | max | read-only | after scout, advise balanced/frontier work or economy work with unresolved questions |
 | maker | balanced | medium | workspace-write | implement the plan |
 | verification | no model | n/a | explicit argv commands | record opt-in command results |
 | reviewer | frontier | high | read-only | review correctness and risk |
@@ -123,6 +123,13 @@ harness, workflow, and Skill lineage is recorded in `docs/prior-art.md`.
 These are role defaults, not a claim that one role always receives the
 objectively best or cheapest model. The available catalog metadata and local
 overrides determine the concrete model and supported effort.
+
+The default `conditional` policy skips the architect call only when the initial
+task is economy-tier and `scout.json` contains no open questions. The run still
+keeps `architect.md` as a deterministic skip record, so the six-stage artifact
+contract remains stable. Balanced/frontier work keeps the advisor, and an
+economy run with unresolved questions stops before mutation if its invocation
+budget has no advisor headroom.
 
 ## Commands
 
@@ -167,6 +174,22 @@ command string:
 The default configuration runs no verification command. Configure commands
 that are appropriate and safe for the current repository.
 
+Advisor routing can be switched for comparison or compatibility:
+
+```json
+{
+  "routing": {
+    "advisorMode": "conditional"
+  }
+}
+```
+
+`conditional` is the default, `always` restores always-on architect invocation,
+and `never` disables the architect checkpoint. Relay10
+records invocation counts but does not currently observe provider tokens or
+billed currency, so these modes must not be described as a measured percentage
+cost saving without an external evaluation.
+
 Live Reader-10 can use the discovered economy-labelled model or supplied model
 slugs:
 
@@ -198,8 +221,12 @@ slugs:
   independent errors, and live readers check clarity rather than truth.
 - There is no resume/checkpoint engine, `/goal` DSL, long-running scheduler, or
   durable workflow database.
+- The only evidence-time checkpoint is the architect decision after scout.
+  There is no mid-maker pause/resume advisor loop or automatic escalation after
+  a failed stage.
 - Runtime model routing uses catalog descriptions, priority, supported efforts,
-  and overrides; it does not query live prices or benchmark model quality.
+  overrides, and the scout's open-question count; it does not query live prices
+  or benchmark model quality.
 - Verification commands are explicit opt-in configuration. No project command
   is inferred or run by default.
 - Saved artifacts support inspection and model-free report regeneration, but
@@ -212,6 +239,7 @@ slugs:
 - [Korean harness landscape](https://github.com/minwoo19930301/relay10/blob/main/docs/korea-landscape.md)
 - [Global harness landscape](https://github.com/minwoo19930301/relay10/blob/main/docs/global-landscape.md)
 - [Top global repositories and distilled patterns](https://github.com/minwoo19930301/relay10/blob/main/docs/global-top-repos.md)
+- [Conditional advisor evidence and routing decision](https://github.com/minwoo19930301/relay10/blob/main/docs/conditional-advisor-routing.md)
 - [Clean-room prior art ledger](https://github.com/minwoo19930301/relay10/blob/main/docs/prior-art.md)
 - [30/60/90 development and promotion playbook](https://github.com/minwoo19930301/relay10/blob/main/docs/growth-playbook.md)
 - [Launch report](https://github.com/minwoo19930301/relay10/blob/main/docs/launch-report.html)
