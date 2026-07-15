@@ -107,6 +107,8 @@ not derived copies of any compared repository:
 - `plugins/relay10/.codex-plugin/plugin.json`: Relay10's own plugin metadata;
 - `plugins/relay10/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`:
   Relay10's own Claude Code plugin and marketplace metadata.
+- `docs/host-surface-verification.md`: dated evidence for Claude Code and Grok
+  Build skill-host loading; not stage-executor proof.
 
 Relay10-specific combinations include the risk/verifiability/reversibility
 router, correctness-versus-clarity separation, literal-argv verification,
