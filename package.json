@@ -23,6 +23,8 @@
   },
   "keywords": [
     "codex",
+    "claude-code",
+    "agent-skills",
     "agent-harness",
     "model-routing",
     "multi-agent",
@@ -45,6 +47,7 @@
     "scripts",
     "docs",
     "plugins/relay10",
+    ".claude-plugin",
     "README.md",
     "LICENSE",
     "SECURITY.md"

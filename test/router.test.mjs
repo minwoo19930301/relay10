@@ -10,6 +10,8 @@ test("simple read-only work stays economy and disables mutation stages", () => {
   assert.equal(route.byId.scout.modelRole, "economy");
   assert.equal(route.byId.architect.modelRole, "frontier");
   assert.equal(route.byId.architect.effort, "max");
+  assert.equal(route.byId.architect.activation, "conditional");
+  assert.equal(route.byId.architect.checkpoint, "after-scout");
   assert.equal(route.byId.maker.enabled, false);
   assert.equal(route.byId.reviewer.enabled, true);
 });
@@ -63,6 +65,32 @@ test("routeTask emits all six stage contracts and a 10-reader clarity jury", () 
   assert.equal(route.byId.reader.fanout, 10);
   assert.equal(route.byId.reader.quorum, 9);
   assert.equal(route.byId.reader.maxRounds, 2);
+});
+
+test("conditional advisor mode invokes upfront only for non-economy work", () => {
+  const easy = routeTask("Implement a small helper and add a test.");
+  assert.equal(easy.assessment.role, "economy");
+  assert.equal(easy.byId.architect.activation, "conditional");
+  assert.equal(easy.byId.architect.decision, "pending");
+
+  const hard = routeTask("Deploy a database schema migration to production.");
+  assert.equal(hard.assessment.role, "frontier");
+  assert.equal(hard.byId.architect.activation, "always");
+  assert.equal(hard.byId.architect.decision, "invoke");
+});
+
+test("advisor mode can restore always-on routing or disable the advisor", () => {
+  const always = routeTask("Implement a small helper.", { advisorMode: "always" });
+  assert.equal(always.byId.architect.enabled, true);
+  assert.equal(always.byId.architect.activation, "always");
+
+  const never = routeTask("Deploy a database schema migration to production.", { advisorMode: "never" });
+  assert.equal(never.byId.architect.enabled, false);
+  assert.equal(never.byId.architect.activation, "never");
+  assert.throws(
+    () => routeTask("Implement a helper.", { advisorMode: "sometimes" }),
+    /advisorMode must be one of/,
+  );
 });
 
 test("report and jury options adjust reader contracts without changing assessment", () => {

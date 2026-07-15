@@ -366,6 +366,56 @@ export async function validateSkillPack(pluginRoot = DEFAULT_PLUGIN_ROOT) {
     }
   }
 
+  const claudeManifestFile = path.join(resolvedRoot, '.claude-plugin', 'plugin.json');
+  let claudeManifest = null;
+  if (!(await existsWithType(claudeManifestFile, 'file'))) {
+    addError('claude-manifest-missing', claudeManifestFile, 'missing .claude-plugin/plugin.json');
+  } else {
+    try {
+      const parsed = JSON.parse(await readFile(claudeManifestFile, 'utf8'));
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+        addError('claude-manifest-shape', claudeManifestFile, 'plugin.json must contain a JSON object');
+      } else {
+        claudeManifest = parsed;
+      }
+    } catch (error) {
+      addError('claude-manifest-json', claudeManifestFile, `plugin.json is not valid JSON: ${error.message}`);
+    }
+  }
+
+  if (claudeManifest) {
+    for (const field of ['name', 'version', 'description', 'author.name']) {
+      if (!nonEmptyString(manifestValue(claudeManifest, field))) {
+        addError('claude-manifest-required-field', claudeManifestFile, `field ${field} must be a non-empty string`);
+      }
+    }
+    if (nonEmptyString(claudeManifest.name) && !SKILL_NAME_PATTERN.test(claudeManifest.name)) {
+      addError('claude-manifest-name', claudeManifestFile, 'field name must use kebab-case');
+    }
+    if (nonEmptyString(claudeManifest.version) && !SEMVER_PATTERN.test(claudeManifest.version)) {
+      addError('claude-manifest-version', claudeManifestFile, 'field version must use strict semantic versioning');
+    }
+    if (manifest && nonEmptyString(claudeManifest.name) && nonEmptyString(manifest.name)
+      && claudeManifest.name !== manifest.name) {
+      addError('claude-manifest-name-mismatch', claudeManifestFile, 'field name must match the .codex-plugin/plugin.json name');
+    }
+    if (manifest && nonEmptyString(claudeManifest.version) && nonEmptyString(manifest.version)
+      && claudeManifest.version !== manifest.version) {
+      addError('claude-manifest-version-mismatch', claudeManifestFile, 'field version must match the .codex-plugin/plugin.json version');
+    }
+    // Claude Code scans ./skills at the plugin root by default, and that
+    // default layout is the only one this validator checks per skill. Fail
+    // closed on extra declared directories instead of pretending their
+    // skills were validated.
+    if (Object.hasOwn(claudeManifest, 'skills')) {
+      addError(
+        'claude-manifest-skills-unsupported',
+        claudeManifestFile,
+        'field skills is not validated here; keep skills in the default ./skills directory or extend the validator',
+      );
+    }
+  }
+
   let skillEntries = [];
   try {
     skillEntries = (await readdir(skillsRoot, { withFileTypes: true }))
@@ -512,7 +562,7 @@ function helpText() {
   return [
     'Usage: node scripts/validate-skill-pack.mjs [plugin-path] [--json]',
     '',
-    'Validate a Relay10 Codex plugin manifest and every bundled skill.',
+    'Validate the Relay10 Codex and Claude Code plugin manifests and every bundled skill.',
     '',
     'Options:',
     '  --json  Print the machine-readable result.',

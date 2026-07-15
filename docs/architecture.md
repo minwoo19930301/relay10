@@ -32,7 +32,8 @@ supply or connect to that workspace-agent runtime.
 request
   -> deterministic initial task assessment
   -> scout      catalog economy label / low / read-only
-  -> architect  catalog frontier label / max / read-only
+  -> advisor decision after scout evidence
+     -> architect  catalog frontier label / max / read-only, or recorded skip
   -> maker      catalog balanced label / medium / workspace-write
   -> commands   only explicitly configured argv commands
   -> reviewer   model judgment / read-only
@@ -41,7 +42,7 @@ request
   -> self-contained HTML report
 ```
 
-## Initial routing, not adaptive escalation
+## Initial routing with one evidence checkpoint
 
 Task difficulty alone is a poor proxy for a suitable role. Relay10 records five
 scores from 0 to 3:
@@ -52,10 +53,17 @@ scores from 0 to 3:
 - `verifiability`: availability of schemas, tests, and objective checks;
 - `reversibility`: expected ease of undoing the action.
 
-The router uses these values to build the stage plan before execution. In
-version 0.1, a test failure or model failure does not dynamically select a new
-model tier. Failures are recorded and can stop or fail a run; adaptive retry and
-escalation policy are future work.
+The router uses these values to build a bounded stage plan before execution.
+After scout writes evidence, one conditional checkpoint may change the
+architect from pending to invoked or skipped. Under the default policy,
+balanced/frontier tasks always invoke it; economy tasks invoke it only when
+scout records an open question. The decision and its invocation budget are
+stored in the run manifest.
+
+This is not general adaptive escalation. A test failure or model failure does
+not dynamically select a new model tier, and the maker cannot pause and resume
+around an advisor call. Failures are recorded and can stop or fail a run;
+transcript-aware retry and mid-execution advice remain future work.
 
 ## Model labels come from metadata
 
@@ -90,8 +98,8 @@ provider turns, tokens, or monetary cost.
 
 A completed run contains an artifact hash map in `run.json` and can contain:
 
-- `run.json`: task, route, selected model metadata, timestamps, gate results,
-  artifact hashes, and status;
+- `run.json`: task, selected model metadata, advisor decision/reason/evidence
+  counts/budget, timestamps, gate results, artifact hashes, and status;
 - `scout.json`, `architect.md`, `maker.md`, `reviewer.json`, and `summary.md`;
 - `verification.json`: configured command argv, exit codes, durations, bounded
   logs, and truncation indicators;
@@ -159,11 +167,14 @@ support matrix and official references.
 - There are no direct provider adapters, per-stage provider selection, or
   mixed-provider runs.
 - There is no Skill, Plugin, MCP server, Apps SDK UI, App Server client, or
-  standalone GUI.
+  standalone GUI in the v0.1.1 release; current previews add Skill and Plugin
+  bundles for Codex and Claude Code, plus Grok Build skill discovery via
+  `.agents/skills`, still without MCP or a custom UI.
 - Scout is not a dedicated crawler or browser-automation engine.
 - There is no resume/checkpoint engine, `/goal` DSL, workflow scheduler, or
   durable state database.
-- Routing does not automatically escalate after observed failures.
+- Routing has one post-scout advisor decision; it does not pause the maker or
+  automatically escalate after observed failures.
 - Model roles do not use live price or benchmark data.
 - Deterministic Reader-10 is structural rather than semantic.
 - Live Reader-10 costs ten model invocations per round and does not guarantee

@@ -3,11 +3,11 @@ export function scoutPrompt(task, runDir) {
 }
 
 export function architectPrompt(task, runDir, assessment) {
-  return `You are the quality-first architect.\n\nTask: ${task}\nScout artifact: ${runDir}/scout.json\nRisk assessment: ${JSON.stringify(assessment)}\n\nRead the scout artifact, inspect the workspace as needed, and produce a concise executable plan with scope, acceptance checks, risks, and rollback. Do not modify files. Resolve important tradeoffs explicitly. Your final response becomes ${runDir}/architect.md.`;
+  return `You are a focused frontier advisor called after initial evidence gathering.\n\nTask: ${task}\nScout artifact: ${runDir}/scout.json\nRisk assessment: ${JSON.stringify(assessment)}\n\nRead the scout artifact and inspect the workspace as needed. Resolve only the non-obvious scope, risk, or direction questions that justify this consult, then produce a concise executable plan with acceptance checks and rollback. Do not modify files. Avoid repeating obvious evidence. Your final response becomes ${runDir}/architect.md.`;
 }
 
 export function makerPrompt(task, runDir) {
-  return `You are the maker.\n\nTask: ${task}\nPlan: ${runDir}/architect.md\nEvidence: ${runDir}/scout.json\n\nImplement the requested in-scope change in the workspace. Keep the solution small. Run relevant deterministic checks, do not publish or deploy, and report changed files plus verification. Your final response becomes ${runDir}/maker.md.`;
+  return `You are the maker.\n\nTask: ${task}\nPlan or advisor decision: ${runDir}/architect.md\nEvidence: ${runDir}/scout.json\n\nImplement the requested in-scope change in the workspace. If architect.md starts with "고급 조언 생략", use the task and scout evidence to make the smallest direct plan instead of inventing missing requirements. Keep the solution small. Run relevant deterministic checks, do not publish or deploy, and report changed files plus verification. Your final response becomes ${runDir}/maker.md.`;
 }
 
 export function reviewerPrompt(task, runDir) {

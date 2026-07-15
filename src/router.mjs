@@ -6,6 +6,8 @@ const DIMENSIONS = Object.freeze([
   "reversibility",
 ]);
 
+const ADVISOR_MODES = Object.freeze(["conditional", "always", "never"]);
+
 const PATTERNS = Object.freeze({
   complex: /architect|architecture|distributed|concurren|multi[- ]?(service|repo|step)|refactor|redesign|migration|migrate|아키텍처|동시성|분산|멀티|리팩터|마이그레이션/i,
   veryComplex: /rewrite|platform|framework|protocol|compiler|operating system|대규모|전면 개편|플랫폼|프레임워크|프로토콜/i,
@@ -127,8 +129,22 @@ function contract(id, purpose, modelRole, effort, mode, extra = {}) {
   };
 }
 
+function advisorActivation(assessment, requestedMode) {
+  const advisorMode = requestedMode ?? "conditional";
+  if (!ADVISOR_MODES.includes(advisorMode)) {
+    throw new RangeError(`advisorMode must be one of: ${ADVISOR_MODES.join(", ")}`);
+  }
+  if (advisorMode === "never") return { advisorMode, activation: "never" };
+  if (advisorMode === "always") return { advisorMode, activation: "always" };
+  return {
+    advisorMode,
+    activation: assessment.role === "economy" ? "conditional" : "always",
+  };
+}
+
 export function routeTask(task, options = {}) {
   const assessment = assessTask(task, options);
+  const advisor = advisorActivation(assessment, options.advisorMode);
   const reportEnabled = options.report !== false;
   const jurySize = clampPositiveInteger(options.jurySize ?? 10, "jurySize");
   const quorum = clampPositiveInteger(options.quorum ?? Math.ceil(jurySize * 0.9), "quorum");
@@ -143,10 +159,16 @@ export function routeTask(task, options = {}) {
       writes: false,
       output: "evidence",
     }),
-    contract("architect", "Analyze evidence and produce the implementation plan.", "frontier", "max", "plan", {
-      enabled: true,
+    contract("architect", "Advise on non-obvious scope, risk, and direction after evidence gathering.", "frontier", "max", "plan", {
+      enabled: advisor.activation !== "never",
       writes: false,
       output: "plan",
+      activation: advisor.activation,
+      checkpoint: "after-scout",
+      decision: advisor.activation === "always" ? "invoke" : advisor.activation === "never" ? "skip" : "pending",
+      reasonCode: advisor.activation === "always"
+        ? (advisor.advisorMode === "always" ? "policy-always" : "assessment-non-economy")
+        : advisor.activation === "never" ? "policy-never" : "await-scout-evidence",
     }),
     contract("maker", "Implement the approved plan in the isolated workspace.", "balanced", makerEffort, "write", {
       enabled: !assessment.readOnly,
@@ -175,6 +197,7 @@ export function routeTask(task, options = {}) {
 
   return {
     assessment,
+    policy: { version: 1, advisorMode: advisor.advisorMode },
     stages,
     byId: Object.fromEntries(stages.map((stage) => [stage.id, stage])),
   };

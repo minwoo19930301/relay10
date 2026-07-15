@@ -66,10 +66,21 @@ function stageSelection(stage, config, catalog) {
   return { ...selected, effort };
 }
 
-function baseInvocationCount(route) {
+function stageInvocationBounds(stage) {
+  if (!stage || stage.enabled === false || stage.activation === 'never') {
+    return { minimum: 0, maximum: 0 };
+  }
+  if (stage.activation === 'conditional') return { minimum: 0, maximum: 1 };
+  return { minimum: 1, maximum: 1 };
+}
+
+function baseInvocationBounds(route) {
   return ['scout', 'architect', 'maker', 'reviewer', 'explainer']
-    .filter((id) => routeStage(route, id)?.enabled !== false)
-    .length;
+    .map((id) => stageInvocationBounds(routeStage(route, id)))
+    .reduce((total, bounds) => ({
+      minimum: total.minimum + bounds.minimum,
+      maximum: total.maximum + bounds.maximum,
+    }), { minimum: 0, maximum: 0 });
 }
 
 /** Describe the bounded Codex invocation plan. Counts are invocations, not price estimates. */
@@ -91,25 +102,117 @@ export function buildRunPlan({ task, route, catalog, config, liveReaders = false
       modelSource: selection.source ?? 'provided',
     };
   });
-  const base = baseInvocationCount(route);
+  const base = baseInvocationBounds(route);
   const rounds = liveReaders && routeStage(route, 'reader')?.enabled !== false
     ? config.readerGate.maxRounds
     : 0;
-  const minimum = base + (rounds > 0 ? READER10_PERSONAS.length : 0);
-  const maximum = base
+  const minimum = base.minimum + (rounds > 0 ? READER10_PERSONAS.length : 0);
+  const maximum = base.maximum
     + (rounds * READER10_PERSONAS.length)
     + Math.max(0, rounds - 1);
-  const estimate = { minimum, maximum, unit: 'codex-exec-invocations' };
+  const estimate = {
+    minimum,
+    maximum,
+    conditionalInvocations: base.maximum - base.minimum,
+    unit: 'codex-exec-invocations',
+  };
 
   return {
     task: normalizedTask,
     assessment: route.assessment,
+    routingPolicy: route.policy ?? null,
     stages,
     liveReaders: rounds > 0,
     invocationEstimate: estimate,
     // Kept for 0.1 API compatibility. It does not estimate token or currency cost.
     callEstimate: estimate,
   };
+}
+
+/** Decide whether the frontier architect checkpoint is worth one invocation. */
+export function decideAdvisor({
+  stage,
+  assessment,
+  scout,
+  budget,
+  used,
+  minimumInvocations,
+} = {}) {
+  const activation = stage?.enabled === false ? 'never' : stage?.activation ?? 'always';
+  const openQuestionCount = Array.isArray(scout?.open_questions) ? scout.open_questions.length : 0;
+  const evidence = {
+    assessment: {
+      role: assessment?.role ?? 'unknown',
+      score: assessment?.score ?? null,
+    },
+    scout: {
+      artifact: OUTPUTS.scout,
+      openQuestionCount,
+    },
+  };
+  const budgetEvidence = {
+    unit: 'codex-exec-invocations',
+    budget,
+    usedBefore: used,
+    // Keep this additive with advisorInvocations in every mode. The always-on
+    // plan minimum already contains the pending architect call.
+    mandatoryRemaining: Math.max(
+      0,
+      minimumInvocations - used - (activation === 'always' ? 1 : 0),
+    ),
+    advisorInvocations: 0,
+    headroom: budget - minimumInvocations,
+  };
+
+  if (activation === 'never') {
+    return {
+      decision: 'skip',
+      reasonCode: 'policy-never',
+      reason: 'The configured policy disables the frontier advisor checkpoint.',
+      evidence,
+      budget: budgetEvidence,
+    };
+  }
+  if (activation === 'always') {
+    return {
+      decision: 'invoke',
+      reasonCode: stage?.reasonCode ?? 'policy-always',
+      reason: assessment?.role === 'economy'
+        ? 'The configured policy requires an advisor for every task.'
+        : 'The initial assessment is not economy-tier, so frontier advice is required.',
+      evidence,
+      budget: { ...budgetEvidence, advisorInvocations: 1 },
+    };
+  }
+  if (openQuestionCount === 0) {
+    return {
+      decision: 'skip',
+      reasonCode: 'easy-no-open-questions',
+      reason: 'Economy-tier work has no unresolved scout questions, so the fixed advisor overhead is skipped.',
+      evidence,
+      budget: budgetEvidence,
+    };
+  }
+  if (budget < minimumInvocations + 1) {
+    return {
+      decision: 'budget-blocked',
+      reasonCode: 'advisor-budget-blocked',
+      reason: 'Scout found unresolved questions, but the invocation budget cannot fund the advisor and all mandatory stages.',
+      evidence,
+      budget: { ...budgetEvidence, advisorInvocations: 1, requiredTotal: minimumInvocations + 1 },
+    };
+  }
+  return {
+    decision: 'invoke',
+    reasonCode: 'scout-open-questions',
+    reason: 'Scout recorded unresolved questions, so the frontier advisor is invoked before mutation.',
+    evidence,
+    budget: { ...budgetEvidence, advisorInvocations: 1 },
+  };
+}
+
+function skippedAdvisorArtifact(decision) {
+  return `# 고급 조언 생략\n\n판단 근거: ${decision.reason}\n\nscout.json의 근거로 뒷받침되는 가장 작은 직접 계획으로 진행합니다. 누락된 요구사항을 지어내거나 권한 범위를 넓히거나 설정된 검증을 생략하지 않습니다.`;
 }
 
 export function validateRunRequest({
@@ -407,6 +510,7 @@ export async function runPipeline({
     createdAt: clock(),
     updatedAt: clock(),
     assessment: plan.assessment,
+    routingPolicy: plan.routingPolicy,
     invocationEstimate: plan.invocationEstimate,
     invocations: { used: 0, budget },
     calls: { used: 0, budget, unit: 'codex-exec-invocations' },
@@ -416,6 +520,10 @@ export async function runPipeline({
       effort: stage.effort,
       model: stage.model,
       enabled: stage.enabled !== false,
+      activation: stage.activation ?? (stage.enabled === false ? 'never' : 'always'),
+      checkpoint: stage.checkpoint ?? null,
+      decision: stage.decision ?? (stage.enabled === false ? 'skip' : 'invoke'),
+      reasonCode: stage.reasonCode ?? null,
       reason: stage.purpose,
     })),
     stages: {},
@@ -555,10 +663,52 @@ export async function runPipeline({
     await persist();
 
     const architectFile = path.join(runDir, OUTPUTS.architect);
-    await invokeStage('architect', {
-      prompt: architectPrompt(plan.task, runDir, plan.assessment),
-      outputFile: architectFile,
+    const architect = stageContract('architect');
+    const advisorDecision = decideAdvisor({
+      stage: architect,
+      assessment: plan.assessment,
+      scout,
+      budget,
+      used: manifest.invocations.used,
+      minimumInvocations: plan.invocationEstimate.minimum,
     });
+    const advisorRoute = manifest.routing.find((row) => row.stage === 'architect');
+    Object.assign(advisorRoute, advisorDecision);
+    await recordEvent('routing.decided', {
+      stage: 'architect',
+      decision: advisorDecision.decision,
+      reasonCode: advisorDecision.reasonCode,
+      evidence: advisorDecision.evidence,
+      budget: advisorDecision.budget,
+    });
+    if (advisorDecision.decision === 'budget-blocked') {
+      const output = `# ADVISOR BLOCKED\n\n${advisorDecision.reason}`;
+      await writeText(architectFile, output);
+      manifest.stages.architect = {
+        id: 'architect', title: architect.purpose, status: 'fail', enabled: true,
+        profile: architect.modelRole, model: architect.model, effort: architect.effort, output,
+      };
+      await recordEvent('stage.blocked', {
+        stage: 'architect', reasonCode: advisorDecision.reasonCode,
+      });
+      throw new RangeError(advisorDecision.reason);
+    }
+    if (advisorDecision.decision === 'skip') {
+      const output = skippedAdvisorArtifact(advisorDecision);
+      await writeText(architectFile, output);
+      manifest.stages.architect = {
+        id: 'architect', title: architect.purpose, status: 'skipped', enabled: false,
+        profile: architect.modelRole, model: architect.model, effort: architect.effort, output,
+      };
+      await recordEvent('stage.skipped', {
+        stage: 'architect', reasonCode: advisorDecision.reasonCode,
+      });
+    } else {
+      await invokeStage('architect', {
+        prompt: architectPrompt(plan.task, runDir, plan.assessment),
+        outputFile: architectFile,
+      });
+    }
 
     const maker = stageContract('maker');
     const makerFile = path.join(runDir, OUTPUTS.maker);

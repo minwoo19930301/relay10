@@ -15,9 +15,9 @@ cheapest, weakest, or strongest available model.
 
 ## What it does
 
-- **Deterministic initial routing:** five task dimensions select stage profiles
-  before a run starts. Version 0.1 does not automatically escalate a failed
-  stage to another model.
+- **Evidence-gated advisor routing:** five task dimensions select stage
+  profiles, then the scout evidence decides whether an economy task needs the
+  frontier architect. Version 0.1 still does not escalate after a failed stage.
 - **Small execution surface:** one Node CLI, built-in Node modules, and the
   installed Codex CLI.
 - **Inspectable handoffs:** each completed stage has a declared role, effort,
@@ -67,18 +67,23 @@ multi-provider API client.
 | Target | Current status | What that means |
 |---|---|---|
 | Codex CLI with the locally discovered OpenAI models | Supported and tested | This is the release path. Every model stage launches `codex exec`, and model discovery uses `codex debug models`. |
-| Codex with an xAI/Grok custom provider | Experimental candidate, untested | Codex and xAI both expose a Responses-compatible path, but Relay10 cannot select providers per stage and has not completed end-to-end tool, schema, search, or Reader-10 tests. Do not treat this as released Grok support. |
-| Anthropic/Claude or Google Gemini APIs directly | Unsupported | Their native APIs and current OpenAI-compatibility surfaces need provider-specific executors or a verified translation layer plus an agent tool runtime. |
+| Codex with an xAI/Grok custom provider as a **stage executor** | Experimental candidate, untested | Codex and xAI both expose a Responses-compatible path, but Relay10 cannot select providers per stage and has not completed end-to-end tool, schema, search, or Reader-10 tests. Do not treat this as released Grok stage support. |
+| Anthropic/Claude or Google Gemini APIs as stage executors | Unsupported | Their native APIs and current OpenAI-compatibility surfaces need provider-specific executors or a verified translation layer plus an agent tool runtime. |
+| Claude Code as a Skill and Plugin host | Preview, re-verified 2026-07-15 | The `.claude/skills` symlink, `.claude-plugin` plugin manifest, and repository marketplace let Claude Code load the eight skills and invoke the `r10` CLI. Every Relay10 model stage still launches Codex CLI subprocesses; Claude Code does not become a stage executor. |
+| Grok Build / Grok CLI as a Skill host | Preview, verified 2026-07-15 | Grok loads the eight skills from `.agents/skills` (and Claude-compat skill roots) inside a cloned repo. Skills guide the host agent only; model stages still require Codex CLI. This is not xAI stage-executor support. |
 | Mixed providers in one run | Unsupported | Stage configuration contains a model, not a provider or profile. |
 | Codex desktop app or IDE | Indirect shell use only | A task can invoke `r10`, but Relay10 then starts separate Codex CLI subprocesses. There is no native progress UI or current-task model switching. |
 | ChatGPT app/web or a standalone GUI | Not implemented | These need a remote MCP/Apps SDK backend or a local sidecar/App Server client. |
 
-The repo-scoped Codex Skills make the existing commands easier to invoke from
-the app, but a Skill by itself does not switch the current app task's model for
-every Relay10 stage. The current `main` branch includes an eight-Skill
-pack and a valid Codex Plugin bundle as a preview; the immutable `v0.1.1` tag
-does not. The preview has no MCP server or custom UI, so native progress and
-stage execution still use the existing CLI. See the full
+The repo-scoped Skills make the existing commands easier to invoke from Codex,
+Claude Code, and Grok Build, but a Skill by itself does not switch the current
+app task's model for every Relay10 stage. The current branch preview includes an
+eight-Skill pack plus Codex and Claude Code plugin bundles; the immutable
+`v0.1.1` tag does not. The preview has no MCP server or custom UI, so native
+progress and stage execution still use the existing CLI. Evidence for host
+checks lives in
+[host-surface-verification.md](https://github.com/minwoo19930301/relay10/blob/main/docs/host-surface-verification.md).
+See also the full
 [lineage and portability decision](https://github.com/minwoo19930301/relay10/blob/main/docs/lineage-and-portability.md).
 
 ## Relay10 Skill pack
@@ -89,7 +94,7 @@ large catalog:
 
 | Skill | Job | Important boundary |
 |---|---|---|
-| `relay10-orchestrate` | choose the smallest useful workflow | does not switch the current Codex task model |
+| `relay10-orchestrate` | choose the smallest useful workflow | does not switch the host agent's current task model |
 | `relay10-research` | collect current read-only evidence | does not mutate a repository |
 | `relay10-spec` | define outcome, non-goals, acceptance, and rollback | does not implement plan-only requests |
 | `relay10-build` | implement an authorized change in small slices | does not publish |
@@ -98,22 +103,38 @@ large catalog:
 | `relay10-release` | prove package, artifact, hash, and support claims | requires explicit publication authority |
 | `relay10-skill-lab` | tune triggers and compare against no-skill baseline | rejects skills without measured benefit |
 
-The canonical pack lives under `plugins/relay10/skills`. `.agents/skills` is a
-relative symlink to that directory so a cloned repository exposes the same
-skills to Codex App, CLI, and IDE surfaces that support repository skills. The
-Plugin manifest is at `plugins/relay10/.codex-plugin/plugin.json`; it is ready
-for local validation and marketplace packaging but has not been published to a
-marketplace. The pack follows progressive disclosure and contains original
-clean-room text. The Skill-ecosystem source subset and license cautions are
-recorded in `plugins/relay10/provenance/sources.json`; the complete agent,
-harness, workflow, and Skill lineage is recorded in `docs/prior-art.md`.
+The canonical pack lives under `plugins/relay10/skills`. `.agents/skills` and
+`.claude/skills` are relative symlinks to that directory so a cloned repository
+exposes the same skills to Codex, Claude Code, and Grok Build surfaces that
+scan those roots. The plugin manifests are at
+`plugins/relay10/.codex-plugin/plugin.json` and
+`plugins/relay10/.claude-plugin/plugin.json`, and the repository root
+`.claude-plugin/marketplace.json` makes this repository installable as a Claude
+Code marketplace; all three pass their local validators but have not been
+published to a curated marketplace. To install the pack in Claude Code:
+
+```text
+/plugin marketplace add minwoo19930301/relay10
+/plugin install relay10@relay10
+```
+
+Installed Claude Code plugin skills appear namespaced as `relay10:<skill-name>`;
+a session opened inside a clone of this repository loads the same skills through
+`.claude/skills` or `.agents/skills` without installing anything. Grok Build
+discovers the pack via `.agents/skills` (and optional Claude-compat skill
+paths). Skills guide the host agent and can call the `r10` CLI, which still
+requires an authenticated Codex CLI for model stages. The pack follows
+progressive disclosure and contains original clean-room text. The Skill-ecosystem
+source subset and license cautions are recorded in
+`plugins/relay10/provenance/sources.json`; the complete agent, harness,
+workflow, and Skill lineage is recorded in `docs/prior-art.md`.
 
 ## Default pipeline
 
 | Stage | Capability label | Effort | Access | Purpose |
 |---|---|---:|---|---|
 | scout | economy | low | read-only + optional search | inspect sources and collect context |
-| architect | frontier | max | read-only | produce a plan |
+| architect/advisor | frontier | max | read-only | after scout, advise balanced/frontier work or economy work with unresolved questions |
 | maker | balanced | medium | workspace-write | implement the plan |
 | verification | no model | n/a | explicit argv commands | record opt-in command results |
 | reviewer | frontier | high | read-only | review correctness and risk |
@@ -123,6 +144,13 @@ harness, workflow, and Skill lineage is recorded in `docs/prior-art.md`.
 These are role defaults, not a claim that one role always receives the
 objectively best or cheapest model. The available catalog metadata and local
 overrides determine the concrete model and supported effort.
+
+The default `conditional` policy skips the architect call only when the initial
+task is economy-tier and `scout.json` contains no open questions. The run still
+keeps `architect.md` as a deterministic skip record, so the six-stage artifact
+contract remains stable. Balanced/frontier work keeps the advisor, and an
+economy run with unresolved questions stops before mutation if its invocation
+budget has no advisor headroom.
 
 ## Commands
 
@@ -167,6 +195,22 @@ command string:
 The default configuration runs no verification command. Configure commands
 that are appropriate and safe for the current repository.
 
+Advisor routing can be switched for comparison or compatibility:
+
+```json
+{
+  "routing": {
+    "advisorMode": "conditional"
+  }
+}
+```
+
+`conditional` is the default, `always` restores always-on architect invocation,
+and `never` disables the architect checkpoint. Relay10
+records invocation counts but does not currently observe provider tokens or
+billed currency, so these modes must not be described as a measured percentage
+cost saving without an external evaluation.
+
 Live Reader-10 can use the discovered economy-labelled model or supplied model
 slugs:
 
@@ -184,12 +228,15 @@ slugs:
 
 ## Version 0.1 limits
 
-- The verified runtime is Codex CLI. Direct OpenAI, xAI/Grok, Anthropic/Claude,
-  and Gemini API adapters are not included, and providers cannot be mixed by
-  stage.
+- The verified stage runtime is Codex CLI. Direct OpenAI, xAI/Grok,
+  Anthropic/Claude, and Gemini API adapters are not included, and providers
+  cannot be mixed by stage. Grok Build skill-host loading is separate from
+  xAI stage execution and does not change this limit.
 - Codex desktop can invoke the CLI indirectly, but there is no Relay10 Skill,
   Plugin, MCP server, Apps SDK UI, or standalone GUI in the immutable v0.1.1
-  release. Current `main` has a Skill/Plugin preview, without MCP or a custom UI.
+  release. The current preview adds Skill/Plugin surfaces for Codex and Claude
+  Code, and skill discovery for Grok Build via `.agents/skills`, without MCP
+  or a custom UI.
 - The scout is a general read/search Codex stage, not a dedicated crawler,
   browser automation system, or site-specific extraction engine.
 - Deterministic Reader-10 checks structure, length, terminology, links, and
@@ -198,8 +245,12 @@ slugs:
   independent errors, and live readers check clarity rather than truth.
 - There is no resume/checkpoint engine, `/goal` DSL, long-running scheduler, or
   durable workflow database.
+- The only evidence-time checkpoint is the architect decision after scout.
+  There is no mid-maker pause/resume advisor loop or automatic escalation after
+  a failed stage.
 - Runtime model routing uses catalog descriptions, priority, supported efforts,
-  and overrides; it does not query live prices or benchmark model quality.
+  overrides, and the scout's open-question count; it does not query live prices
+  or benchmark model quality.
 - Verification commands are explicit opt-in configuration. No project command
   is inferred or run by default.
 - Saved artifacts support inspection and model-free report regeneration, but
@@ -212,6 +263,7 @@ slugs:
 - [Korean harness landscape](https://github.com/minwoo19930301/relay10/blob/main/docs/korea-landscape.md)
 - [Global harness landscape](https://github.com/minwoo19930301/relay10/blob/main/docs/global-landscape.md)
 - [Top global repositories and distilled patterns](https://github.com/minwoo19930301/relay10/blob/main/docs/global-top-repos.md)
+- [Conditional advisor evidence and routing decision](https://github.com/minwoo19930301/relay10/blob/main/docs/conditional-advisor-routing.md)
 - [Clean-room prior art ledger](https://github.com/minwoo19930301/relay10/blob/main/docs/prior-art.md)
 - [30/60/90 development and promotion playbook](https://github.com/minwoo19930301/relay10/blob/main/docs/growth-playbook.md)
 - [Launch report](https://github.com/minwoo19930301/relay10/blob/main/docs/launch-report.html)

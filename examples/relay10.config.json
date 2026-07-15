@@ -6,7 +6,8 @@
   },
   "routing": {
     "balancedThreshold": 7,
-    "frontierThreshold": 15
+    "frontierThreshold": 15,
+    "advisorMode": "conditional"
   },
   "effort": {
     "scout": "low",

@@ -85,6 +85,11 @@
           "type": "integer",
           "minimum": 1,
           "maximum": 30
+        },
+        "advisorMode": {
+          "type": "string",
+          "enum": ["conditional", "always", "never"],
+          "description": "Controls the frontier architect/advisor checkpoint after scout evidence gathering."
         }
       }
     },

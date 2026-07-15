@@ -33,7 +33,7 @@ Recommended promotion gate: validation recall at least 90%, near-miss false trig
 Check:
 
 - valid YAML frontmatter and matching folder/name;
-- concise `agents/openai.yaml` with a literal `$skill-name` starter prompt;
+- concise `agents/openai.yaml` with a literal `$skill-name` starter prompt when the pack targets Codex distribution; Claude Code ignores this file;
 - no TODOs, broken relative links, or machine-specific absolute paths;
 - deterministic scripts support `--help`, non-interactive execution, clear exit codes, and structured output;
 - plugin manifest points only to files that exist;
