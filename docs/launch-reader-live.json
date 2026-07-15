@@ -3,8 +3,8 @@
   "mode": "live",
   "model": "gpt-5.6-luna",
   "effort": "low",
-  "reportSha256": "40cd22edc5a620831c7cbf3b38830c7a5781f638c05b9983f2dc8bdccf82dbbf",
-  "generatedAt": "2026-07-13T15:57:59.672Z",
+  "reportSha256": "22716c0993405b18411f1431930baa313975f613a6df4fcffd8751ec78708bed",
+  "generatedAt": "2026-07-15T08:13:38.587Z",
   "passed": true,
   "pass": true,
   "status": "pass",
@@ -20,7 +20,7 @@
       "name": "30초 독자",
       "description": "제목, 목적, 핵심 결과만 훑어보는 독자",
       "passed": true,
-      "restatement": "목적: 글로벌 agent·workflow·Skill 패턴을 조사해 Relay10의 8개 Skill과 Plugin preview로 압축한다. 결과: v0.1.1과 정적 검증은 완료됐고, 공식 실행은 Codex CLI·현재 OpenAI 모델에 한정된다. 근거: 82개 테스트와 lint·Skill·Plugin·모델·패키지 검사가 통과했다. 남은 위험: 실제 Reader-10 판독과 App·IDE trigger, provider 확장은 아직 미검증이다. 다음 행동: npm run audit:launch를 실행하고 docs/launch-reader-live.json의 10/10·해시 결과를 확인한다.",
+      "restatement": "목적: 글로벌·국내 에이전트와 Ouroboros를 조사해 Relay10에 적용할 패턴을 정리했다. 결과: 여덟 Skill과 제한적 작업 계약을 기존 core에 통합하고 v0.1.1을 공개했다. 근거: 95개 자동 테스트, 정적 검사, 모델·패키지 검사를 통과했다. 남은 위험: HTML 독자 검수와 새 계약의 동일 fixture 검증, 비용·품질 평가, Grok 실행은 아직 미검증이다. 다음 행동: 담당자가 npm run audit:launch를 실행하고 결과를 docs/launch-reader-live.json 및 outputs/relay10-launch-reader-live.json에 기록한다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -32,16 +32,17 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적: 글로벌 agent·workflow·Skill 패턴을 조사해 Relay10의 8개 Skill과 Plugin preview로 압축한다. 결과: v0.1.1과 정적 검증은 완료됐고, 공식 실행은 Codex CLI·현재 OpenAI 모델에 한정된다. 근거: 82개 테스트와 lint·Skill·Plugin·모델·패키지 검사가 통과했다. 남은 위험: 실제 Reader-10 판독과 App·IDE trigger, provider 확장은 아직 미검증이다. 다음 행동: npm run audit:launch를 실행하고 docs/launch-reader-live.json의 10/10·해시 결과를 확인한다.",
+        "restatement": "목적: 글로벌·국내 에이전트와 Ouroboros를 조사해 Relay10에 적용할 패턴을 정리했다. 결과: 여덟 Skill과 제한적 작업 계약을 기존 core에 통합하고 v0.1.1을 공개했다. 근거: 95개 자동 테스트, 정적 검사, 모델·패키지 검사를 통과했다. 남은 위험: HTML 독자 검수와 새 계약의 동일 fixture 검증, 비용·품질 평가, Grok 실행은 아직 미검증이다. 다음 행동: 담당자가 npm run audit:launch를 실행하고 결과를 docs/launch-reader-live.json 및 outputs/relay10-launch-reader-live.json에 기록한다.",
         "blocking_ambiguities": [],
         "jargon": [
-          "clean-room",
-          "progressive disclosure",
-          "Reader-10",
-          "reportSha256",
-          "E2E"
+          "Ouroboros",
+          "Skill",
+          "core",
+          "fixture",
+          "Grok stage executor",
+          "forward evaluation"
         ],
-        "action": "명확한 보고서다. 다음 단계는 지정된 audit:launch 실행과 별도 JSON·HTML 해시 확인이다."
+        "action": "별도 Reader-10 JSON의 passedPersonas 10, criticalCount 0, reportSha256 일치를 확인한다."
       }
     },
     {
@@ -49,7 +50,7 @@
       "name": "도메인 초보자",
       "description": "전문용어 배경지식이 없는 독자",
       "passed": true,
-      "restatement": "목적은 글로벌 사례를 조사해 Relay10의 8개 Skill과 Plugin preview를 만들고 지원 범위와 발전 계획을 정리하는 것이다. 결과는 v0.1.1 공개와 자동 검증 통과이며, 실제 독자 10회 판독은 아직 남았다. 근거는 테스트·정적 검사·모델 탐색·패키지 검사 기록이다. 위험은 독자 판독과 앱·다중 공급자 지원이 아직 검증되지 않은 점이다. 다음 행동은 담당자가 audit:launch를 실행하고 결과 JSON과 HTML 해시를 확인하는 것이다.",
+      "restatement": "목적은 여러 에이전트 도구와 Ouroboros의 아이디어를 조사해 Relay10에 필요한 부분만 통합하는 것이다. 결과는 여덟 개 Skill과 v0.1.1 보고서이며, 현재 공식 실행은 Codex CLI뿐이다. 테스트 95개와 정적 검사 등은 통과했지만 실제 독자 10회 판독과 일부 호스트·공급자 실행 검증은 아직 남아 있다. 다음 조치는 담당자가 audit:launch를 실행해 판독 결과와 HTML 해시를 확인하는 것이다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -61,28 +62,19 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 글로벌 사례를 조사해 Relay10의 8개 Skill과 Plugin preview를 만들고 지원 범위와 발전 계획을 정리하는 것이다. 결과는 v0.1.1 공개와 자동 검증 통과이며, 실제 독자 10회 판독은 아직 남았다. 근거는 테스트·정적 검사·모델 탐색·패키지 검사 기록이다. 위험은 독자 판독과 앱·다중 공급자 지원이 아직 검증되지 않은 점이다. 다음 행동은 담당자가 audit:launch를 실행하고 결과 JSON과 HTML 해시를 확인하는 것이다.",
+        "restatement": "목적은 여러 에이전트 도구와 Ouroboros의 아이디어를 조사해 Relay10에 필요한 부분만 통합하는 것이다. 결과는 여덟 개 Skill과 v0.1.1 보고서이며, 현재 공식 실행은 Codex CLI뿐이다. 테스트 95개와 정적 검사 등은 통과했지만 실제 독자 10회 판독과 일부 호스트·공급자 실행 검증은 아직 남아 있다. 다음 조치는 담당자가 audit:launch를 실행해 판독 결과와 HTML 해시를 확인하는 것이다.",
         "blocking_ambiguities": [],
         "jargon": [
-          "Relay10",
-          "agent",
-          "workflow",
           "Skill",
-          "Plugin",
+          "Ouroboros",
           "Codex CLI",
-          "provider",
-          "MCP",
           "checkpoint",
-          "Reader-10",
-          "reportSha256",
+          "frontier advisor",
+          "clean-room",
           "E2E",
-          "forward test",
-          "adapter",
-          "dry-run",
-          "fixture",
-          "golden demo"
+          "Reader-10"
         ],
-        "action": "담당자가 audit:launch를 실행해 Reader-10 결과와 HTML 해시를 확인한다."
+        "action": "담당자가 저장소에서 npm run audit:launch를 실행하고 10회 판독 결과를 확인한다."
       }
     },
     {
@@ -90,7 +82,7 @@
       "name": "쉬운 문장 독자",
       "description": "짧고 직접적인 문장을 선호하는 독자",
       "passed": true,
-      "restatement": "목적은 글로벌 사례를 조사해 Relay10의 작은 Skill 8개와 Plugin 미리보기를 만드는 것이다. 결과는 v0.1.1 공개와 82개 테스트 통과다. 근거는 테스트 로그, 정적 검사, 모델 탐색, 패키지 검사다. 남은 위험은 실제 Reader-10 판독과 앱·다중 공급자 지원이 아직 검증되지 않은 점이다. 다음 행동은 audit:launch를 실행하고 결과 JSON의 해시와 10회 판독 결과를 확인하는 것이다.",
+      "restatement": "목적은 여러 에이전트 사례를 조사해 Relay10을 정리하는 것이다. 결과는 여덟 Skill과 제한된 작업 계약이다. 테스트와 정적 검사는 통과했다. Reader-10 실제 판독은 아직 대기 중이며 지원 경계도 일부 미검증이다. 담당자가 audit:launch를 실행하고 결과 JSON과 해시를 확인해야 한다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -102,21 +94,17 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 글로벌 사례를 조사해 Relay10의 작은 Skill 8개와 Plugin 미리보기를 만드는 것이다. 결과는 v0.1.1 공개와 82개 테스트 통과다. 근거는 테스트 로그, 정적 검사, 모델 탐색, 패키지 검사다. 남은 위험은 실제 Reader-10 판독과 앱·다중 공급자 지원이 아직 검증되지 않은 점이다. 다음 행동은 audit:launch를 실행하고 결과 JSON의 해시와 10회 판독 결과를 확인하는 것이다.",
+        "restatement": "목적은 여러 에이전트 사례를 조사해 Relay10을 정리하는 것이다. 결과는 여덟 Skill과 제한된 작업 계약이다. 테스트와 정적 검사는 통과했다. Reader-10 실제 판독은 아직 대기 중이며 지원 경계도 일부 미검증이다. 담당자가 audit:launch를 실행하고 결과 JSON과 해시를 확인해야 한다.",
         "blocking_ambiguities": [],
         "jargon": [
           "Skill",
-          "Plugin",
+          "frontier advisor",
+          "stage executor",
           "clean-room",
-          "Reader-10",
-          "progressive disclosure",
-          "provider",
-          "adapter",
-          "E2E",
-          "SHA-256",
-          "dry-run"
+          "forward evaluation",
+          "reportSha256"
         ],
-        "action": "담당자가 저장소에서 npm run audit:launch를 실행한다. 10/10 이해와 해시 일치를 확인한 뒤, Skill과 지원 범위의 추가 검증을 진행한다."
+        "action": "담당자가 npm run audit:launch를 실행하고, 10/10 판독 및 해시 일치를 확인한다."
       }
     },
     {
@@ -124,7 +112,7 @@
       "name": "비원어민 독자",
       "description": "명시적 구조와 용어 설명이 필요한 독자",
       "passed": true,
-      "restatement": "목적: 글로벌 코딩 에이전트 패턴을 조사해 Relay10의 8개 Skill과 Plugin preview를 만들고 지원 범위·발전 계획을 정리한다. 결과: v0.1.1이 공개됐고 Codex CLI와 현재 OpenAI 모델만 지원·검증됐다. 근거: 82개 자동 테스트, 정적 검사, 모델 탐색·배정, 패키지 검사 로그가 있다. 남은 위험: Reader-10 실제 판독과 Skill trigger·forward test는 아직 미완료이며 Grok·Claude·Gemini·앱 native 지원은 미지원이다. 다음 행동: 담당자가 audit:launch를 실행해 10회 판독하고 별도 JSON의 해시·결과를 확인한다.",
+      "restatement": "목적은 글로벌·국내 agent 사례와 Ouroboros를 조사해 Relay10 설계와 지원 범위를 정리하는 것이다. 결과는 v0.1.1과 8개 Skill이며 공식 실행 경로는 Codex CLI다. 근거는 95개 자동 테스트와 정적·패키지·모델 검증이다. 남은 위험은 Reader-10, 새 계약 행동, 비용·품질 우월성, 다중 provider가 아직 검증되지 않은 점이다. 다음은 audit:launch를 실행하고 별도 JSON의 10/10·criticalCount 0·해시 일치를 확인하는 것이다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -136,18 +124,25 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적: 글로벌 코딩 에이전트 패턴을 조사해 Relay10의 8개 Skill과 Plugin preview를 만들고 지원 범위·발전 계획을 정리한다. 결과: v0.1.1이 공개됐고 Codex CLI와 현재 OpenAI 모델만 지원·검증됐다. 근거: 82개 자동 테스트, 정적 검사, 모델 탐색·배정, 패키지 검사 로그가 있다. 남은 위험: Reader-10 실제 판독과 Skill trigger·forward test는 아직 미완료이며 Grok·Claude·Gemini·앱 native 지원은 미지원이다. 다음 행동: 담당자가 audit:launch를 실행해 10회 판독하고 별도 JSON의 해시·결과를 확인한다.",
+        "restatement": "목적은 글로벌·국내 agent 사례와 Ouroboros를 조사해 Relay10 설계와 지원 범위를 정리하는 것이다. 결과는 v0.1.1과 8개 Skill이며 공식 실행 경로는 Codex CLI다. 근거는 95개 자동 테스트와 정적·패키지·모델 검증이다. 남은 위험은 Reader-10, 새 계약 행동, 비용·품질 우월성, 다중 provider가 아직 검증되지 않은 점이다. 다음은 audit:launch를 실행하고 별도 JSON의 10/10·criticalCount 0·해시 일치를 확인하는 것이다.",
         "blocking_ambiguities": [],
         "jargon": [
-          "Skill/Plugin",
-          "Codex CLI",
-          "Reader-10",
-          "forward test",
-          "reportSha256",
+          "agent",
+          "Skill",
+          "Ouroboros",
+          "checkpoint",
+          "scout",
+          "advisor",
+          "frontier",
+          "economy",
+          "stage executor",
+          "provider",
           "E2E",
-          "provider adapter"
+          "dry-run",
+          "forward evaluation",
+          "manifest"
         ],
-        "action": "명확함: 제품 출시와 보고서 독자 검수의 상태를 분리해 설명하고, 검수 결과 파일과 실행 명령을 지정한다."
+        "action": "담당자가 npm run audit:launch를 실행하고 launch-reader-live.json의 결과와 reportSha256을 확인한다."
       }
     },
     {
@@ -155,7 +150,7 @@
       "name": "문자 그대로 읽는 독자",
       "description": "모호한 지시어를 추측하지 않는 독자",
       "passed": true,
-      "restatement": "목적은 글로벌·국내 하네스 패턴을 조사해 Relay10의 여덟 Skill과 Plugin preview, 지원 경계, 발전 계획을 보고하는 것이다. 결과는 v0.1.1 공개, Codex CLI·현재 OpenAI 모델 지원, 정적·자동 검증 통과다. 근거는 검증 로그, 82개 테스트, 패키지·Skill 검사와 출처 목록이다. 남은 위험은 Reader-10 실제 판독과 앱·다중 provider 지원이 아직 미검증이라는 점이다. 다음 행동은 npm run audit:launch를 실행하고 별도 JSON의 10회 판독·해시 결과를 확인하는 것이다.",
+      "restatement": "목적은 글로벌·국내 하네스와 Ouroboros를 조사해 Relay10의 설계 선택과 지원 경계를 정리하는 것이다. 결과는 v0.1.1과 여덟 Skill이며, 공식 실행 지원은 Codex CLI와 현재 OpenAI 모델뿐이다. 근거는 자동 검증 로그, 테스트, 저장소·릴리스·조사 문서다. 남은 위험은 Reader-10 판독, 새 계약의 host별 행동, provider 확장이 아직 검증되지 않았다는 점이다. 다음 행동은 담당자가 npm run audit:launch를 실행하고 reportSha256이 일치하는 별도 JSON을 확인하는 것이다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -167,16 +162,16 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 글로벌·국내 하네스 패턴을 조사해 Relay10의 여덟 Skill과 Plugin preview, 지원 경계, 발전 계획을 보고하는 것이다. 결과는 v0.1.1 공개, Codex CLI·현재 OpenAI 모델 지원, 정적·자동 검증 통과다. 근거는 검증 로그, 82개 테스트, 패키지·Skill 검사와 출처 목록이다. 남은 위험은 Reader-10 실제 판독과 앱·다중 provider 지원이 아직 미검증이라는 점이다. 다음 행동은 npm run audit:launch를 실행하고 별도 JSON의 10회 판독·해시 결과를 확인하는 것이다.",
+        "restatement": "목적은 글로벌·국내 하네스와 Ouroboros를 조사해 Relay10의 설계 선택과 지원 경계를 정리하는 것이다. 결과는 v0.1.1과 여덟 Skill이며, 공식 실행 지원은 Codex CLI와 현재 OpenAI 모델뿐이다. 근거는 자동 검증 로그, 테스트, 저장소·릴리스·조사 문서다. 남은 위험은 Reader-10 판독, 새 계약의 host별 행동, provider 확장이 아직 검증되지 않았다는 점이다. 다음 행동은 담당자가 npm run audit:launch를 실행하고 reportSha256이 일치하는 별도 JSON을 확인하는 것이다.",
         "blocking_ambiguities": [],
         "jargon": [
           "Skill",
-          "Plugin",
+          "frontier advisor",
+          "E2E",
           "Reader-10",
-          "reportSha256",
-          "provider adapter"
+          "reportSha256"
         ],
-        "action": "clone한 저장소에서 npm run audit:launch를 실행한 뒤 10/10 판독, 치명적 문제 0개, HTML 해시 일치를 확인한다."
+        "action": "npm run audit:launch 실행 후 docs/launch-reader-live.json에서 10회 판독 결과와 HTML 해시 일치를 확인한다."
       }
     },
     {
@@ -184,7 +179,7 @@
       "name": "모바일 독자",
       "description": "좁은 화면에서 제목과 목록을 훑는 독자",
       "passed": true,
-      "restatement": "목적: 글로벌·국내 하네스 패턴을 조사해 Relay10의 8개 Skill과 Plugin preview를 보강한다. 결과: v0.1.1 공개, 82개 테스트와 정적·패키지 검증 통과. 근거: 검증 JSON, 저장소·릴리스 링크, 해시 기반 Reader-10 기록. 위험: Codex CLI와 현재 OpenAI 모델만 공식 지원하며 실제 10회 독자 판독은 아직 대기 중이다. 다음: 담당자가 audit:launch를 실행하고 별도 JSON의 10/10·해시 일치를 확인한다.",
+      "restatement": "목적은 글로벌·국내 사례와 Ouroboros를 조사해 Relay10의 여덟 Skill과 지원 경계를 정리하는 것이다. 결과는 v0.1.1과 Codex CLI 중심의 검증된 통합본이며, 실제 Reader-10 판독과 일부 host/provider 행동 검증은 남아 있다. 근거는 자동 테스트·정적 검사·패키지 검사와 공개 저장소 기록이다. 다음은 audit:launch를 실행하고 미지원 범위를 유지한 채 후속 평가를 진행하는 것이다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -196,19 +191,16 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적: 글로벌·국내 하네스 패턴을 조사해 Relay10의 8개 Skill과 Plugin preview를 보강한다. 결과: v0.1.1 공개, 82개 테스트와 정적·패키지 검증 통과. 근거: 검증 JSON, 저장소·릴리스 링크, 해시 기반 Reader-10 기록. 위험: Codex CLI와 현재 OpenAI 모델만 공식 지원하며 실제 10회 독자 판독은 아직 대기 중이다. 다음: 담당자가 audit:launch를 실행하고 별도 JSON의 10/10·해시 일치를 확인한다.",
+        "restatement": "목적은 글로벌·국내 사례와 Ouroboros를 조사해 Relay10의 여덟 Skill과 지원 경계를 정리하는 것이다. 결과는 v0.1.1과 Codex CLI 중심의 검증된 통합본이며, 실제 Reader-10 판독과 일부 host/provider 행동 검증은 남아 있다. 근거는 자동 테스트·정적 검사·패키지 검사와 공개 저장소 기록이다. 다음은 audit:launch를 실행하고 미지원 범위를 유지한 채 후속 평가를 진행하는 것이다.",
         "blocking_ambiguities": [],
         "jargon": [
           "Skill",
-          "Plugin",
-          "MCP",
-          "clean-room",
-          "progressive disclosure",
+          "Ouroboros",
           "Reader-10",
-          "E2E",
-          "provider adapter"
+          "frontier advisor",
+          "E2E"
         ],
-        "action": "모바일에서는 긴 요약·용어 목록·가로 스크롤 표가 훑어보기를 방해한다. 핵심 결론, 지원 경계, 대기 중 검수, 다음 행동을 상단에 짧게 재배치하라."
+        "action": "담당자가 audit:launch를 실행해 10회 판독하고 결과 JSON의 해시와 치명적 문제 수를 확인한다."
       }
     },
     {
@@ -216,7 +208,7 @@
       "name": "스크린리더 독자",
       "description": "문서 의미 구조와 대체 텍스트에 의존하는 독자",
       "passed": true,
-      "restatement": "목적은 글로벌·국내 에이전트 사례를 조사해 Relay10의 여덟 Skill과 Plugin preview를 만들고 지원 경계를 정리하는 것이다. v0.1.1은 공개됐고 자동 검증은 통과했다. 근거는 82개 테스트, 정적 검사, 모델 탐색·라우팅·패키지 검사와 관련 JSON 로그다. 남은 위험은 Reader-10 실제 판독, 미검증 provider·앱 지원, 향후 평가다. 다음 조치는 담당자가 npm run audit:launch를 실행하고 별도 JSON의 10회 결과와 reportSha256을 확인하는 것이다.",
+      "restatement": "목적은 글로벌·국내 하네스와 Ouroboros를 조사해 Relay10 설계와 지원 경계를 정리하는 것이다. 결과는 여덟 Skill과 제한된 작업 계약을 포함한 v0.1.1이며 공식 실행은 Codex CLI뿐이다. 테스트·정적 검사·패키지 검사는 통과했다. 남은 위험은 Reader-10 10회 판독과 Claude/Grok 행동 및 provider 확장이 미검증이라는 점이다. 담당자는 audit:launch를 실행하고 docs/launch-reader-live.json의 10회 결과와 reportSha256을 확인해야 한다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -228,20 +220,17 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 글로벌·국내 에이전트 사례를 조사해 Relay10의 여덟 Skill과 Plugin preview를 만들고 지원 경계를 정리하는 것이다. v0.1.1은 공개됐고 자동 검증은 통과했다. 근거는 82개 테스트, 정적 검사, 모델 탐색·라우팅·패키지 검사와 관련 JSON 로그다. 남은 위험은 Reader-10 실제 판독, 미검증 provider·앱 지원, 향후 평가다. 다음 조치는 담당자가 npm run audit:launch를 실행하고 별도 JSON의 10회 결과와 reportSha256을 확인하는 것이다.",
+        "restatement": "목적은 글로벌·국내 하네스와 Ouroboros를 조사해 Relay10 설계와 지원 경계를 정리하는 것이다. 결과는 여덟 Skill과 제한된 작업 계약을 포함한 v0.1.1이며 공식 실행은 Codex CLI뿐이다. 테스트·정적 검사·패키지 검사는 통과했다. 남은 위험은 Reader-10 10회 판독과 Claude/Grok 행동 및 provider 확장이 미검증이라는 점이다. 담당자는 audit:launch를 실행하고 docs/launch-reader-live.json의 10회 결과와 reportSha256을 확인해야 한다.",
         "blocking_ambiguities": [],
         "jargon": [
+          "Ouroboros",
           "Skill",
-          "Plugin",
           "Reader-10",
-          "clean-room",
-          "progressive disclosure",
-          "MCP",
-          "provider adapter",
+          "frontier advisor",
           "E2E",
           "reportSha256"
         ],
-        "action": "outputs/relay10-launch-reader-live.json의 판독 결과와 현재 HTML 해시를 확인한다."
+        "action": "npm run audit:launch 실행 후 docs/launch-reader-live.json에서 10/10 이해, 치명적 문제 0개, HTML 해시 일치를 확인한다."
       }
     },
     {
@@ -249,7 +238,7 @@
       "name": "근거 확인 독자",
       "description": "수치와 결론의 검증 근거를 찾는 독자",
       "passed": true,
-      "restatement": "목적은 글로벌 사례를 조사해 Relay10의 8개 Skill과 Plugin preview를 보강하는 것이다. 결과는 v0.1.1 공개, 정적·자동 검증 통과, Codex CLI/OpenAI 경로만 공식 지원이다. 근거는 테스트·lint·Skill 검사·모델 탐색·패키지 검사 로그와 출처 링크다. 남은 위험은 Reader-10 실제 판독, forward eval, 다중 공급자·앱 지원이 미검증이라는 점이다. 다음 행동은 audit:launch를 실행하고 reportSha256 및 10회 판독 결과를 확인하는 것이다.",
+      "restatement": "목적은 여러 agent·workflow 사례와 Ouroboros를 조사해 Relay10 설계와 지원 경계를 정리하는 것이다. 결과는 여덟 Skill과 제한적 작업 계약을 기존 core에 통합한 v0.1.1 공개본이다. 근거는 공식 저장소·README, 95개 테스트, 정적 검사와 검증 로그다. Reader-10 실제 판독, forward evaluation, Claude/Grok 계약 행동과 xAI 실행 검증은 남은 위험이다. 다음은 audit:launch를 실행하고 별도 JSON의 10/10·해시 일치를 확인하는 것이다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -261,16 +250,16 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 글로벌 사례를 조사해 Relay10의 8개 Skill과 Plugin preview를 보강하는 것이다. 결과는 v0.1.1 공개, 정적·자동 검증 통과, Codex CLI/OpenAI 경로만 공식 지원이다. 근거는 테스트·lint·Skill 검사·모델 탐색·패키지 검사 로그와 출처 링크다. 남은 위험은 Reader-10 실제 판독, forward eval, 다중 공급자·앱 지원이 미검증이라는 점이다. 다음 행동은 audit:launch를 실행하고 reportSha256 및 10회 판독 결과를 확인하는 것이다.",
+        "restatement": "목적은 여러 agent·workflow 사례와 Ouroboros를 조사해 Relay10 설계와 지원 경계를 정리하는 것이다. 결과는 여덟 Skill과 제한적 작업 계약을 기존 core에 통합한 v0.1.1 공개본이다. 근거는 공식 저장소·README, 95개 테스트, 정적 검사와 검증 로그다. Reader-10 실제 판독, forward evaluation, Claude/Grok 계약 행동과 xAI 실행 검증은 남은 위험이다. 다음은 audit:launch를 실행하고 별도 JSON의 10/10·해시 일치를 확인하는 것이다.",
         "blocking_ambiguities": [],
         "jargon": [
+          "frontier advisor",
+          "stage executor",
+          "forward evaluation",
           "Reader-10",
-          "clean-room",
-          "progressive disclosure",
-          "forward eval",
-          "provider/worker/surface adapter"
+          "reportSha256"
         ],
-        "action": "명시된 후속 작업과 결과 파일이 분명하므로 추가 확인 없이 판독을 완료한다."
+        "action": "docs/launch-reader-live.json에서 10회 판독 결과와 reportSha256 일치를 확인한다."
       }
     },
     {
@@ -278,7 +267,7 @@
       "name": "실행 담당자",
       "description": "보고서를 읽고 바로 행동해야 하는 독자",
       "passed": true,
-      "restatement": "목적은 글로벌 사례를 조사해 Relay10의 8개 Skill과 Plugin preview를 보강하는 것이다. 결과는 v0.1.1 공개, Codex CLI·OpenAI만 공식 지원, 82개 테스트와 정적 검증 통과다. 남은 위험은 Reader-10 실제 판독과 다중 공급자·앱 지원이 미검증·미지원이라는 점이다. 다음은 담당자가 audit:launch를 실행하고 reportSha256 및 10/10 결과를 확인하는 것이다.",
+      "restatement": "목적은 글로벌·국내 agent 사례와 Ouroboros를 조사해 Relay10 설계를 정리하는 것이다. v0.1.1과 8개 Skill이 구현·공개됐고 Codex CLI만 공식 실행 지원한다. 95개 테스트와 정적·패키지 검사가 통과했다. Reader-10 판독, contract 행동검증, multi-provider·Grok 실행은 아직 미검증이다. 담당자가 npm run audit:launch를 실행하고 별도 JSON의 10/10·criticalCount 0·reportSha256 일치를 확인해야 한다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -290,15 +279,16 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 글로벌 사례를 조사해 Relay10의 8개 Skill과 Plugin preview를 보강하는 것이다. 결과는 v0.1.1 공개, Codex CLI·OpenAI만 공식 지원, 82개 테스트와 정적 검증 통과다. 남은 위험은 Reader-10 실제 판독과 다중 공급자·앱 지원이 미검증·미지원이라는 점이다. 다음은 담당자가 audit:launch를 실행하고 reportSha256 및 10/10 결과를 확인하는 것이다.",
+        "restatement": "목적은 글로벌·국내 agent 사례와 Ouroboros를 조사해 Relay10 설계를 정리하는 것이다. v0.1.1과 8개 Skill이 구현·공개됐고 Codex CLI만 공식 실행 지원한다. 95개 테스트와 정적·패키지 검사가 통과했다. Reader-10 판독, contract 행동검증, multi-provider·Grok 실행은 아직 미검증이다. 담당자가 npm run audit:launch를 실행하고 별도 JSON의 10/10·criticalCount 0·reportSha256 일치를 확인해야 한다.",
         "blocking_ambiguities": [],
         "jargon": [
-          "Skill/Plugin",
+          "Skill",
           "Reader-10",
-          "reportSha256",
-          "forward test"
+          "stage executor",
+          "forward evaluation",
+          "reportSha256"
         ],
-        "action": "relay10 저장소에서 npm run audit:launch를 실행한 뒤 docs/launch-reader-live.json의 10/10, criticalCount 0, reportSha256 일치를 확인한다."
+        "action": "clone 후 검증 명령과 dry-run을 실행하고, 담당자가 npm run audit:launch를 실행해 launch-reader-live.json 결과를 확인한다."
       }
     },
     {
@@ -306,7 +296,7 @@
       "name": "결론 우선 독자",
       "description": "본문보다 요약과 최종 상태를 먼저 읽는 독자",
       "passed": true,
-      "restatement": "목적은 글로벌 agent·workflow 패턴을 조사해 Relay10의 여덟 Skill과 Plugin preview로 정리하는 것이다. 결과는 v0.1.1 공개와 정적·자동 검증 완료이며, Codex CLI와 현재 OpenAI 모델만 공식 지원한다. 근거는 82개 테스트, 문법·Plugin·패키지 검사와 모델 탐색 로그다. 남은 위험은 Reader-10 실제 판독과 앱·다중 provider 지원 검증이 아직 없다는 점이다. 다음 행동은 audit:launch를 실행하고 별도 JSON의 10/10, 치명적 문제 0, reportSha256 일치를 확인하는 것이다.",
+      "restatement": "목적은 국내·글로벌 agent 사례와 Ouroboros를 조사해 Relay10 설계를 정리하는 것이다. 결과는 v0.1.1과 8개 Skill이며, Codex CLI만 공식 실행 지원한다. 95개 테스트와 정적·패키지 검사가 통과했다. Reader-10 판독, contract 행동 검증, 다중 공급자 지원은 남은 위험이다. 담당자가 audit:launch를 실행하고 별도 JSON의 10/10·해시 일치를 확인한다.",
       "checks": [
         {
           "id": "live-understanding",
@@ -318,16 +308,16 @@
       ],
       "raw": {
         "understood": true,
-        "restatement": "목적은 글로벌 agent·workflow 패턴을 조사해 Relay10의 여덟 Skill과 Plugin preview로 정리하는 것이다. 결과는 v0.1.1 공개와 정적·자동 검증 완료이며, Codex CLI와 현재 OpenAI 모델만 공식 지원한다. 근거는 82개 테스트, 문법·Plugin·패키지 검사와 모델 탐색 로그다. 남은 위험은 Reader-10 실제 판독과 앱·다중 provider 지원 검증이 아직 없다는 점이다. 다음 행동은 audit:launch를 실행하고 별도 JSON의 10/10, 치명적 문제 0, reportSha256 일치를 확인하는 것이다.",
+        "restatement": "목적은 국내·글로벌 agent 사례와 Ouroboros를 조사해 Relay10 설계를 정리하는 것이다. 결과는 v0.1.1과 8개 Skill이며, Codex CLI만 공식 실행 지원한다. 95개 테스트와 정적·패키지 검사가 통과했다. Reader-10 판독, contract 행동 검증, 다중 공급자 지원은 남은 위험이다. 담당자가 audit:launch를 실행하고 별도 JSON의 10/10·해시 일치를 확인한다.",
         "blocking_ambiguities": [],
         "jargon": [
-          "Reader-10",
-          "reportSha256",
-          "Plugin preview",
-          "progressive disclosure",
-          "provider adapter"
+          "frontier advisor",
+          "stage executor",
+          "forward evaluation",
+          "canonical Skill",
+          "reportSha256"
         ],
-        "action": "담당자가 clone한 저장소에서 npm run audit:launch를 실행하고 docs/launch-reader-live.json의 최종 조건을 확인한다."
+        "action": "docs/launch-reader-live.json의 결과와 reportSha256을 확인한다."
       }
     }
   ]

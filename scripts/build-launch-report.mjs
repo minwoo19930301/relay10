@@ -16,8 +16,9 @@ if (verificationLog.passed !== true || !Array.isArray(verificationLog.commands))
 }
 const testCommand = verificationLog.commands.find((command) => command.command === 'npm' && command.args?.[0] === 'test');
 const testCount = Number(/ℹ tests (\d+)/.exec(testCommand?.stdout ?? '')?.[1] ?? 0);
-const task = '국내 여섯 하네스뿐 아니라 GitHub의 글로벌 상위 코딩 agent·workflow·Skill 저장소를 최신 공개 근거로 다시 조사하고, 각 장단점과 Relay10의 채택·제외를 밝힌다. 검증된 패턴은 여덟 개의 작은 Codex Skill과 Plugin preview로 독립 구현하고, 공급자·CLI·앱 지원 경계와 사용자가 앞으로 제품을 발전·홍보할 30일·60일·90일 행동 계획까지 하나의 검증된 HTML 보고서로 정리한다.';
-const summary = `결론부터 말하면 Relay10 main은 글로벌 조사와 여덟 개의 clean-room Skill, 유효한 Codex Plugin manifest, 정적 Skill pack 검증을 추가했다. 상위 저장소에서는 OpenCode의 plan/build 권한 분리, Gemini CLI·Cline의 write 전 checkpoint, Aider의 architect/editor 분리, mini software-engineering agent의 작은 stateless core, Goose의 recipe success gate, Agent Orchestrator의 worker/reviewer adapter, Agent Skills의 progressive disclosure만 골랐다. daemon·DB·GUI·swarm·vector memory·scheduler·tmux를 core에 넣지 않았다. 고정 release v0.1.1의 공식 실행 경로는 여전히 Codex CLI와 현재 로컬 OpenAI 모델뿐이다. main의 repo Skill은 Codex App·CLI·IDE에서 작업 지침을 제공할 수 있지만 현재 task 모델을 단계별로 바꾸지 않으며, Plugin preview에도 MCP server나 custom UI가 없다. Grok은 미검증 후보이고 Claude·Gemini 직접 API와 한 run의 공급자 혼합도 미지원이다. 별 수는 인기·발견 신호일 뿐 품질이나 실사용 점유율의 증거가 아니다. 검증 근거는 ${testCount || '전체'}개 자동 테스트, JavaScript 문법, Skill·Plugin 정적 검사, 실제 Codex 모델 탐색, 모델 배정 미리보기, npm package 검사다. 이 HTML은 생성 후 economy 역할 모델을 low 노력으로 열 번 호출하는 Reader-10을 다시 실행한다. 별도 JSON의 passedPersonas 10, criticalCount 0, reportSha256 일치가 최종 판독 조건이다. 제품 발전은 30일 안에 설치·첫 성공 측정과 대표 demo를 만들고, 60일 안에 provider/worker port와 forward eval을 증명하며, 90일 안에 검증된 adapter 또는 local MCP 중 사용자 수요가 큰 하나만 출시하는 순서다. 용어: OMO(Oh My OpenAgent), OMP(Oh My Pi), OMC(Oh My ClaudeCode), OMX(Oh My Codex), GJC(Gajae-Code), CLI(명령줄), GUI(그래픽 화면), TUI(터미널 화면), UI(사용자 화면), UX(사용 경험), IDE(개발 환경), DB(database·데이터베이스), JSON(구조화 데이터), SDK(개발 도구 모음), URL(웹 주소), HTTP(웹 통신 규격), MIT(허용 범위가 넓은 오픈소스 라이선스), LICENSE(라이선스 파일), NOTICE(출처·권리 고지), SKILL(SKILL.md 작업 지침 파일), Skill(필요할 때 불러오는 작업 지침), Plugin(Skill과 선택적 연결 요소의 배포 묶음), MCP(앱과 도구 연결 규격), API(프로그램 연결 규격), RPC(원격 기능 호출), ACP(agent communication protocol·에이전트 통신 규격), LSP(language server protocol·언어 서버 규격), DAP(debug adapter protocol·디버거 규격), AST(abstract syntax tree·코드 문법 트리), PRD(product requirements document·제품 요구 문서), QA(quality assurance·품질 검증), TDD(test-driven development·테스트 주도 개발), SUL(sustainable use license·지속가능 사용 라이선스), DSL(domain-specific language·도메인 전용 언어), HUD(head-up display·상태 표시 화면), RLM(긴 문맥 처리 연구 방식), ADR(architecture decision record·설계 결정 기록), CI(continuous integration·지속 통합), CDC(change data capture·변경 데이터 추적), PR(pull request·변경 제안), HN(Hacker News), D30(30일 재사용 지표), E2E(처음부터 끝까지 검증), Reader-10(열 가지 독자 역할 검수), clean-room(동작 아이디어만 보고 코드·문구를 새로 작성), progressive disclosure(필요한 정보만 단계적으로 로드), dry-run(변경 없는 미리보기), SHA-256(파일 내용 식별값).`;
+const task = '국내 여섯 하네스와 GitHub의 글로벌 코딩 agent·workflow·Skill 저장소에 더해 Ouroboros를 공식 근거로 조사하고, 장단점과 Relay10의 채택·제외를 밝힌다. Ouroboros의 소크라틱 질문과 실행 전 의도 확인은 기존 relay10-spec 안의 가벼운 작업 계약으로 독립 구현하며, 공급자·CLI·앱 지원 경계와 30일·60일·90일 발전 계획을 하나의 검증된 HTML 보고서로 정리한다.';
+const summary = `결론부터 말하면 Relay10 통합본은 글로벌 조사와 여덟 개의 clean-room Skill, Codex·Claude Code manifest, 조건부 frontier advisor, Grok Build Skill-host 근거를 한 core에 합쳤다. 모든 advisor 판단은 scout 이후 checkpoint에서 이뤄지며, economy 작업은 scout가 미결 질문을 남길 때만 frontier/max advisor를 부르고 비-economy 작업은 scout 이후 항상 advisor를 호출한다. always·never 정책으로 되돌릴 수 있다. 이는 호출 한 번을 생략할 수 있는 구조일 뿐 실제 비용·품질 우월성은 아직 forward evaluation 전이다. 상위 저장소에서는 OpenCode의 plan/build 권한 분리, Gemini CLI·Cline의 write 전 checkpoint, Aider의 architect/editor 분리, mini software-engineering agent의 작은 stateless core, Goose의 recipe success gate, Agent Orchestrator의 worker/reviewer adapter, Agent Skills의 progressive disclosure만 골랐다. daemon·DB·GUI·swarm·vector memory·scheduler·tmux를 core에 넣지 않았다. 고정 release v0.1.1의 공식 실행 경로는 여전히 Codex CLI와 현재 로컬 OpenAI 모델뿐이다. main의 repo Skill은 Codex App·CLI·IDE와 Claude Code·Grok Build host에서 발견될 수 있지만 현재 task 모델을 단계별로 바꾸지 않으며, Plugin에는 MCP server나 custom UI가 없다. 병합된 PR #3은 Grok Build가 여덟 Skill을 발견하는 host 경로만 실측했으며 xAI/Grok stage executor는 여전히 미검증 후보다. Claude·Gemini 직접 API와 한 run의 공급자 혼합도 미지원이다. 별 수는 인기·발견 신호일 뿐 품질이나 실사용 점유율의 증거가 아니다. 검증 근거는 ${testCount || '전체'}개 자동 테스트, JavaScript 문법, Skill·Plugin 정적 검사, 실제 Codex 모델 탐색, 모델 배정 미리보기, npm package 검사다. 이 HTML은 생성 후 economy 역할 모델을 low 노력으로 열 번 호출하는 Reader-10을 다시 실행한다. 별도 JSON의 passedPersonas 10, criticalCount 0, reportSha256 일치가 최종 판독 조건이다. 제품 발전은 30일 안에 설치·첫 성공 측정과 대표 demo를 만들고, 60일 안에 provider/worker port와 forward eval을 증명하며, 90일 안에 검증된 adapter 또는 local MCP 중 사용자 수요가 큰 하나만 출시하는 순서다. 용어: OMO(Oh My OpenAgent), OMP(Oh My Pi), OMC(Oh My ClaudeCode), OMX(Oh My Codex), GJC(Gajae-Code), CLI(명령줄), GUI(그래픽 화면), TUI(터미널 화면), UI(사용자 화면), UX(사용 경험), IDE(개발 환경), DB(database·데이터베이스), JSON(구조화 데이터), SDK(개발 도구 모음), URL(웹 주소), HTTP(웹 통신 규격), MIT(허용 범위가 넓은 오픈소스 라이선스), LICENSE(라이선스 파일), NOTICE(출처·권리 고지), SKILL(SKILL.md 작업 지침 파일), Skill(필요할 때 불러오는 작업 지침), Plugin(Skill과 선택적 연결 요소의 배포 묶음), MCP(앱과 도구 연결 규격), API(프로그램 연결 규격), RPC(원격 기능 호출), ACP(agent communication protocol·에이전트 통신 규격), LSP(language server protocol·언어 서버 규격), DAP(debug adapter protocol·디버거 규격), AST(abstract syntax tree·코드 문법 트리), PRD(product requirements document·제품 요구 문서), QA(quality assurance·품질 검증), TDD(test-driven development·테스트 주도 개발), SUL(sustainable use license·지속가능 사용 라이선스), DSL(domain-specific language·도메인 전용 언어), HUD(head-up display·상태 표시 화면), RLM(긴 문맥 처리 연구 방식), ADR(architecture decision record·설계 결정 기록), CI(continuous integration·지속 통합), CDC(change data capture·변경 데이터 추적), PR(pull request·변경 제안), HN(Hacker News), D30(30일 재사용 지표), E2E(처음부터 끝까지 검증), Reader-10(열 가지 독자 역할 검수), clean-room(동작 아이디어만 보고 코드·문구를 새로 작성), progressive disclosure(필요한 정보만 단계적으로 로드), dry-run(변경 없는 미리보기), SHA-256(파일 내용 식별값).`;
+const ouroborosSummary = `이 최종 통합본은 Ouroboros의 장점 중 저장소 사실을 먼저 확인하고 인간 결정만 제한적으로 질문한 뒤 실행 전 작업 계약을 확인하는 패턴만 기존 relay10-spec에 추가했다. 새 Skill·CLI·모델 호출·DB·MCP·TUI·Ralph·ontology loop는 넣지 않았다. Claude Code와 Grok Build의 Skill-host 표면은 PR #2/#3으로 main에 병합됐으며, 이 계약 변경까지 포함한 동일 fixture 행동 검증은 후속 과제로 남는다. xAI/Grok stage executor는 별도 종단간 검증 전까지 지원으로 표시하지 않는다. ${summary}`;
 
 const evidence = [
   { title: 'Relay10 공개 저장소', url: repository, note: 'GitHub CLI로 게시한 공식 저장소다.' },
@@ -31,7 +32,8 @@ const evidence = [
   { title: '글로벌 상위 저장소 증류표', url: `${repository}/blob/main/docs/global-top-repos.md`, note: '2026-07-14 GitHub API 스냅샷, 장단점, Relay10 채택·제외, archive·deprecated·라이선스 주의.' },
   { title: 'Clean-room prior art ledger', url: `${repository}/blob/main/docs/prior-art.md`, note: '어떤 동작 패턴을 참고했고 어떤 코드·문구·자산도 복사하지 않았는지 기록.' },
   { title: '30·60·90 발전·홍보 playbook', url: `${repository}/blob/main/docs/growth-playbook.md`, note: '개발 우선순위, 측정 지표, demo와 커뮤니티 홍보 원칙.' },
-  { title: 'Relay10 Codex Plugin preview', url: `${repository}/tree/main/plugins/relay10`, note: '여덟 Skill, manifest, provenance, third-party pattern notice. MCP와 custom UI는 없음.' },
+  { title: 'Relay10 Codex·Claude Code Skill pack', url: `${repository}/tree/main/plugins/relay10`, note: '여덟 Skill, Codex·Claude Code manifest, provenance, third-party pattern notice. MCP와 custom UI는 없음.' },
+  { title: '조건부 advisor 설계·평가 계획', url: `${repository}/blob/main/docs/conditional-advisor-routing.md`, note: 'scout 이후 미결 질문에 따른 frontier advisor gate, always·never fallback, 아직 측정하지 않은 비용·품질 경계.' },
   { title: 'Relay10 설계 계보와 이식성 판정', url: `${repository}/blob/main/docs/lineage-and-portability.md`, note: '여섯 하네스의 장단점·채택·제외와 공급자·앱별 현재 지원 경계.' },
   { title: 'OpenAI 최신 모델 가이드', url: 'https://developers.openai.com/api/docs/guides/latest-model.md', note: '현재 모델 계열과 추론 노력 안내.' },
   { title: 'Codex 설정 참고', url: 'https://learn.chatgpt.com/docs/config-file/config-reference', note: '모델 노력도와 읽기·쓰기 격리 권한 설정.' },
@@ -40,6 +42,10 @@ const evidence = [
   { title: '현재 OpenAI Plugin 예제', url: 'https://github.com/openai/plugins', note: 'deprecated openai/skills 대신 현재 참고한 공식 plugin 구조.' },
   { title: 'Agent Skills 표준', url: 'https://github.com/agentskills/agentskills', note: 'SKILL.md 폴더와 progressive disclosure의 이식 가능한 기준.' },
   { title: 'Superpowers', url: 'https://github.com/obra/superpowers', note: 'spec, systematic debugging, verification-before-completion 패턴. 문구와 코드는 복사하지 않음.' },
+  { title: 'Ouroboros 공식 저장소', url: 'https://github.com/Q00/ouroboros/tree/456a1347195038ad0eea2bcfee21efee495d6cb9', note: '2026-07-15에 고정한 공식 커밋. interview→Seed→execute→evaluate→evolve 구조를 확인한 근거다.' },
+  { title: 'Ouroboros 증류 결정', url: `${repository}/blob/main/docs/ouroboros-distillation.md`, note: '가져온 소크라틱 작업 계약과 가져오지 않은 Agent OS 기능을 구분한 clean-room 기록.' },
+  { title: 'relay10-spec 초기 정성 검사', url: `${repository}/blob/main/docs/ouroboros-spec-forward-eval.md`, note: '분리된 with-Skill·no-Skill 응답과 held-out trigger 8건의 수동 관찰. 모델·노력도·token·시간·raw trace가 없어 warning이며 benchmark가 아니다.' },
+  { title: 'Claude Code·Grok Build host 검증 PR #3', url: `${repository}/pull/3`, note: 'main에 병합된 여덟 Skill 발견 실측. Grok Build Skill host와 xAI/Grok stage executor를 명시적으로 구분한다.' },
   { title: 'Codex App Server 공식 문서', url: 'https://learn.chatgpt.com/docs/app-server', note: 'Codex 기반 custom client의 thread·turn·model API.' },
   { title: 'xAI Responses API', url: 'https://docs.x.ai/developers/quickstart', note: 'Grok의 Responses-compatible 실험 가능성을 판단한 공식 근거.' },
   { title: 'Anthropic OpenAI SDK compatibility', url: 'https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk', note: 'Claude 호환 계층과 현재 Codex Responses-only 경계의 차이.' },
@@ -61,9 +67,12 @@ const risks = [
   '실제 Reader-10은 같은 모델 계열을 여러 번 호출할 수 있으므로 10개의 독립적인 사람 판단으로 해석하면 안 된다.',
   '스카우트는 범용 Codex 읽기·검색 단계이며 전용 크롤러가 아니다. 복잡한 사이트 수집은 별도 도구가 필요하다.',
   '현재 코드는 codex executable, codex debug models, Codex 전용 sandbox·search·output-schema 인수에 결합돼 있다. OpenAI 호환 API라는 이유만으로 완전한 코딩 agent runtime 호환이 성립하지 않는다.',
-  'Grok은 Codex custom provider를 통한 프로토콜상 실험 후보일 뿐 실제 파일 도구·검색·structured output·Reader-10 종단간 검증이 없으므로 현재 지원으로 광고하면 안 된다.',
+  'main에 병합된 PR #3은 Grok Build가 Skill pack을 발견하는 host 경로만 검증했다. xAI/Grok stage executor는 실제 파일 도구·검색·structured output·Reader-10 종단간 검증이 없으므로 현재 지원으로 광고하면 안 된다.',
   'Codex Skill이나 Plugin은 앱에서 호출 경로를 만들 수 있지만 그 자체가 현재 앱 task의 모델을 Relay10 단계마다 교체하지는 않는다.',
   'main의 여덟 Skill과 Plugin manifest는 정적 구조 검증을 통과했지만 Codex App·CLI·IDE별 trigger recall과 no-skill baseline 비교는 아직 공개 benchmark가 아니다.',
+  'Confirmed Task Contract는 relay10-spec이 따르는 Skill 수준의 작업 규율이다. 암호학적으로 고정된 Ouroboros Seed나 runtime 강제 장치로 해석하면 안 된다.',
+  'Claude Code와 Grok Build host는 PR #2/#3으로 main에 병합됐지만 새 contract fixture를 실행하지 않았다. 공통 SKILL.md나 host discovery만으로 두 runtime의 동작 동등성을 주장하지 않는다.',
+  '조건부 advisor는 economy 경로에서 호출 한 번을 생략할 수 있지만 token·시간·정확도·비용 개선을 아직 같은 task로 측정하지 않았다. 절감이나 성능 향상으로 광고하면 안 된다.',
   'Skill 저장소는 폴더별 라이선스가 다를 수 있다. Anthropic 문서 Skill, Vercel Skill, OpenAI Plugin은 파일 단위 검토 없이 문구·코드·자산을 복사하면 안 된다.',
   'GitHub 별은 인기·발견 신호이고 품질·보안·실사용자 수·비용 절감·생산성 향상을 증명하지 않는다. Continue와 Roo Code처럼 별이 많아도 유지 상태가 바뀔 수 있다.',
   '비교 프로젝트의 별, 릴리스, 기능, 라이선스 표시는 빠르게 바뀐다. 특히 OMO 코어의 Sustainable Use License는 상업 재사용 전 다시 확인해야 한다.',
@@ -74,6 +83,7 @@ const globalRepos = [
   { name: 'OpenCode', url: 'https://github.com/anomalyco/opencode', signal: '185,365★ · MIT · active', strengths: '다중 provider와 plan/build 권한 분리가 명료하다.', cautions: 'TUI·desktop·server·인증까지 가진 전체 runtime이다.', adopted: 'read-only plan과 단계별 permission 경계.', excluded: '두 번째 runtime·TUI·provider 인증층.' },
   { name: 'Claude Code', url: 'https://github.com/anthropics/claude-code', signal: '137,686★ · Commercial terms · active', strengths: 'CLI·IDE·GitHub·Plugin·Skill 경험이 한 runtime에서 이어진다.', cautions: '오픈소스가 아니며 vendor runtime과 prompt에 결합된다.', adopted: 'Plugin anatomy와 전문 reviewer 개념.', excluded: '코드·prompt 복사, 무한 loop, Claude 전용 가정.' },
   { name: 'Spec Kit', url: 'https://github.com/github/spec-kit', signal: '120,376★ · MIT · active', strengths: '원칙→spec→plan→task→구현을 실행 가능한 산출물로 잇는다.', cautions: '작은 되돌릴 수 있는 변경에는 의식이 너무 크다.', adopted: 'outcome·non-goal·acceptance·rollback.', excluded: '모든 작업의 constitution과 큰 artifact tree.' },
+  { name: 'Ouroboros', url: 'https://github.com/Q00/ouroboros/tree/456a1347195038ad0eea2bcfee21efee495d6cb9', signal: '공식 커밋 456a134 · MIT · 2026-07-15 확인', strengths: '소크라틱 인터뷰로 모호한 의도를 Seed에 고정하고 실행·평가·진화로 잇는다.', cautions: 'DB·MCP·TUI·runtime adapter·Ralph loop를 포함한 전체 Agent OS라 작은 하네스에는 운영 표면이 크다.', adopted: '저장소 사실 선확인, 꼭 필요한 인간 결정만 최대 3개, 실행 전 Confirmed Task Contract, 의도 변경 시 새 revision.', excluded: 'Seed 스키마 복제, 수치 ambiguity score, ontology, Ralph loop, EventStore, resume, multi-runtime 지원 주장.' },
   { name: 'Gemini CLI', url: 'https://github.com/google-gemini/gemini-cli', signal: '105,958★ · Apache-2.0 · active', strengths: 'MCP·structured output·GitHub Action·checkpoint/restore가 있다.', cautions: 'Gemini 인증·도구·release channel을 포함한 독립 agent다.', adopted: 'write 전 checkpoint와 기계 판독 event 원칙.', excluded: 'Gemini runtime과 인증 stack.' },
   { name: 'OpenAI Codex', url: 'https://github.com/openai/codex', signal: '97,655★ · Apache-2.0 · active', strengths: 'sandbox·approval과 CLI·App·IDE 표면을 제공하는 검증된 host다.', cautions: 'Relay10이 현재 결합된 host이지 provider-neutral contract는 아니다.', adopted: '설치된 runtime·catalog·sandbox 재사용.', excluded: 'Codex 내부 구현이나 TUI 재구현.' },
   { name: 'OpenHands', url: 'https://github.com/OpenHands/OpenHands', signal: '80,656★ · core MIT/enterprise 별도 · active', strengths: 'backend·sandbox·SDK·local/remote surface를 분리한다.', cautions: 'server·canvas·automation·enterprise까지 운영 표면이 크다.', adopted: 'worker/provider port와 sandbox boundary 목표.', excluded: 'control plane·always-on server·enterprise stack.' },
@@ -85,12 +95,12 @@ const globalRepos = [
   { name: 'Agent Orchestrator', url: 'https://github.com/AgentWrapper/agent-orchestrator', signal: '8,224★ · Apache-2.0 · active', strengths: 'agent·worker·runtime·workspace·SCM adapter와 reviewer adapter를 나눈다.', cautions: 'Electron·daemon·SQLite·PR watcher·telemetry가 필요하다.', adopted: 'worker adapter 경계와 독립 reviewer.', excluded: 'daemon·Electron·CDC·상시 polling.' },
 ];
 
-const globalSummary = '2026-07-14 GitHub API와 각 공식 README를 다시 확인했다. 별 수는 인기·발견 신호일 뿐 품질·시장 점유율·생산성 증거가 아니다. Continue는 별이 많지만 README가 no longer actively maintained/read-only라고 밝혀 역사적 역할 분리 사례로만 남겼고, Roo Code는 archived 상태라 현행 추천에서 제외했다. Relay10은 동작 패턴만 독립 구현했으며, provider runtime·daemon·DB·GUI·swarm·vector memory는 core에 넣지 않았다.';
+const globalSummary = '2026-07-14 GitHub API와 각 공식 README를 다시 확인했고, Ouroboros는 2026-07-15 공식 커밋 456a134에 고정해 별도로 검토했다. 별 수는 인기·발견 신호일 뿐 품질·시장 점유율·생산성 증거가 아니다. Continue는 별이 많지만 README가 no longer actively maintained/read-only라고 밝혀 역사적 역할 분리 사례로만 남겼고, Roo Code는 archived 상태라 현행 추천에서 제외했다. Relay10은 동작 패턴만 독립 구현했으며, provider runtime·daemon·DB·GUI·swarm·vector memory·ontology loop는 core에 넣지 않았다.';
 
 const skillPack = [
   { name: 'relay10-orchestrate', job: '요청을 가장 작은 안전 workflow로 보낸다.', patterns: 'OpenCode plan/build, thin orchestrator, Relay10 risk router', boundary: '현재 Codex task 모델을 바꾸거나 불필요한 stage를 만들지 않는다.', status: 'pass', current: 'main 구현·정적 검증' },
   { name: 'relay10-research', job: '현재 근거를 읽기 전용으로 수집한다.', patterns: 'Awesome Copilot evidence, selective grounding', boundary: '근거 수집은 수정 권한이 아니며 별을 품질로 해석하지 않는다.', status: 'pass', current: 'main 구현·정적 검증' },
-  { name: 'relay10-spec', job: 'outcome·non-goal·acceptance·rollback을 정한다.', patterns: 'Spec Kit, OpenSpec, Superpowers planning', boundary: '작은 변경에 큰 constitution을 강제하지 않는다.', status: 'pass', current: 'main 구현·정적 검증' },
+  { name: 'relay10-spec', job: '저장소 사실을 먼저 확인하고 꼭 필요한 인간 결정을 물은 뒤 작업 계약을 확정한다.', patterns: 'Spec Kit, OpenSpec, Superpowers planning, Ouroboros Socratic interview', boundary: '명확한 작은 변경은 인터뷰를 생략하고, 질문은 한 번에 하나·기본 최대 3개다. 중대한 미결정은 build를 막는다.', status: 'warn', current: '구현·정적 회귀 검증 통과; 행동 검사는 계측 부족으로 warning' },
   { name: 'relay10-build', job: '승인된 변경을 작은 slice로 구현한다.', patterns: 'Superpowers TDD, vertical slice, bounded maker', boundary: '모든 artifact에 TDD를 강제하지 않고 publish하지 않는다.', status: 'pass', current: 'main 구현·정적 검증' },
   { name: 'relay10-debug', job: '재현→경계→가설→최소 실험으로 원인을 찾는다.', patterns: 'systematic debugging, stop-and-reassess', boundary: '진단 요청은 수정 권한이 아니며 세 번 같은 실패 뒤 재평가한다.', status: 'pass', current: 'main 구현·정적 검증' },
   { name: 'relay10-review', job: '고정 baseline의 spec·correctness·risk를 검토한다.', patterns: 'separate spec/quality review, reviewer adapter', boundary: 'read-only이며 maker의 self-review를 독립 증거로 부르지 않는다.', status: 'pass', current: 'main 구현·정적 검증' },
@@ -98,7 +108,7 @@ const skillPack = [
   { name: 'relay10-skill-lab', job: 'trigger와 no-skill baseline으로 Skill 가치를 평가한다.', patterns: 'Agent Skills, Anthropic eval ideas, OpenAI plugin-eval', boundary: '라이선스 불명 문구를 복사하거나 효과 없는 Skill을 늘리지 않는다.', status: 'pass', current: 'main 구현·정적 검증' },
 ];
 
-const skillSummary = 'Agent Skills 형식과 Codex Plugin 배포 구조를 따르되, 수백 개 catalog 대신 한 가지 일만 맡는 여덟 Skill만 둔다. .agents/skills는 plugin의 canonical skills 폴더를 가리켜 Codex repo surface에서 중복 없이 발견된다. Plugin에는 MCP·hook·app UI가 없고 현재 task 모델을 교체하지 않는다. 모든 문구는 clean-room으로 새로 작성했으며 provenance와 license 주의를 함께 저장했다.';
+const skillSummary = 'Agent Skills 형식과 Codex Plugin 배포 구조를 따르되, 수백 개 catalog 대신 한 가지 일만 맡는 여덟 Skill만 둔다. Ouroboros 때문에 아홉 번째 Skill이나 새 runtime을 만들지 않고 기존 relay10-spec에 제한 질문과 Confirmed Task Contract만 보강했다. .agents/skills는 plugin의 canonical skills 폴더를 가리켜 Codex repo surface에서 중복 없이 발견된다. Plugin에는 MCP·hook·app UI가 없고 현재 task 모델을 교체하지 않는다. 모든 문구는 clean-room으로 새로 작성했으며 provenance와 license 주의를 함께 저장했다.';
 
 const growthPlan = [
   { period: '0~30일 · 첫 성공 증명', product: '필수 fixture 4개와 실제 저장소 golden demo 1개를 만들고, stretch로 fixture 12개·demo 3개까지 늘린다.', proof: 'opt-in 관찰의 clone→첫 route 시간, routing set 12개, Skill당 positive/near-miss 각 3개를 공개한다.', promotion: '90초 무편집 terminal demo, 한국어·영어 README, 비교표보다 실제 before/after와 실패 로그를 GitHub Discussion·개발 커뮤니티에 공유한다.', metric: '필수 tester 5명 중 4명 5분 내 first dry-run, blocker issue 응답 48시간 이내.' },
@@ -151,9 +161,16 @@ const comparisons = [
     adopted: '짧은 quick start, 하나의 r10 진입점, 설치 직후 doctor로 상태를 확인하는 UX.',
     excluded: 'Codex plugin 주입, 전역 config 자동 변경, marketplace·startup hook, OMO submodule과 SUL 코드. 한 줄 설치·upgrade·uninstall은 아직 미구현.',
   },
+  {
+    name: 'Ouroboros',
+    strengths: '저장소 사실과 인간 결정을 분리하는 소크라틱 인터뷰, 명시적 Seed, 실행·평가·진화까지 이어지는 철학 레이어가 강하다.',
+    weaknesses: 'DB·MCP·TUI·runtime adapter·Ralph loop·ontology까지 포함한 Agent OS라 작은 작업에는 설정·상태·운영 비용이 커질 수 있다.',
+    adopted: 'repo fact를 먼저 확인하고, 사람만 정할 수 있는 중대한 결정만 한 번에 하나씩 기본 최대 3개 묻고, 실행 전 Confirmed Task Contract를 만들며 의도 변경은 새 revision으로 남기는 흐름.',
+    excluded: '코드·prompt·Seed schema 복제, 수치 ambiguity score, ontology, DB·EventStore, MCP·TUI, Ralph loop, resume/evolve 자동화, Claude·Grok 등 multi-runtime 지원 주장.',
+  },
 ];
 
-const comparisonSummary = '여기서 체리피킹은 소스 코드 복제가 아니라 공개 동작 패턴의 clean-room 독립 구현을 뜻한다. 국내 여섯 프로젝트에서는 역할별 모델, 단계 분리, doctor·evidence, external wrapper, 단순한 진입 UX만 골랐다. 글로벌 저장소에서는 권한 분리, write 전 checkpoint, architect/editor, stateless transcript, recipe success gate, worker/reviewer adapter, progressive disclosure를 보강했다. Relay10은 위험·파급·검증 가능성·되돌림 가능성 router와 correctness·clarity 분리, hash-bound Reader-10을 유지한다.';
+const comparisonSummary = '여기서 체리피킹은 소스 코드 복제가 아니라 공개 동작 패턴의 clean-room 독립 구현을 뜻한다. 국내 여섯 프로젝트에서는 역할별 모델, 단계 분리, doctor·evidence, external wrapper, 단순한 진입 UX만 골랐다. 글로벌 저장소에서는 권한 분리, write 전 checkpoint, architect/editor, stateless transcript, recipe success gate, worker/reviewer adapter, progressive disclosure를 보강했다. Ouroboros에서는 전체 Agent OS가 아니라 제한된 소크라틱 확인과 revision이 있는 작업 계약만 기존 relay10-spec에 넣었다. Relay10은 위험·파급·검증 가능성·되돌림 가능성 router와 correctness·clarity 분리, hash-bound Reader-10을 유지한다.';
 
 const supportMatrix = [
   { target: 'Codex CLI + 현재 OpenAI 모델', status: 'pass', current: '지원·검증됨', reason: '모든 stage가 codex exec를 호출하고 codex debug models로 catalog를 읽는다. 현재 출시 검증 경로다.', required: '추가 작업 없음. Node 20+, 인증된 Codex CLI 필요.' },
@@ -163,11 +180,12 @@ const supportMatrix = [
   { target: 'Google Gemini API 직접', status: 'fail', current: '미지원', reason: 'Gemini의 OpenAI 호환 표면은 Chat Completions이며 Relay10에는 Gemini catalog·executor가 없다.', required: 'Gemini native executor 또는 Responses 변환 proxy와 tool runtime.' },
   { target: '한 run의 OpenAI·Grok·Claude 혼합', status: 'fail', current: '미지원', reason: 'stage config에는 model만 있고 providerId·profile·capability negotiation이 없다.', required: 'stage별 providerId, adapter registry, effort·tool·schema capability 검사.' },
   { target: 'Codex App·CLI·IDE Skill', status: 'warn', current: 'main preview·간접 실행', reason: 'main에 repo-scoped 8 Skill과 유효한 Plugin manifest가 있다. Skill이 r10을 안내·호출해도 내부 실행은 별도 Codex CLI이며 현재 task 모델을 바꾸지 않는다.', required: '실제 surface별 trigger forward test와 marketplace packaging. native progress는 local MCP가 별도로 필요.' },
+  { target: 'Claude Code·Grok Build Skill host', status: 'warn', current: 'main의 PR #2/#3에서 발견 경로 검증', reason: 'PR #3은 Claude plugin과 Grok Build가 canonical 8 Skill을 찾는 것을 실측했다. 그러나 이 새 contract 행동은 아직 두 host에서 재실행하지 않았고, Grok stage provider를 뜻하지 않는다.', required: 'main의 동일 outcome fixture를 Claude Code와 Grok Build에서 반복.' },
   { target: 'ChatGPT 앱·웹', status: 'fail', current: '미지원', reason: 'ChatGPT App UI나 remote MCP backend가 없고 로컬 Mac repo에 직접 접근하는 구조도 아니다.', required: 'Apps SDK UI, remote MCP worker 또는 안전한 local sidecar 연결.' },
   { target: '독립 데스크톱 GUI', status: 'fail', current: '미구현', reason: '현재 package는 r10·relay10 CLI bin만 제공한다.', required: 'core 분리 뒤 Codex App Server client 또는 provider-neutral local sidecar와 Electron·Tauri·Swift UI.' },
 ];
 
-const supportSummary = '고정 v0.1.1 release의 공식 실행 지원은 Codex CLI뿐이고 현재 OpenAI 경로만 실제 검증했다. main은 Codex App·CLI·IDE가 읽을 수 있는 repo-scoped 8 Skill과 Plugin manifest preview를 추가했지만 MCP·custom UI·현재 task model 전환은 없다. Grok은 Codex xAI custom provider를 거치는 실험 후보이지 지원 완료가 아니며, Claude·Gemini 직접 연결과 한 run 공급자 혼합도 미지원이다. surface별 trigger와 종단간 검증 전에는 앱 native 또는 multi-provider 지원으로 표시하지 않는다.';
+const supportSummary = '고정 v0.1.1 release의 공식 stage 실행 지원은 Codex CLI뿐이고 현재 OpenAI 경로만 실제 검증했다. main은 PR #2/#3으로 Codex App·CLI·IDE, Claude Code, Grok Build가 읽을 수 있는 canonical 8 Skill과 두 manifest를 포함한다. Claude Code와 Grok Build의 Skill-host 발견 경로는 검증했지만 새 contract 행동과 xAI/Grok stage 실행은 검증하지 않았다. Plugin에는 MCP·custom UI·현재 task model 전환이 없고 Claude·Gemini 직접 연결과 한 run 공급자 혼합도 미지원이다. host discovery와 stage executor를 구분하고, surface별 행동·종단간 검증 전에는 앱 native 또는 multi-provider 지원으로 표시하지 않는다.';
 
 const verificationChecks = [
   ...verificationLog.commands.map((command) => ({
@@ -222,6 +240,15 @@ const stages = [
     evidence: [{ title: 'LazyCodex 공식 README와 submodule', url: 'https://github.com/code-yeongyu/lazycodex' }],
   },
   {
+    title: 'Ouroboros', status: 'pass', profile: '글로벌 비교·철학 레이어', model: '공식 커밋 456a134',
+    summary: '전체 Agent OS가 아니라 모호한 작업을 실행 가능한 계약으로 바꾸는 얇은 인터뷰 패턴만 가져왔다.',
+    output: '사실: Ouroboros는 소크라틱 interview에서 Seed를 만들고 execute→evaluate→evolve로 잇는 Agent OS다. 장점: 모델이 바뀌어도 의도·제약·평가 기준을 먼저 명시하는 철학 레이어가 남는다. 단점: DB·MCP·TUI·runtime adapter·Ralph loop·ontology까지 포함해 작은 하네스에는 운영 표면이 크다. Relay10 채택: 저장소 사실 선확인, 사람만 정할 결정 한 번에 하나·기본 최대 3개, 실행 전 Confirmed Task Contract, 의도 변경 시 새 revision. 제외: 코드·prompt·Seed schema, ambiguity score, ontology, DB·EventStore, MCP·TUI, Ralph·resume·evolve, multi-runtime 지원 주장. 이 계약은 Skill 규율이지 암호학적으로 고정된 runtime Seed가 아니다.',
+    evidence: [
+      { title: 'Ouroboros 공식 저장소 고정 커밋', url: 'https://github.com/Q00/ouroboros/tree/456a1347195038ad0eea2bcfee21efee495d6cb9' },
+      { title: 'Relay10 Ouroboros 증류 결정', url: `${repository}/blob/main/docs/ouroboros-distillation.md` },
+    ],
+  },
+  {
     title: '글로벌 상위 저장소 재조사', status: 'pass', profile: '해외 조사', model: 'GitHub API·공식 README',
     summary: '상위 agent runtime뿐 아니라 spec workflow, minimal core, Skill 표준과 현재 Plugin 배포 경로까지 다시 비교했다.',
     output: '2026-07-14 스냅샷의 current core reference 12개는 OpenCode, Claude Code, Spec Kit, Gemini CLI, Codex, OpenHands, Cline, Ruflo, Goose, Aider, Agent Orchestrator, mini software-engineering agent다. Skills는 Superpowers, Anthropic Skills, Awesome Copilot, Vercel Agent Skills, Agent Skills, Microsoft Skills, 현재 OpenAI Plugins를 비교했다. OpenSpec·BMAD는 인접 workflow 사례, openai/skills는 deprecated, Continue는 no longer actively maintained/read-only, Roo Code는 archived로 구분했다. 별은 발견 신호일 뿐 품질·시장점유율·생산성 증거가 아니다.',
@@ -233,7 +260,7 @@ const stages = [
   {
     title: '여덟 개 Skill·Plugin preview', status: 'pass', profile: 'progressive disclosure', model: 'Agent Skills·Codex Plugin 규격',
     summary: '수백 개 catalog 대신 research·spec·build·debug·review·release·orchestrate·skill-lab 여덟 개만 필요할 때 로드한다.',
-    output: 'main에 plugins/relay10/.codex-plugin/plugin.json과 여덟 SKILL.md, UI metadata, provenance, third-party notice를 구현했다. .agents/skills는 canonical plugin skills 폴더를 가리킨다. npm run validate:skills와 전체 회귀 테스트가 manifest·frontmatter·UI metadata·상대 링크·placeholder를 검사해 통과했다. Skill은 Codex App·CLI·IDE에서 작업 지침을 제공할 수 있지만 현재 task model을 바꾸지 않으며 Plugin에는 MCP server·hook·custom UI가 없다. trigger recall과 with/without baseline은 다음 forward-eval 단계다.',
+    output: 'main에 Codex·Claude Code manifest와 여덟 SKILL.md, UI metadata, provenance, third-party notice를 구현했다. .agents/skills와 .claude/skills는 같은 canonical plugin skills 폴더를 가리킨다. npm run validate:skills와 전체 회귀 테스트가 manifest·frontmatter·UI metadata·상대 링크·placeholder를 검사해 통과했다. 이번 relay10-spec 정성 검사에서는 held-out 8건이 기대 분류와 같았지만 정확한 모델·노력도·token·시간·raw trace가 없어 행동 검증은 warning이다. 기본 모델도 파괴 작업을 막았으므로 우월성을 주장하지 않는다. 병합된 PR #3은 Claude Code와 Grok Build가 canonical pack을 발견하는 것까지 확인했지만 새 contract 행동 검사는 아직이다. Skill은 현재 task model을 바꾸지 않으며 Plugin에는 MCP server·hook·custom UI가 없다.',
     evidence: [
       { title: 'Relay10 Plugin preview', url: `${repository}/tree/main/plugins/relay10` },
       { title: 'Codex Skill 공식 문서', url: 'https://learn.chatgpt.com/docs/build-skills' },
@@ -242,8 +269,8 @@ const stages = [
   },
   {
     title: 'Relay10 라우팅 설계', status: 'pass', profile: 'frontier', model: 'gpt-5.6-sol / max 원칙',
-    summary: '사용자 아이디어를 난이도 하나가 아니라 오류 파급·검증 가능성·되돌림 가능성과 결합했다.',
-    output: '기본 정책: 읽기·검색은 economy/low, 분석·계획은 frontier/max, 구현은 balanced/medium, 사실 검토는 frontier/high, 쉬운 설명은 balanced/low, 마지막 독자 검수는 economy/low 10회다. 복잡성, 위험, 영향 범위, 검증 가능성, 되돌림 가능성을 0~3으로 기록한다. 이 점수는 실행 전 초기 모델 배정이며 0.1은 실패 후 자동 승격하지 않는다. Codex task-level /goal로 이번 출시 목표를 추적했지만 Relay10 자체에는 /goal 명령 문법이 없다.',
+    summary: '위험 차원별 모델 배정에 scout 이후 조건부 frontier advisor를 결합했다.',
+    output: '기본 정책: 읽기·검색은 economy/low, 구현은 balanced/medium, 사실 검토는 frontier/high, 쉬운 설명은 balanced/low, 마지막 독자 검수는 economy/low 10회다. 모든 advisor 판단은 scout 이후 checkpoint에서 이뤄진다. 비-economy 작업은 그 시점에 frontier/max advisor를 항상 호출하고, economy 작업은 scout가 미결 질문을 남길 때만 같은 advisor를 호출한다. advisorMode always·never로 이전 정책이나 완전 비활성화로 되돌릴 수 있다. 복잡성, 위험, 영향 범위, 검증 가능성, 되돌림 가능성을 0~3으로 기록한다. 이 구조는 조건부 호출을 가능하게 할 뿐 실제 token·시간·정확도·비용 절감은 아직 forward evaluation 전이다. Relay10 자체에는 /goal 명령 문법이 없다.',
   },
   {
     title: '경량·안전 구현', status: 'pass', profile: 'balanced', model: 'Node 20+ 내장 모듈',
@@ -266,6 +293,7 @@ const nextSteps = [
   '공개 상태 확인: gh repo view minwoo19930301/relay10 및 gh release view v0.1.1 --repo minwoo19930301/relay10. 릴리스 주소는 이미 공개됐으며 결과 파일은 reportSha256으로 현재 HTML과 일치 여부를 확인한다.',
   '30개 라우팅 평가 세트를 @minwoo19930301이 관리한다. 실측 전에는 비용·속도·품질 우월성을 광고하지 않는다.',
   'main의 8 Skill은 npm run validate:skills로 검사하고, 각 Skill에 should-trigger 10개·near-miss 10개와 no-skill baseline을 추가해 Codex App·CLI·IDE에서 forward test한다.',
+  'relay10-spec의 초기 isolated with-Skill·no-Skill 정성 관찰은 docs/ouroboros-spec-forward-eval.md에 warning으로 보존했다. 정확한 model·effort·raw output·token/time·failure type을 남기는 runner로 Codex App·CLI에서 반복하고, main의 Claude Code와 Grok Build에서 같은 fixture를 다시 확인한다. xAI/Grok stage executor는 파일 도구·검색·구조화 출력·Reader-10 종단간 검증 전까지 지원으로 표시하지 않는다.',
   '30일 필수: 공개 fixture 4개와 실제 저장소 golden demo 1개를 만들고, opt-in tester 5명 중 4명이 5분 안에 first dry-run을 끝내는지 관찰한다. fixture 12개·demo 3개는 stretch다.',
   '60일: CatalogAdapter·ExecutorAdapter·SurfaceAdapter 설계와 Skill with/without 결과를 공개한다. local MCP와 provider adapter 중 사용자 수요가 큰 하나를 선택한다.',
   '90일: 선택한 확장 하나만 E2E tool·schema·search·workspace·Reader-10 gate 뒤 release 후보로 만든다. 통과 전에는 Grok·Claude·Gemini 또는 앱 native 지원으로 광고하지 않는다.',
@@ -273,17 +301,17 @@ const nextSteps = [
 ];
 
 const base = {
-  title: 'Relay10 글로벌 증류·Skill 보강 보고서',
-  heroSummary: '글로벌 상위 agent·workflow·Skill 저장소를 다시 조사해 권한 분리, checkpoint, 작은 core, 독립 review, progressive disclosure만 여덟 Skill로 압축했다. main에는 Codex Plugin preview가 있지만 고정 v0.1.1의 공식 실행 지원은 여전히 Codex CLI뿐이다.',
+  title: 'Relay10 글로벌·Ouroboros 증류 보고서',
+  heroSummary: '글로벌 상위 agent·workflow·Skill 저장소와 Ouroboros를 조사해 권한 분리, checkpoint, 작은 core, 독립 review, progressive disclosure에 더해 제한된 소크라틱 작업 계약만 여덟 Skill로 압축했다. 새 Agent OS는 만들지 않았고 고정 v0.1.1의 공식 실행 지원은 여전히 Codex CLI뿐이다.',
   task,
-  summary,
+  summary: ouroborosSummary,
   runId: 'relay10-launch-20260713',
   generatedAt: new Date().toISOString(),
   status: 'warn',
   routing: {
     decisions: [
       { stage: '자료 읽기·검색', profile: 'economy', effort: 'low', model: '현재 로컬: gpt-5.6-luna', enabled: true, reason: '되돌릴 수 있고 구조 검증이 쉬운 수집' },
-      { stage: '분석·계획', profile: 'frontier', effort: 'max', model: '현재 로컬: gpt-5.6-sol', enabled: true, reason: '판단 오류의 파급이 큰 단계' },
+      { stage: '분석·조건부 자문', profile: 'frontier', effort: 'max', model: '현재 로컬: gpt-5.6-sol', enabled: true, reason: 'scout 이후 비-economy는 항상, economy는 미결 질문이 있을 때만 호출' },
       { stage: '구현', profile: 'balanced', effort: 'medium', model: '현재 로컬: gpt-5.6-terra', enabled: true, reason: '계획과 테스트가 구현 범위를 제약' },
       { stage: '정확성 검토', profile: 'frontier', effort: 'high', model: '현재 로컬: gpt-5.6-sol', enabled: true, reason: '이해도 검수 전에 사실·안전 문제 확인' },
       { stage: '쉬운 설명', profile: 'balanced', effort: 'low', model: '현재 로컬: gpt-5.6-terra', enabled: true, reason: '검증 기록을 짧은 문장으로 변환' },
@@ -308,7 +336,7 @@ const base = {
 
 const payloadGate = evaluateReader10Payload({
   task,
-  summary,
+  summary: ouroborosSummary,
   evidence,
   verification: { checks: verificationChecks },
   risks,
