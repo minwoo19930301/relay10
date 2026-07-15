@@ -8,9 +8,10 @@
 > Relay10은 Codex를 갈아엎지 않고, 읽기·계획·구현·검토·설명을 위험도에
 > 맞게 나누고 모든 handoff를 파일로 남기는 작은 harness다.
 
-지금 말할 수 있는 범위는 “Codex CLI에서 검증됨, main에 여덟 Skill과 Codex
-Plugin preview가 있음”이다. “가장 싸다”, “가장 똑똑하다”, “Grok·Claude·Gemini
-지원”, “Codex App native 지원”은 아직 증명되지 않았으므로 쓰지 않는다.
+지금 말할 수 있는 범위는 “Codex CLI에서 검증됨, main에 여덟 Skill과
+Codex·Claude Code Plugin preview가 있음”이다. “가장 싸다”, “가장 똑똑하다”,
+“Grok·Claude·Gemini 지원”, “Codex App native 지원”은 아직 증명되지
+않았으므로 쓰지 않는다.
 
 ## North-star와 보조 지표
 

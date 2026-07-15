@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 import {
   main,
@@ -23,6 +24,7 @@ async function writeFixture(overrides = {}) {
   const skillName = overrides.skillName ?? 'relay10-example';
   const skillRoot = path.join(root, 'skills', skillName);
   await mkdir(path.join(root, '.codex-plugin'), { recursive: true });
+  await mkdir(path.join(root, '.claude-plugin'), { recursive: true });
   await mkdir(path.join(skillRoot, 'agents'), { recursive: true });
   await mkdir(path.join(skillRoot, 'references'), { recursive: true });
 
@@ -48,6 +50,20 @@ async function writeFixture(overrides = {}) {
     `${JSON.stringify(manifest, null, 2)}\n`,
     'utf8',
   );
+  if (overrides.claudeManifest !== false) {
+    const claudeManifest = {
+      name: 'relay10',
+      version: '0.1.1',
+      description: 'A focused workflow skill pack.',
+      author: { name: 'Relay10 contributors' },
+      ...overrides.claudeManifest,
+    };
+    await writeFile(
+      path.join(root, '.claude-plugin', 'plugin.json'),
+      `${JSON.stringify(claudeManifest, null, 2)}\n`,
+      'utf8',
+    );
+  }
   await writeFile(
     path.join(skillRoot, 'SKILL.md'),
     overrides.skill ?? `---\nname: ${skillName}\ndescription: Use this skill when a bounded example workflow needs verification.\n---\n\n# Example\n\nRead [the reference](./references/example.md).\n`,
@@ -145,6 +161,62 @@ test('manifest paths must start with ./ and cannot traverse outside the plugin',
   const root = await writeFixture({ manifest: { skills: '../skills' } });
   const result = await validateSkillPack(root);
   assert.ok(result.errors.some((error) => error.code === 'manifest-path'));
+});
+
+test('validator requires a Claude Code plugin manifest next to the Codex manifest', async () => {
+  const root = await writeFixture({ claudeManifest: false });
+  const result = await validateSkillPack(root);
+  assert.equal(result.passed, false);
+  assert.ok(result.errors.some((error) => error.code === 'claude-manifest-missing'));
+});
+
+test('Claude manifest must agree with the Codex manifest and stay within the validated layout', async () => {
+  const root = await writeFixture({
+    claudeManifest: {
+      name: 'Relay 10',
+      version: '0.2',
+      description: '',
+      skills: './skills/',
+    },
+  });
+  const result = await validateSkillPack(root);
+  const codes = new Set(result.errors.map((error) => error.code));
+
+  assert.equal(result.passed, false);
+  for (const code of [
+    'claude-manifest-name',
+    'claude-manifest-name-mismatch',
+    'claude-manifest-version',
+    'claude-manifest-version-mismatch',
+    'claude-manifest-required-field',
+    'claude-manifest-skills-unsupported',
+  ]) {
+    assert.ok(codes.has(code), `missing ${code}: ${JSON.stringify(result.errors, null, 2)}`);
+  }
+  assert.ok(result.errors
+    .filter((error) => error.code.startsWith('claude-manifest-'))
+    .every((error) => error.path === '.claude-plugin/plugin.json'));
+});
+
+test('repository marketplace manifest points at the bundled plugin with a matching name', async () => {
+  const repositoryRoot = fileURLToPath(new URL('..', import.meta.url));
+  const marketplace = JSON.parse(await readFile(
+    path.join(repositoryRoot, '.claude-plugin', 'marketplace.json'),
+    'utf8',
+  ));
+
+  assert.equal(marketplace.name, 'relay10');
+  assert.ok(marketplace.owner?.name, 'marketplace owner.name is required');
+  assert.ok(Array.isArray(marketplace.plugins) && marketplace.plugins.length > 0);
+  for (const entry of marketplace.plugins) {
+    assert.match(entry.name, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+    assert.match(entry.source, /^\.\//, 'plugin source must be a relative path inside the repository');
+    const pluginManifest = JSON.parse(await readFile(
+      path.join(repositoryRoot, entry.source, '.claude-plugin', 'plugin.json'),
+      'utf8',
+    ));
+    assert.equal(pluginManifest.name, entry.name);
+  }
 });
 
 test('CLI help is side-effect free and JSON failure returns a nonzero status with itemized errors', async () => {

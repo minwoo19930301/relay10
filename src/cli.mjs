@@ -51,6 +51,19 @@ Run artifacts: .relay10/runs/<run-id>/
 
 export const RUN_ID_PATTERN = /^\d{8}T\d{9}Z-[a-z0-9]{8}$/i;
 
+/** Human-readable CLI error for missing executables and other failures. */
+export function formatCliError(error) {
+  const message = error?.message || String(error);
+  const syscall = typeof error?.syscall === 'string' ? error.syscall : '';
+  const missingExecutable = error?.code === 'ENOENT'
+    && (syscall.startsWith('spawn ') || message.startsWith('spawn '));
+  if (missingExecutable) {
+    const command = error.path || error.cmd || 'executable';
+    return `${command} not found on PATH. Relay10 model stages require an authenticated Codex CLI (install Codex, then re-run r10 doctor).`;
+  }
+  return message;
+}
+
 const BOOLEAN = 'boolean';
 const VALUE = 'value';
 const COMMAND_SPECS = Object.freeze({
@@ -377,18 +390,30 @@ export async function main(argv = process.argv.slice(2), context = {}) {
   if (command === 'doctor') {
     const spawnCaptureImpl = context.spawnCaptureImpl ?? spawnCapture;
     const configAndCatalogImpl = context.configAndCatalogImpl ?? configAndCatalog;
-    const codex = await spawnCaptureImpl('codex', ['--version'], { cwd, timeoutMs: 10_000 });
+    let codex;
+    let codexSpawnError;
+    try {
+      codex = await spawnCaptureImpl('codex', ['--version'], { cwd, timeoutMs: 10_000 });
+    } catch (error) {
+      codexSpawnError = error;
+      codex = {
+        code: 1,
+        stdout: '',
+        stderr: formatCliError(error),
+      };
+    }
     let catalog;
     let catalogError;
     try {
       ({ catalog } = await configAndCatalogImpl(cwd));
     } catch (error) {
-      catalogError = error.message;
+      catalogError = formatCliError(error);
     }
+    const codexDetail = codex.stdout.trim() || codex.stderr.trim() || (codexSpawnError ? formatCliError(codexSpawnError) : 'unknown Codex failure');
     const result = {
       ok: Number(process.versions.node.split('.')[0]) >= 20 && codex.code === 0 && !catalogError,
       node: process.version,
-      codex: codex.stdout.trim() || codex.stderr.trim(),
+      codex: codexDetail,
       config: (await exists(path.join(cwd, CONFIG_FILENAME))) ? CONFIG_FILENAME : 'defaults',
       roles: catalog?.roles,
       error: catalogError,
@@ -502,7 +527,7 @@ if (isMainModule()) {
   main().then((code) => {
     process.exitCode = code;
   }).catch((error) => {
-    process.stderr.write(`relay10: ${error.message}\n`);
+    process.stderr.write(`relay10: ${formatCliError(error)}\n`);
     process.exitCode = 1;
   });
 }

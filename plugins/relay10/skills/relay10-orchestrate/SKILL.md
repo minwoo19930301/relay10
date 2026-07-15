@@ -14,7 +14,7 @@ Coordinate the other Relay10 skills without turning every request into a large p
 3. If `r10` is available, run `r10 doctor` and preview routing with `r10 route "<task>" --json`.
 4. Treat `r10 run "<task>" --dry-run` as a preview. Run a mutating pipeline only when the user authorized implementation.
 
-This skill helps choose a workflow. It does not change the model of the current Codex task and does not make unsupported providers available.
+This skill helps choose a workflow. It does not change the model of the host agent's current task, whether that host is Codex or Claude Code, and does not make unsupported providers available.
 
 ## Choose the smallest path
 
