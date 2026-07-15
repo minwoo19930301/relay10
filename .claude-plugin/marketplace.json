@@ -10,7 +10,7 @@
       "source": "./plugins/relay10",
       "description": "Eight small, on-demand skills for evidence-led repository work with Relay10.",
       "license": "MIT",
-      "keywords": ["agent-skills", "model-routing", "release-evidence"]
+      "keywords": ["claude-code", "agent-skills", "model-routing", "release-evidence"]
     }
   ]
 }

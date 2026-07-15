@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Document Claude Code and Grok Build as **Skill hosts** (not stage executors),
+  with dated evidence in `docs/host-surface-verification.md`.
+- Make `r10 doctor` report a structured FAIL with PATH guidance when the Codex
+  CLI is missing, instead of crashing on `spawn codex ENOENT`.
+- Format top-level CLI errors for missing executables with the same guidance.
+
 ## 0.1.1 - 2026-07-13
 
 - Include `examples/relay10.config.json` in the Git repository and release tag.

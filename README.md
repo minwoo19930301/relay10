@@ -67,19 +67,23 @@ multi-provider API client.
 | Target | Current status | What that means |
 |---|---|---|
 | Codex CLI with the locally discovered OpenAI models | Supported and tested | This is the release path. Every model stage launches `codex exec`, and model discovery uses `codex debug models`. |
-| Codex with an xAI/Grok custom provider | Experimental candidate, untested | Codex and xAI both expose a Responses-compatible path, but Relay10 cannot select providers per stage and has not completed end-to-end tool, schema, search, or Reader-10 tests. Do not treat this as released Grok support. |
+| Codex with an xAI/Grok custom provider as a **stage executor** | Experimental candidate, untested | Codex and xAI both expose a Responses-compatible path, but Relay10 cannot select providers per stage and has not completed end-to-end tool, schema, search, or Reader-10 tests. Do not treat this as released Grok stage support. |
 | Anthropic/Claude or Google Gemini APIs as stage executors | Unsupported | Their native APIs and current OpenAI-compatibility surfaces need provider-specific executors or a verified translation layer plus an agent tool runtime. |
-| Claude Code as a Skill and Plugin host | Preview on `main`, verified locally | The `.claude/skills` symlink, `.claude-plugin` plugin manifest, and repository marketplace let Claude Code load the eight skills and invoke the `r10` CLI. Every Relay10 model stage still launches Codex CLI subprocesses; Claude Code does not become a stage executor. |
+| Claude Code as a Skill and Plugin host | Preview, re-verified 2026-07-15 | The `.claude/skills` symlink, `.claude-plugin` plugin manifest, and repository marketplace let Claude Code load the eight skills and invoke the `r10` CLI. Every Relay10 model stage still launches Codex CLI subprocesses; Claude Code does not become a stage executor. |
+| Grok Build / Grok CLI as a Skill host | Preview, verified 2026-07-15 | Grok loads the eight skills from `.agents/skills` (and Claude-compat skill roots) inside a cloned repo. Skills guide the host agent only; model stages still require Codex CLI. This is not xAI stage-executor support. |
 | Mixed providers in one run | Unsupported | Stage configuration contains a model, not a provider or profile. |
 | Codex desktop app or IDE | Indirect shell use only | A task can invoke `r10`, but Relay10 then starts separate Codex CLI subprocesses. There is no native progress UI or current-task model switching. |
 | ChatGPT app/web or a standalone GUI | Not implemented | These need a remote MCP/Apps SDK backend or a local sidecar/App Server client. |
 
-The repo-scoped Skills make the existing commands easier to invoke from the
-Codex and Claude Code apps, but a Skill by itself does not switch the current
-app task's model for every Relay10 stage. The current `main` branch includes an
-eight-Skill pack plus Codex and Claude Code plugin bundles as a preview; the
-immutable `v0.1.1` tag does not. The preview has no MCP server or custom UI, so
-native progress and stage execution still use the existing CLI. See the full
+The repo-scoped Skills make the existing commands easier to invoke from Codex,
+Claude Code, and Grok Build, but a Skill by itself does not switch the current
+app task's model for every Relay10 stage. The current branch preview includes an
+eight-Skill pack plus Codex and Claude Code plugin bundles; the immutable
+`v0.1.1` tag does not. The preview has no MCP server or custom UI, so native
+progress and stage execution still use the existing CLI. Evidence for host
+checks lives in
+[host-surface-verification.md](https://github.com/minwoo19930301/relay10/blob/main/docs/host-surface-verification.md).
+See also the full
 [lineage and portability decision](https://github.com/minwoo19930301/relay10/blob/main/docs/lineage-and-portability.md).
 
 ## Relay10 Skill pack
@@ -101,8 +105,8 @@ large catalog:
 
 The canonical pack lives under `plugins/relay10/skills`. `.agents/skills` and
 `.claude/skills` are relative symlinks to that directory so a cloned repository
-exposes the same skills to Codex and Claude Code surfaces that support
-repository skills. The plugin manifests are at
+exposes the same skills to Codex, Claude Code, and Grok Build surfaces that
+scan those roots. The plugin manifests are at
 `plugins/relay10/.codex-plugin/plugin.json` and
 `plugins/relay10/.claude-plugin/plugin.json`, and the repository root
 `.claude-plugin/marketplace.json` makes this repository installable as a Claude
@@ -114,14 +118,16 @@ published to a curated marketplace. To install the pack in Claude Code:
 /plugin install relay10@relay10
 ```
 
-Installed plugin skills appear namespaced as `relay10:<skill-name>`; a session
-opened inside a clone of this repository loads the same skills through
-`.claude/skills` without installing anything. Skills guide the host agent and
-can call the `r10` CLI, which still requires an authenticated Codex CLI for
-model stages. The pack follows progressive disclosure and contains original
-clean-room text. The Skill-ecosystem source subset and license cautions are
-recorded in `plugins/relay10/provenance/sources.json`; the complete agent,
-harness, workflow, and Skill lineage is recorded in `docs/prior-art.md`.
+Installed Claude Code plugin skills appear namespaced as `relay10:<skill-name>`;
+a session opened inside a clone of this repository loads the same skills through
+`.claude/skills` or `.agents/skills` without installing anything. Grok Build
+discovers the pack via `.agents/skills` (and optional Claude-compat skill
+paths). Skills guide the host agent and can call the `r10` CLI, which still
+requires an authenticated Codex CLI for model stages. The pack follows
+progressive disclosure and contains original clean-room text. The Skill-ecosystem
+source subset and license cautions are recorded in
+`plugins/relay10/provenance/sources.json`; the complete agent, harness,
+workflow, and Skill lineage is recorded in `docs/prior-art.md`.
 
 ## Default pipeline
 
@@ -199,13 +205,15 @@ slugs:
 
 ## Version 0.1 limits
 
-- The verified runtime is Codex CLI. Direct OpenAI, xAI/Grok, Anthropic/Claude,
-  and Gemini API adapters are not included, and providers cannot be mixed by
-  stage.
+- The verified stage runtime is Codex CLI. Direct OpenAI, xAI/Grok,
+  Anthropic/Claude, and Gemini API adapters are not included, and providers
+  cannot be mixed by stage. Grok Build skill-host loading is separate from
+  xAI stage execution and does not change this limit.
 - Codex desktop can invoke the CLI indirectly, but there is no Relay10 Skill,
   Plugin, MCP server, Apps SDK UI, or standalone GUI in the immutable v0.1.1
-  release. Current `main` has a Skill/Plugin preview for Codex and Claude Code,
-  without MCP or a custom UI.
+  release. The current preview adds Skill/Plugin surfaces for Codex and Claude
+  Code, and skill discovery for Grok Build via `.agents/skills`, without MCP
+  or a custom UI.
 - The scout is a general read/search Codex stage, not a dedicated crawler,
   browser automation system, or site-specific extraction engine.
 - Deterministic Reader-10 checks structure, length, terminology, links, and

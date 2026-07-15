@@ -159,8 +159,9 @@ support matrix and official references.
 - There are no direct provider adapters, per-stage provider selection, or
   mixed-provider runs.
 - There is no Skill, Plugin, MCP server, Apps SDK UI, App Server client, or
-  standalone GUI in the v0.1.1 release; current `main` previews Skill and
-  Plugin bundles for Codex and Claude Code, still without MCP or a custom UI.
+  standalone GUI in the v0.1.1 release; current previews add Skill and Plugin
+  bundles for Codex and Claude Code, plus Grok Build skill discovery via
+  `.agents/skills`, still without MCP or a custom UI.
 - Scout is not a dedicated crawler or browser-automation engine.
 - There is no resume/checkpoint engine, `/goal` DSL, workflow scheduler, or
   durable state database.
