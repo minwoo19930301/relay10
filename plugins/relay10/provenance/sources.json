@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "retrievedAt": "2026-07-14T00:24:00+09:00",
+  "retrievedAt": "2026-07-15T14:06:19+09:00",
   "policy": "behavior-pattern-only clean-room implementation; no prompt, code, or asset copied",
   "sources": [
     {
@@ -50,6 +50,13 @@
       "commit": "c33193b",
       "license": "MIT",
       "patterns": ["selective installation", "test and evaluation harnesses"],
+      "copied": false
+    },
+    {
+      "repository": "https://github.com/Q00/ouroboros",
+      "commit": "456a1347195038ad0eea2bcfee21efee495d6cb9",
+      "license": "MIT",
+      "patterns": ["bounded Socratic clarification before specification", "confirmed intent contract with revisions"],
       "copied": false
     }
   ]

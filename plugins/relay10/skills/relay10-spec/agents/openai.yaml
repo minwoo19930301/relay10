@@ -1,4 +1,4 @@
 interface:
   display_name: "Relay10 Spec"
-  short_description: "Turn an ambiguous change into an executable spec"
-  default_prompt: "Use $relay10-spec to define the smallest verifiable change and its rollback."
+  short_description: "Clarify blocking decisions and confirm a task contract"
+  default_prompt: "Use $relay10-spec to inspect repo facts, ask only blocking decisions, and confirm the smallest verifiable task contract."
