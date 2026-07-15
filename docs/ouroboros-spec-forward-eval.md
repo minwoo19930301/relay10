@@ -56,10 +56,10 @@ build, and review.
 
 - Repeat the same fixtures in a clean Codex App and CLI surface with exact
   model, effort, raw output, token/time, and failure-type records.
-- PR #3 verified that Claude Code and Grok Build can discover the canonical
-  Skill pack, but not this new contract behavior. After the PR #2/#3 stack
-  includes this branch, repeat these fixtures in both hosts before claiming
-  equivalent behavior.
+- PR #3, now merged through PR #2, verified that Claude Code and Grok Build can
+  discover the canonical Skill pack, but not this new contract behavior. After
+  repeat these fixtures from main in both hosts before claiming equivalent
+  behavior.
 - Treat Grok Build as a Skill host separately from an xAI/Grok stage executor.
   The latter still requires explicit tool, structured-output, permission,
   effort, and resume declarations plus end-to-end verification.

@@ -53,21 +53,20 @@ immutable and the Relay10 runtime does not yet enforce it.
 These exclusions preserve Relay10's current one-CLI, zero-runtime-dependency
 core and avoid a second state owner.
 
-## Interaction with the open advisor and host changes
+## Interaction with the merged advisor and host changes
 
 - The conditional-advisor change operates after evidence collection and decides
   whether technical frontier advice is worth a call. The confirmed contract
   operates earlier and resolves human intent. The two gates are complementary.
-- [PR #2](https://github.com/minwoo19930301/relay10/pull/2) exposes the same
+- [PR #2](https://github.com/minwoo19930301/relay10/pull/2) now exposes the same
   canonical `plugins/relay10/skills` directory to Claude Code.
-- [PR #3](https://github.com/minwoo19930301/relay10/pull/3), stacked on PR #2,
-  records a live Claude plugin check and a Grok Build session that discovered
+- [PR #3](https://github.com/minwoo19930301/relay10/pull/3) was merged through
+  PR #2 and records a live Claude plugin check and a Grok Build session that discovered
   all eight Skills through `.agents/skills`. That is Skill-host evidence, not
   an xAI/Grok stage executor. It also does not yet exercise this new confirmed
   contract behavior.
-- After this branch merges, the PR #2/#3 stack must rebase or merge `main` to
-  receive the updated canonical Skill, then repeat the outcome fixtures in both
-  hosts before claiming equivalent behavior.
+- Repeat the outcome fixtures against the updated canonical Skill in both hosts
+  before claiming equivalent behavior.
 - Any future xAI/Grok stage executor must declare structured output, tools,
   permission mode, reasoning effort, and session resume as supported,
   translated, ignored, or unavailable, then pass an end-to-end workspace test
