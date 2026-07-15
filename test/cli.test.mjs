@@ -40,9 +40,15 @@ test('formatCliError turns missing executables into actionable PATH guidance', (
   const missing = Object.assign(new Error('spawn codex ENOENT'), {
     code: 'ENOENT',
     path: 'codex',
+    syscall: 'spawn codex',
   });
   assert.match(formatCliError(missing), /codex not found on PATH/);
   assert.match(formatCliError(missing), /authenticated Codex CLI/);
+  const missingFile = Object.assign(
+    new Error("ENOENT: no such file or directory, open '/tmp/run.json'"),
+    { code: 'ENOENT', path: '/tmp/run.json', syscall: 'open' },
+  );
+  assert.equal(formatCliError(missingFile), missingFile.message);
   assert.equal(formatCliError(new Error('boom')), 'boom');
 });
 

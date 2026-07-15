@@ -53,11 +53,15 @@ export const RUN_ID_PATTERN = /^\d{8}T\d{9}Z-[a-z0-9]{8}$/i;
 
 /** Human-readable CLI error for missing executables and other failures. */
 export function formatCliError(error) {
-  if (error?.code === 'ENOENT') {
+  const message = error?.message || String(error);
+  const syscall = typeof error?.syscall === 'string' ? error.syscall : '';
+  const missingExecutable = error?.code === 'ENOENT'
+    && (syscall.startsWith('spawn ') || message.startsWith('spawn '));
+  if (missingExecutable) {
     const command = error.path || error.cmd || 'executable';
     return `${command} not found on PATH. Relay10 model stages require an authenticated Codex CLI (install Codex, then re-run r10 doctor).`;
   }
-  return error?.message || String(error);
+  return message;
 }
 
 const BOOLEAN = 'boolean';
