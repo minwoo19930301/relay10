@@ -1,0 +1,16 @@
+{
+  "name": "relay10",
+  "description": "Relay10 skill pack for evidence-led repository work.",
+  "owner": {
+    "name": "minwoo19930301"
+  },
+  "plugins": [
+    {
+      "name": "relay10",
+      "source": "./plugins/relay10",
+      "description": "Eight small, on-demand skills for evidence-led repository work with Relay10.",
+      "license": "MIT",
+      "keywords": ["claude-code", "agent-skills", "model-routing", "release-evidence"]
+    }
+  ]
+}

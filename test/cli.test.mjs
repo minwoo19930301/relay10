@@ -12,6 +12,7 @@ import {
   RUN_ID_PATTERN,
   configAndCatalog,
   exitCodeForStatus,
+  formatCliError,
   main,
   parseCommandLine,
   requireVerificationOptIn,
@@ -34,6 +35,71 @@ function captureOutput() {
     read: () => value,
   };
 }
+
+test('formatCliError turns missing executables into actionable PATH guidance', () => {
+  const missing = Object.assign(new Error('spawn codex ENOENT'), {
+    code: 'ENOENT',
+    path: 'codex',
+    syscall: 'spawn codex',
+  });
+  assert.match(formatCliError(missing), /codex not found on PATH/);
+  assert.match(formatCliError(missing), /authenticated Codex CLI/);
+  const missingFile = Object.assign(
+    new Error("ENOENT: no such file or directory, open '/tmp/run.json'"),
+    { code: 'ENOENT', path: '/tmp/run.json', syscall: 'open' },
+  );
+  assert.equal(formatCliError(missingFile), missingFile.message);
+  assert.equal(formatCliError(new Error('boom')), 'boom');
+});
+
+test('doctor reports a structured FAIL when Codex is missing instead of crashing', async () => {
+  const output = captureOutput();
+  const context = {
+    cwd: await mkdtemp(path.join(os.tmpdir(), 'relay10-doctor-missing-')),
+    stdout: output.stream,
+    spawnCaptureImpl: async () => {
+      const error = Object.assign(new Error('spawn codex ENOENT'), {
+        code: 'ENOENT',
+        path: 'codex',
+      });
+      throw error;
+    },
+    configAndCatalogImpl: async () => {
+      const error = Object.assign(new Error('spawn codex ENOENT'), {
+        code: 'ENOENT',
+        path: 'codex',
+      });
+      throw error;
+    },
+  };
+
+  assert.equal(await main(['doctor'], context), 1);
+  const text = output.read();
+  assert.match(text, /^FAIL Node /m);
+  assert.match(text, /FAIL Codex codex not found on PATH/);
+  assert.match(text, /FAIL codex not found on PATH/);
+  assert.doesNotMatch(text, /spawn codex ENOENT/);
+});
+
+test('doctor --json stays parseable when Codex spawn fails', async () => {
+  const output = captureOutput();
+  const context = {
+    cwd: await mkdtemp(path.join(os.tmpdir(), 'relay10-doctor-json-')),
+    stdout: output.stream,
+    spawnCaptureImpl: async () => {
+      throw Object.assign(new Error('spawn codex ENOENT'), { code: 'ENOENT', path: 'codex' });
+    },
+    configAndCatalogImpl: async () => ({
+      catalog: { roles: { economy: { model: 'e', effort: 'low' } } },
+    }),
+  };
+
+  assert.equal(await main(['doctor', '--json'], context), 1);
+  const payload = JSON.parse(output.read());
+  assert.equal(payload.ok, false);
+  assert.match(payload.codex, /codex not found on PATH/);
+  assert.equal(payload.error, undefined);
+});
 
 test('strict parser keeps boolean flags separate from following positional arguments', () => {
   assert.deepEqual(parseCommandLine(['route', '--json', 'fix typo']), {

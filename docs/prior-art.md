@@ -104,7 +104,11 @@ not derived copies of any compared repository:
 - `test/*.test.mjs`: behavior and regression tests written for Relay10;
 - `plugins/relay10/skills/relay10-*/SKILL.md`: locally written, focused skill
   procedures;
-- `plugins/relay10/.codex-plugin/plugin.json`: Relay10's own plugin metadata.
+- `plugins/relay10/.codex-plugin/plugin.json`: Relay10's own plugin metadata;
+- `plugins/relay10/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`:
+  Relay10's own Claude Code plugin and marketplace metadata.
+- `docs/host-surface-verification.md`: dated evidence for Claude Code and Grok
+  Build skill-host loading; not stage-executor proof.
 
 Relay10-specific combinations include the risk/verifiability/reversibility
 router, correctness-versus-clarity separation, literal-argv verification,
@@ -124,6 +128,9 @@ not invention of every component concept.
 - `openai/skills` is retained only as a historical research source; new Codex
   packaging follows the current plugin structure described by
   [openai/plugins](https://github.com/openai/plugins).
+- Claude Code packaging follows the plugin and marketplace structure described
+  in Anthropic's official Claude Code documentation; no Anthropic-owned skill
+  or plugin text is copied.
 - MIT and Apache-2.0 projects are still credited as conceptual prior art here.
   Their license status is not used to justify copying.
 
