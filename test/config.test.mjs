@@ -153,6 +153,14 @@ test("validator enforces routing ranges and threshold ordering", async () => {
     loadInline({ version: 1, routing: { balancedThreshold: 15, frontierThreshold: 15 } }),
     /balancedThreshold must be lower than frontierThreshold/,
   );
+  for (const advisorMode of ["conditional", "always", "never"]) {
+    const config = await loadInline({ version: 1, routing: { advisorMode } });
+    assert.equal(config.routing.advisorMode, advisorMode);
+  }
+  await assert.rejects(
+    loadInline({ version: 1, routing: { advisorMode: "automatic" } }),
+    /routing\.advisorMode: must be one of/,
+  );
 });
 
 test("validator enforces stage effort keys and values", async () => {
@@ -222,6 +230,14 @@ test("reader gate ranges, uniqueness, mode, and model-call budget are coherent",
   });
   assert.equal(live.readerGate.mode, "live");
   assert.equal(live.limits.maxModelCalls, 37);
+
+  const liveWithoutAdvisor = await loadInline({
+    version: 1,
+    routing: { advisorMode: "never" },
+    readerGate: { mode: "live", maxRounds: 3 },
+    limits: { maxModelCalls: 36 },
+  });
+  assert.equal(liveWithoutAdvisor.limits.maxModelCalls, 36);
 });
 
 test("limits are bounded integers and reject unknown knobs", async () => {

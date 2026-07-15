@@ -13,8 +13,8 @@ const reportData = {
   runId: 'run-001',
   generatedAt: '2026-07-13T03:00:00.000Z',
   routing: [
-    { stage: '자료 읽기', enabled: true, profile: 'economy', effort: 'low', model: 'scout', reason: '구조화된 입력이라 자동 검증이 가능합니다.' },
-    { stage: '분석과 계획', enabled: false, profile: 'frontier', effort: 'high', model: 'architect', reason: '출시 판단의 영향이 큽니다.' },
+    { stage: '자료 읽기', enabled: true, decision: 'invoke', profile: 'economy', effort: 'low', model: 'scout', reason: '구조화된 입력이라 자동 검증이 가능합니다.' },
+    { stage: '분석과 계획', enabled: true, decision: 'skip', reasonCode: 'easy-no-open-questions', profile: 'frontier', effort: 'high', model: 'architect', evidence: { assessment: { role: 'economy', score: 3 }, scout: { openQuestionCount: 0 } }, budget: { usedBefore: 1, budget: 30, mandatoryRemaining: 3, advisorInvocations: 0 }, reason: '미해결 질문이 없어 고급 조언을 생략했습니다.' },
   ],
   comparisons: [
     { name: '예제 하네스', strengths: '설치가 쉽습니다.', weaknesses: '기능이 많습니다.', adopted: '진단 명령', excluded: '상시 실행 서버' },
@@ -89,9 +89,11 @@ test('generateReport creates a self-contained, accessible Korean HTML report', (
   assert.match(html, /<h1>Relay10 배포 준비<\/h1>/);
   assert.match(html, /핵심 요약:<\/strong> Codex CLI 지원, 다른 공급자와 앱 네이티브 통합은 아직 미지원입니다/);
   assert.match(html, /<th scope="col">단계<\/th>/);
-  assert.match(html, /<th scope="col">실행 여부<\/th>/);
-  assert.match(html, /> 실행<\/span>/);
-  assert.match(html, /> 건너뜀<\/span>/);
+  assert.match(html, /<th scope="col">라우팅 판단<\/th>/);
+  assert.match(html, /> 호출<\/span>/);
+  assert.match(html, /> 생략<\/span>/);
+  assert.match(html, /코드 easy-no-open-questions · 초기 역할 economy · 점수 3 · 미해결 질문 0개/);
+  assert.match(html, /판단 전 1\/30회 · 필수 잔여 3회 · 고급 조언 0회/);
   assert.match(html, /하네스별 장단점과 Relay10 체리피킹/);
   assert.match(html, /Relay10이 채택한 패턴/);
   assert.match(html, /현재 공급자·CLI·앱 지원 범위/);

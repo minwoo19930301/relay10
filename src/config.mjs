@@ -11,6 +11,7 @@ export const DEFAULT_CONFIG = deepFreeze({
   routing: {
     balancedThreshold: 7,
     frontierThreshold: 15,
+    advisorMode: "conditional",
   },
   effort: {
     scout: "low",
@@ -58,6 +59,7 @@ const STAGE_IDS = Object.freeze([
 ]);
 const EFFORT_LEVELS = Object.freeze(["low", "medium", "high", "xhigh", "max", "ultra"]);
 const READER_MODES = Object.freeze(["deterministic", "live"]);
+const ADVISOR_MODES = Object.freeze(["conditional", "always", "never"]);
 const MAX_ROUTING_SCORE = 30;
 const MAX_VERIFICATION_COMMANDS = 64;
 const MAX_COMMAND_ARGS = 256;
@@ -138,12 +140,15 @@ function validateCatalog(catalog) {
 
 function validateRouting(routing) {
   assertObject(routing, "routing");
-  assertKnownKeys(routing, ["balancedThreshold", "frontierThreshold"], "routing");
+  assertKnownKeys(routing, ["balancedThreshold", "frontierThreshold", "advisorMode"], "routing");
   if (Object.hasOwn(routing, "balancedThreshold")) {
     assertInteger(routing.balancedThreshold, "routing.balancedThreshold", 0, MAX_ROUTING_SCORE - 1);
   }
   if (Object.hasOwn(routing, "frontierThreshold")) {
     assertInteger(routing.frontierThreshold, "routing.frontierThreshold", 1, MAX_ROUTING_SCORE);
+  }
+  if (Object.hasOwn(routing, "advisorMode")) {
+    assertEnum(routing.advisorMode, ADVISOR_MODES, "routing.advisorMode");
   }
 }
 
@@ -273,7 +278,9 @@ export function validateConfig(config) {
   const maxModelCalls = config.limits?.maxModelCalls ?? DEFAULT_CONFIG.limits.maxModelCalls;
   const maxRounds = config.readerGate?.maxRounds ?? DEFAULT_CONFIG.readerGate.maxRounds;
   if (readerMode === "live") {
-    const requiredCalls = 5 + (10 * maxRounds) + Math.max(0, maxRounds - 1);
+    const advisorMode = config.routing?.advisorMode ?? DEFAULT_CONFIG.routing.advisorMode;
+    const baseCalls = advisorMode === "never" ? 4 : 5;
+    const requiredCalls = baseCalls + (10 * maxRounds) + Math.max(0, maxRounds - 1);
     if (maxModelCalls < requiredCalls) {
       configError(
         "limits.maxModelCalls",

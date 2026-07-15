@@ -188,6 +188,7 @@ function routeOptions(config) {
   return {
     balancedThreshold: config.routing?.balancedThreshold,
     frontierThreshold: config.routing?.frontierThreshold,
+    advisorMode: config.routing?.advisorMode,
     jurySize: 10,
     quorum: config.readerGate?.minPass ?? 9,
     maxRounds: config.readerGate?.maxRounds ?? 2,
@@ -233,9 +234,11 @@ function printRoute(plan, asJson, stdout) {
   stdout.write(`Assessment: ${plan.assessment.role} (score ${plan.assessment.score})\n`);
   stdout.write(`Dimensions: complexity=${plan.assessment.complexity}, risk=${plan.assessment.risk}, blast=${plan.assessment.blastRadius}, verifiability=${plan.assessment.verifiability}, reversibility=${plan.assessment.reversibility}\n`);
   for (const stage of plan.stages) {
-    const state = stage.enabled !== false ? 'run' : 'skip';
+    const state = stage.enabled === false
+      ? 'skip'
+      : stage.activation === 'conditional' ? 'conditional' : 'run';
     const capability = stage.capability ?? stage.modelRole ?? stage.profile ?? 'unassigned';
-    stdout.write(`- ${stage.id.padEnd(10)} ${state.padEnd(4)} ${capability}/${stage.effort} -> ${stage.model}\n`);
+    stdout.write(`- ${stage.id.padEnd(10)} ${state.padEnd(11)} ${capability}/${stage.effort} -> ${stage.model}\n`);
   }
   const readerMode = plan.callEstimate.readerMode ?? (plan.liveReaders ? 'live' : 'deterministic');
   stdout.write(`Codex invocations: ${plan.callEstimate.minimum}..${plan.callEstimate.maximum} (${readerMode} readers)\n`);
