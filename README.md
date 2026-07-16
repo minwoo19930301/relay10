@@ -71,16 +71,7 @@ Pick it when you want:
 - **A surface one person can inspect.** Zero third-party runtime npm
   dependencies, host-facing skills as ordinary files under
   `plugins/relay10/skills`, and optional run handoffs under
-  `.relay10/runs/<id>/`—not a full compliance audit trail. Heavy agent CLIs
-  still carry packaging risk: in March 2026 a Claude Code npm release shipped
-  an internal source map that exposed client source widely mirrored on
-  GitHub; Anthropic described it as packaging human error and stated no
-  customer data or credentials were involved
-  ([Guardian](https://www.theguardian.com/technology/2026/apr/01/anthropic-claudes-code-leaks-ai),
-  [The Hacker News](https://thehackernews.com/2026/04/claude-code-tleaked-via-npm-packaging.html)).
-  That is a supply-chain lesson for large closed agent packages, not a claim
-  about chat privacy—and not a claim that Relay10 is immune to every class of
-  packaging mistake.
+  `.relay10/runs/<id>/`—not a full compliance audit trail.
 
 If you want an autonomous team that keeps working until the task looks done,
 a batteries-included harness is the better tool. Relay10 is for work where
