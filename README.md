@@ -1,7 +1,7 @@
 # Relay10
 
-> Route explicitly. Keep handoffs inspectable. Separate correctness signals
-> from report clarity.
+> Bounded, risk-aware, inspectable runs. Route explicitly. Keep handoffs
+> inspectable. Separate correctness signals from report clarity.
 
 Relay10 is a small Codex harness with zero third-party npm runtime
 dependencies. It maps the local Codex model catalog into three capability
@@ -40,24 +40,32 @@ completion loops, and autonomous teams. Projects such as
 [docs/lineage-and-portability.md](docs/lineage-and-portability.md) for a
 sourced comparison.
 
-Relay10 competes on restraint. Pick it when you want:
+Relay10 competes on restraint: **bounded, risk-aware, inspectable runs.**
+Pick it when you want:
 
-- **Spend routed by risk, not habit.** The router scores each task on five
-  dimensions and assigns the `economy` model tier to low-risk stages,
-  escalating to `frontier` only when risk, blast radius, or irreversibility
-  demand it. Tier labels come from catalog metadata, not live price data.
-- **A hard ceiling instead of a loop.** `--budget-calls` caps total model
-  invocations per run and the pipeline has no retry-until-done loop. The
-  budget counts Codex subprocess launches, not tokens or currency.
-- **Verification you can disagree with.** Command results, the model
-  reviewer, and Reader-10 clarity checks are reported side by side, so
-  "the loop stopped" is never presented as proof the work is correct.
-- **A surface one person can audit.** One Node CLI, zero third-party runtime
-  dependencies, and every handoff written to disk as a file.
+- **Risk-aware routing, not habit.** Five task dimensions
+  (complexity, risk, blast radius, verifiability, reversibility) produce a
+  score and an `economy` / `balanced` / `frontier` profile. That profile
+  gates advisor activation and stage effort; stage model roles themselves
+  stay on fixed contracts (for example scout stays `economy`, reviewer stays
+  `frontier`). Labels come from catalog metadata, not live prices or a
+  measured spend map.
+- **A hard ceiling instead of a completion loop.** `--budget-calls` caps
+  Codex subprocess launches per run. The pipeline has no retry-until-done
+  loop; Reader-10 may still revise the report for a config-bounded number of
+  rounds. The budget is not tokens, provider turns, or currency.
+- **Verification you can disagree with.** Configured command results, the
+  model reviewer, and Reader-10 clarity checks are reported side by side, so
+  "the run finished" is never presented as proof the work is correct.
+- **A surface one person can inspect.** One Node CLI, zero third-party
+  runtime npm dependencies, and stage handoffs written under
+  `.relay10/runs/<id>/` as ordinary files—not a full compliance audit
+  trail or frozen environment ledger.
 
 If you want an autonomous team that keeps working until the task looks done,
 a batteries-included harness is the better tool. Relay10 is for runs where
-you want to see — and bound — every model call that produced the result.
+scope and call budget are closed first, and the resulting handoffs stay
+readable on disk.
 
 ## Quick start
 
