@@ -29,6 +29,36 @@ cheapest, weakest, or strongest available model.
   structure and accessibility heuristics. Live mode makes ten reader-model
   invocations per round; neither mode establishes factual correctness.
 
+## Why Relay10 instead of a batteries-included harness
+
+Most agent harnesses compete on abundance: more agents, more hooks, always-on
+completion loops, and autonomous teams. Projects such as
+[OMO](https://github.com/code-yeongyu/oh-my-openagent),
+[OMC](https://github.com/Yeachan-Heo/oh-my-claudecode), and
+[OMX](https://github.com/Yeachan-Heo/oh-my-codex) are excellent at that; see
+[docs/korea-landscape.md](docs/korea-landscape.md) and
+[docs/lineage-and-portability.md](docs/lineage-and-portability.md) for a
+sourced comparison.
+
+Relay10 competes on restraint. Pick it when you want:
+
+- **Spend routed by risk, not habit.** The router scores each task on five
+  dimensions and assigns the `economy` model tier to low-risk stages,
+  escalating to `frontier` only when risk, blast radius, or irreversibility
+  demand it. Tier labels come from catalog metadata, not live price data.
+- **A hard ceiling instead of a loop.** `--budget-calls` caps total model
+  invocations per run and the pipeline has no retry-until-done loop. The
+  budget counts Codex subprocess launches, not tokens or currency.
+- **Verification you can disagree with.** Command results, the model
+  reviewer, and Reader-10 clarity checks are reported side by side, so
+  "the loop stopped" is never presented as proof the work is correct.
+- **A surface one person can audit.** One Node CLI, zero third-party runtime
+  dependencies, and every handoff written to disk as a file.
+
+If you want an autonomous team that keeps working until the task looks done,
+a batteries-included harness is the better tool. Relay10 is for runs where
+you want to see — and bound — every model call that produced the result.
+
 ## Quick start
 
 Requirements: Node 20+ and an authenticated Codex CLI.
