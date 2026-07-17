@@ -1,4 +1,14 @@
-import { appendFile, mkdir, open, readdir, stat, unlink } from 'node:fs/promises';
+import {
+  appendFile,
+  mkdir,
+  open,
+  readdir,
+  rename,
+  rmdir,
+  stat,
+  unlink,
+} from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -457,6 +467,395 @@ export async function verifyFrozenRun(runDir) {
   };
 }
 
+const OWNER_TOKEN_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const RECLAIM_GUARD_SUFFIX = '.reclaim';
+const RECLAIM_GUARD_ATTEMPTS = 200;
+const RECLAIM_GUARD_DELAY_MS = 5;
+const RECLAIM_ENTRY_PATTERN = /^(owner|claim)-([1-9]\d*)-([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i;
+
+function probeLockHolder(pid) {
+  if (!Number.isSafeInteger(pid) || pid <= 0) return 'unknown';
+  try {
+    process.kill(pid, 0);
+    return 'alive';
+  } catch (error) {
+    return error?.code === 'ESRCH' ? 'dead' : 'unknown';
+  }
+}
+
+function validOwnerToken(value) {
+  return typeof value === 'string' && OWNER_TOKEN_PATTERN.test(value);
+}
+
+function validWorkspaceRecord(record) {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) return false;
+  if (typeof record.runId !== 'string' || !record.runId.trim()) return false;
+  if (!Number.isSafeInteger(record.pid) || record.pid <= 0) return false;
+  if (typeof record.createdAt !== 'string' || !Number.isFinite(Date.parse(record.createdAt))) return false;
+  // Records written before owner tokens were introduced remain reclaimable,
+  // but only when their PID is provably dead.
+  return record.ownerToken === undefined || validOwnerToken(record.ownerToken);
+}
+
+async function readWorkspaceLock(lockFile) {
+  let content;
+  try {
+    content = await readText(lockFile);
+  } catch (error) {
+    if (error?.code === 'ENOENT') return { status: 'missing', record: null };
+    throw error;
+  }
+
+  let record;
+  try {
+    record = JSON.parse(content);
+  } catch {
+    return { status: 'invalid', record: null };
+  }
+
+  return validWorkspaceRecord(record)
+    ? { status: 'valid', record }
+    : { status: 'invalid', record };
+}
+
+async function createExclusiveRecord(file, record, openFile) {
+  // Serialize before creating the path so clock/JSON failures cannot leave an
+  // empty lock behind.
+  const content = `${JSON.stringify(record)}\n`;
+  let handle;
+  let created = false;
+  let failure;
+  try {
+    handle = await openFile(file, 'wx');
+    created = true;
+    try {
+      await handle.writeFile(content);
+    } catch (error) {
+      failure = error;
+    }
+    try {
+      await handle.close();
+    } catch (error) {
+      failure ??= error;
+      try { await handle.close(); } catch {}
+    }
+  } catch (error) {
+    failure = error;
+  }
+
+  if (!failure) return;
+  if (created) {
+    try {
+      await unlink(file);
+    } catch (cleanupError) {
+      if (cleanupError?.code !== 'ENOENT') {
+        // Preserve the operation failure; a later attempt will fail closed on
+        // any file that could not be removed.
+      }
+    }
+  }
+  throw failure;
+}
+
+async function removeRecordOwnedBy(file, ownerToken) {
+  let record;
+  try {
+    record = JSON.parse(await readText(file));
+  } catch (error) {
+    if (error?.code === 'ENOENT') return false;
+    if (error instanceof SyntaxError) return false;
+    throw error;
+  }
+
+  if (record?.ownerToken !== ownerToken) return false;
+  try {
+    await unlink(file);
+    return true;
+  } catch (error) {
+    if (error?.code === 'ENOENT') return false;
+    throw error;
+  }
+}
+
+function delay(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+function reclaimEntryName(state, pid, token) {
+  return `${state}-${pid}-${token}`;
+}
+
+function parseReclaimEntry(name) {
+  const match = RECLAIM_ENTRY_PATTERN.exec(name);
+  if (!match) return null;
+  const pid = Number(match[2]);
+  if (!Number.isSafeInteger(pid) || pid <= 0) return null;
+  return { state: match[1].toLowerCase(), pid, token: match[3].toLowerCase() };
+}
+
+async function cleanCandidateDirectory({ candidateDir, candidateEntry }) {
+  try {
+    await unlink(path.join(candidateDir, candidateEntry));
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
+  }
+  try {
+    await rmdir(candidateDir);
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
+  }
+}
+
+async function installFreshReclaimGuard({ guardDir, token, openFile }) {
+  const entryName = reclaimEntryName('owner', process.pid, token);
+  const candidateDir = `${guardDir}.candidate-${process.pid}-${token}`;
+  await mkdir(candidateDir, { mode: 0o700 });
+
+  let handle;
+  let initialized = false;
+  let failure;
+  try {
+    handle = await openFile(path.join(candidateDir, entryName), 'wx');
+    try {
+      await handle.close();
+      initialized = true;
+    } catch (error) {
+      failure = error;
+      try {
+        await handle.close();
+        initialized = true;
+      } catch {}
+    }
+    if (!failure) {
+      await rename(candidateDir, guardDir);
+      return { guardDir, entryName };
+    }
+  } catch (error) {
+    failure = error;
+  }
+
+  // A failed rename leaves only our uniquely named candidate. It is never
+  // necessary (or safe) to remove the shared guard directory here.
+  try {
+    await cleanCandidateDirectory({ candidateDir, candidateEntry: entryName });
+  } catch (cleanupError) {
+    failure ??= cleanupError;
+  }
+  if (!initialized && handle) {
+    try { await handle.close(); } catch {}
+  }
+  throw failure;
+}
+
+async function inspectReclaimGuard(guardDir) {
+  let entries;
+  try {
+    entries = await readdir(guardDir, { withFileTypes: true });
+  } catch (error) {
+    if (error?.code === 'ENOENT') return { status: 'missing' };
+    if (error?.code === 'ENOTDIR') return { status: 'invalid' };
+    throw error;
+  }
+
+  if (entries.length === 0) return { status: 'empty' };
+  if (entries.length !== 1 || !entries[0].isFile()) return { status: 'invalid' };
+  const parsed = parseReclaimEntry(entries[0].name);
+  if (!parsed) return { status: 'invalid' };
+  return { status: 'owned', entryName: entries[0].name, ...parsed };
+}
+
+async function classifyPid(probePid, pid) {
+  try {
+    const observed = await probePid(pid);
+    return observed === 'alive' || observed === 'dead' ? observed : 'unknown';
+  } catch {
+    return 'unknown';
+  }
+}
+
+async function acquireReclaimGuard({ lockFile, probePid, openFile }) {
+  const guardDir = `${lockFile}${RECLAIM_GUARD_SUFFIX}`;
+  const token = randomUUID();
+
+  for (let attempt = 0; attempt < RECLAIM_GUARD_ATTEMPTS; attempt += 1) {
+    try {
+      return await installFreshReclaimGuard({ guardDir, token, openFile });
+    } catch (error) {
+      if (!['EEXIST', 'ENOTEMPTY', 'ENOTDIR', 'EISDIR'].includes(error?.code)) throw error;
+    }
+
+    const current = await inspectReclaimGuard(guardDir);
+    if (current.status === 'missing') continue;
+    if (current.status === 'empty') {
+      try {
+        await rmdir(guardDir);
+      } catch (error) {
+        // A successful contender can replace the empty directory with a fully
+        // initialized nonempty guard before this rmdir. Never remove it.
+        if (!['ENOENT', 'ENOTEMPTY', 'EEXIST'].includes(error?.code)) throw error;
+      }
+      continue;
+    }
+    if (current.status === 'invalid') {
+      throw new Error(`reclaim guard for ${lockFile} is invalid or unidentifiable`);
+    }
+
+    const holderState = await classifyPid(probePid, current.pid);
+    if (holderState === 'dead') {
+      const claimName = reclaimEntryName('claim', process.pid, token);
+      try {
+        // The exact old filename is the compare-and-swap token. A competing
+        // reclaimer can rename it only once, and the new filename immediately
+        // exposes this live claimant's PID and unguessable token.
+        await rename(
+          path.join(guardDir, current.entryName),
+          path.join(guardDir, claimName),
+        );
+        return { guardDir, entryName: claimName };
+      } catch (error) {
+        if (error?.code === 'ENOENT') continue;
+        throw error;
+      }
+    }
+
+    if (attempt + 1 < RECLAIM_GUARD_ATTEMPTS) {
+      await delay(RECLAIM_GUARD_DELAY_MS);
+    }
+  }
+
+  throw new Error(`another mutating DisciplinedRun run is acquiring or reclaiming ${lockFile}`);
+}
+
+async function releaseReclaimGuard({ guardDir, entryName }) {
+  try {
+    await unlink(path.join(guardDir, entryName));
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      throw new Error(`reclaim guard ownership was lost for ${guardDir}`);
+    }
+    throw error;
+  }
+
+  try {
+    await rmdir(guardDir);
+  } catch (error) {
+    // Once our exact entry is gone, a contender may atomically install its
+    // nonempty guard before rmdir. That guard belongs to the contender.
+    if (!['ENOENT', 'ENOTEMPTY', 'EEXIST'].includes(error?.code)) throw error;
+  }
+}
+
+async function withReclaimGuard(options, operation) {
+  const guard = await acquireReclaimGuard(options);
+  let result;
+  let operationError;
+  try {
+    result = await operation();
+  } catch (error) {
+    operationError = error;
+  }
+
+  let guardError;
+  try {
+    await releaseReclaimGuard(guard);
+  } catch (error) {
+    guardError = error;
+  }
+
+  if (operationError) throw operationError;
+  if (guardError) throw guardError;
+  return result;
+}
+
+async function writeAndVerifyWorkspaceLock({ lockFile, record, openFile }) {
+  try {
+    await createExclusiveRecord(lockFile, record, openFile);
+    const installed = await readWorkspaceLock(lockFile);
+    if (installed.status !== 'valid' || installed.record.ownerToken !== record.ownerToken) {
+      throw new Error(`workspace lock ownership verification failed for ${lockFile}`);
+    }
+  } catch (error) {
+    try { await removeRecordOwnedBy(lockFile, record.ownerToken); } catch {}
+    throw error;
+  }
+}
+
+/**
+ * Acquire the mutating-run workspace lock under a short-lived atomic reclaim
+ * guard. Only ESRCH proves that a recorded PID is dead. Live, invalid, and
+ * unknown holders fail closed regardless of record age. Every new lock has an
+ * unguessable owner token used by the guarded release path.
+ */
+export async function acquireWorkspaceLock({
+  lockFile,
+  runId,
+  clock,
+  ownerToken = randomUUID(),
+  probePid = probeLockHolder,
+  openFile = open,
+} = {}) {
+  if (typeof lockFile !== 'string' || !lockFile) throw new TypeError('lockFile must be a non-empty string');
+  if (typeof runId !== 'string' || !runId) throw new TypeError('runId must be a non-empty string');
+  if (typeof clock !== 'function') throw new TypeError('clock must be a function');
+  if (!validOwnerToken(ownerToken)) throw new TypeError('ownerToken must be a UUID v4');
+  if (typeof probePid !== 'function') throw new TypeError('probePid must be a function');
+  if (typeof openFile !== 'function') throw new TypeError('openFile must be a function');
+
+  const record = {
+    runId,
+    pid: process.pid,
+    createdAt: clock(),
+    ownerToken,
+  };
+
+  return withReclaimGuard({ lockFile, runId, clock, probePid, openFile }, async () => {
+    const current = await readWorkspaceLock(lockFile);
+    if (current.status === 'missing') {
+      await writeAndVerifyWorkspaceLock({ lockFile, record, openFile });
+      return ownerToken;
+    }
+    if (current.status !== 'valid') {
+      throw new Error(`another mutating DisciplinedRun run holds ${lockFile} (owner record is invalid or unidentifiable)`);
+    }
+
+    let holderState = 'unknown';
+    try {
+      const observed = await probePid(current.record.pid);
+      if (observed === 'alive' || observed === 'dead') holderState = observed;
+    } catch {
+      holderState = 'unknown';
+    }
+    if (holderState !== 'dead') {
+      throw new Error(
+        `another mutating DisciplinedRun run holds ${lockFile}`
+        + ` (runId ${current.record.runId}, pid ${current.record.pid}, started ${current.record.createdAt}, state ${holderState})`,
+      );
+    }
+
+    // Every acquisition path honors this guard, so this unlink/create pair has
+    // no unguarded gap for another DisciplinedRun process to enter. Re-read and
+    // PID classification above happen only after the guard is held.
+    await unlink(lockFile);
+    await writeAndVerifyWorkspaceLock({ lockFile, record, openFile });
+    return ownerToken;
+  });
+}
+
+/** Remove the workspace lock only when the guarded record still has our token. */
+export async function releaseWorkspaceLock({
+  lockFile,
+  ownerToken,
+  clock,
+  openFile = open,
+} = {}) {
+  if (typeof lockFile !== 'string' || !lockFile) throw new TypeError('lockFile must be a non-empty string');
+  if (!validOwnerToken(ownerToken)) throw new TypeError('ownerToken must be a UUID v4');
+  if (typeof clock !== 'function') throw new TypeError('clock must be a function');
+  return withReclaimGuard({ lockFile, runId: `release-${process.pid}`, clock, openFile }, async () => (
+    removeRecordOwnedBy(lockFile, ownerToken)
+  ));
+}
+
 export async function runPipeline({
   task,
   cwd = process.cwd(),
@@ -495,8 +894,7 @@ export async function runPipeline({
   const eventsFile = path.join(runDir, OUTPUTS.events);
   const lockFile = path.join(stateDir, 'workspace.lock');
   const mutationEnabled = routeStage(route, 'maker')?.enabled !== false;
-  let lockHandle;
-  let lockOwned = false;
+  let lockOwnerToken;
   let runCreated = false;
   let writeQueue = Promise.resolve();
   let eventSequence = 0;
@@ -631,18 +1029,7 @@ export async function runPipeline({
   try {
     await mkdir(stateDir, { recursive: true });
     if (mutationEnabled) {
-      try {
-        lockHandle = await open(lockFile, 'wx');
-        lockOwned = true;
-        await lockHandle.writeFile(`${JSON.stringify({ runId: id, pid: process.pid, createdAt: clock() })}\n`);
-        await lockHandle.close();
-        lockHandle = null;
-      } catch (error) {
-        if (error?.code === 'EEXIST') {
-          throw new Error(`another mutating DisciplinedRun run holds ${lockFile}`);
-        }
-        throw error;
-      }
+      lockOwnerToken = await acquireWorkspaceLock({ lockFile, runId: id, clock });
     }
     await mkdir(runsDir, { recursive: true });
     await mkdir(runDir);
@@ -1089,11 +1476,8 @@ export async function runPipeline({
     }
     throw error;
   } finally {
-    if (lockHandle) {
-      try { await lockHandle.close(); } catch {}
-    }
-    if (lockOwned) {
-      try { await unlink(lockFile); } catch (error) { if (error?.code !== 'ENOENT') throw error; }
+    if (lockOwnerToken) {
+      await releaseWorkspaceLock({ lockFile, ownerToken: lockOwnerToken, clock });
     }
   }
 }
