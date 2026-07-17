@@ -1,10 +1,16 @@
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp } from 'node:fs/promises';
+import { mkdir, mkdtemp, open } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { DEFAULT_CONFIG } from '../src/config.mjs';
-import { acquireWorkspaceLock, buildRunPlan, runPipeline, verifyFrozenRun } from '../src/pipeline.mjs';
+import {
+  acquireWorkspaceLock,
+  buildRunPlan,
+  releaseWorkspaceLock,
+  runPipeline,
+  verifyFrozenRun,
+} from '../src/pipeline.mjs';
 import { routeTask } from '../src/router.mjs';
 import { readJson, readText, writeText } from '../src/utils.mjs';
 
@@ -264,15 +270,33 @@ test('a run never removes a workspace lock that it did not acquire', async () =>
   assert.equal(await readText(lockFile), 'other-run\n');
 });
 
-test('acquireWorkspaceLock reclaims a dead-holder lock and records the new owner', async () => {
+const OWNER_A = '11111111-1111-4111-8111-111111111111';
+const OWNER_B = '22222222-2222-4222-8222-222222222222';
+
+async function assertMissing(file) {
+  await assert.rejects(
+    () => readText(file),
+    (error) => error?.code === 'ENOENT',
+  );
+}
+
+test('acquireWorkspaceLock reclaims only a provably dead holder and records an owner token', async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-'));
   const lockFile = path.join(dir, 'workspace.lock');
   const clock = () => '2026-07-17T10:00:00.000Z';
   await writeText(lockFile, `${JSON.stringify({ runId: 'old-run', pid: 12345, createdAt: '2026-07-17T09:59:00.000Z' })}\n`);
-  await acquireWorkspaceLock({ lockFile, runId: 'new-run', clock, alive: () => false });
+  const ownerToken = await acquireWorkspaceLock({
+    lockFile,
+    runId: 'new-run',
+    clock,
+    ownerToken: OWNER_A,
+    probePid: () => 'dead',
+  });
   const record = JSON.parse(await readText(lockFile));
+  assert.equal(ownerToken, OWNER_A);
   assert.equal(record.runId, 'new-run');
   assert.equal(record.pid, process.pid);
+  assert.equal(record.ownerToken, OWNER_A);
 });
 
 test('acquireWorkspaceLock refuses a fresh lock held by a live process', async () => {
@@ -281,38 +305,227 @@ test('acquireWorkspaceLock refuses a fresh lock held by a live process', async (
   const clock = () => '2026-07-17T10:00:00.000Z';
   await writeText(lockFile, `${JSON.stringify({ runId: 'old-run', pid: 12345, createdAt: '2026-07-17T09:59:00.000Z' })}\n`);
   await assert.rejects(
-    () => acquireWorkspaceLock({ lockFile, runId: 'new-run', clock, alive: () => true }),
+    () => acquireWorkspaceLock({ lockFile, runId: 'new-run', clock, probePid: () => 'alive' }),
     /another mutating DisciplinedRun run holds .*old-run.*12345/s,
   );
   assert.equal(JSON.parse(await readText(lockFile)).runId, 'old-run');
 });
 
-test('acquireWorkspaceLock reclaims a live-holder lock past the stale threshold', async () => {
+test('acquireWorkspaceLock never reclaims a live holder solely because the record is old', async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-'));
   const lockFile = path.join(dir, 'workspace.lock');
   const clock = () => '2026-07-18T11:00:00.000Z';
   await writeText(lockFile, `${JSON.stringify({ runId: 'old-run', pid: 12345, createdAt: '2026-07-17T09:00:00.000Z' })}\n`);
-  await acquireWorkspaceLock({ lockFile, runId: 'new-run', clock, alive: () => true });
-  assert.equal(JSON.parse(await readText(lockFile)).runId, 'new-run');
-});
-
-test('acquireWorkspaceLock holds an unparsable fresh lock and reclaims it when stale', async () => {
-  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-'));
-  const lockFile = path.join(dir, 'workspace.lock');
-  await writeText(lockFile, 'not json\n');
-  const fresh = () => new Date(Date.now() + 60 * 1000).toISOString();
   await assert.rejects(
-    () => acquireWorkspaceLock({ lockFile, runId: 'new-run', clock: fresh }),
+    () => acquireWorkspaceLock({ lockFile, runId: 'new-run', clock, probePid: () => 'alive' }),
     /another mutating DisciplinedRun run holds/,
   );
-  const stale = () => new Date(Date.now() + 25 * 60 * 60 * 1000).toISOString();
-  await acquireWorkspaceLock({ lockFile, runId: 'new-run', clock: stale });
-  assert.equal(JSON.parse(await readText(lockFile)).runId, 'new-run');
+  assert.equal(JSON.parse(await readText(lockFile)).runId, 'old-run');
+});
+
+test('acquireWorkspaceLock fails closed for invalid, unknown, and unparsable holders', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-'));
+  const lockFile = path.join(dir, 'workspace.lock');
+  const clock = () => '2026-07-18T11:00:00.000Z';
+
+  await writeText(lockFile, `${JSON.stringify({ runId: 'invalid-pid', pid: 0, createdAt: '2020-01-01T00:00:00.000Z' })}\n`);
+  await assert.rejects(
+    () => acquireWorkspaceLock({
+      lockFile,
+      runId: 'new-run',
+      clock,
+      probePid: () => { throw new Error('invalid PID must not be probed'); },
+    }),
+    /another mutating DisciplinedRun run holds/,
+  );
+
+  await writeText(lockFile, `${JSON.stringify({ runId: 'unknown-pid', pid: 12345, createdAt: '2020-01-01T00:00:00.000Z' })}\n`);
+  await assert.rejects(
+    () => acquireWorkspaceLock({ lockFile, runId: 'new-run', clock, probePid: () => 'unknown' }),
+    /another mutating DisciplinedRun run holds/,
+  );
+
+  const permissionError = new Error('permission denied');
+  permissionError.code = 'EPERM';
+  await assert.rejects(
+    () => acquireWorkspaceLock({
+      lockFile,
+      runId: 'new-run',
+      clock,
+      probePid: () => { throw permissionError; },
+    }),
+    /another mutating DisciplinedRun run holds .*state unknown/s,
+  );
+
+  await writeText(lockFile, 'not json\n');
+  await assert.rejects(
+    () => acquireWorkspaceLock({ lockFile, runId: 'new-run', clock }),
+    /another mutating DisciplinedRun run holds/,
+  );
+  assert.equal(await readText(lockFile), 'not json\n');
 });
 
 test('acquireWorkspaceLock acquires cleanly when no lock exists', async () => {
   const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-'));
   const lockFile = path.join(dir, 'workspace.lock');
-  await acquireWorkspaceLock({ lockFile, runId: 'solo-run', clock: () => new Date().toISOString() });
-  assert.equal(JSON.parse(await readText(lockFile)).runId, 'solo-run');
+  const ownerToken = await acquireWorkspaceLock({
+    lockFile,
+    runId: 'solo-run',
+    clock: () => new Date().toISOString(),
+    ownerToken: OWNER_A,
+  });
+  const record = JSON.parse(await readText(lockFile));
+  assert.equal(ownerToken, OWNER_A);
+  assert.equal(record.runId, 'solo-run');
+  assert.equal(record.ownerToken, OWNER_A);
+});
+
+test('the reclaim guard serializes contenders and forces a guarded recheck', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-race-'));
+  const lockFile = path.join(dir, 'workspace.lock');
+  const clock = () => '2026-07-17T10:00:00.000Z';
+  const oldPid = 12345;
+  await writeText(lockFile, `${JSON.stringify({ runId: 'dead-run', pid: oldPid, createdAt: '2026-07-17T09:00:00.000Z' })}\n`);
+
+  let releaseCreate;
+  const createBlocked = new Promise((resolve) => { releaseCreate = resolve; });
+  let reportCreateReached;
+  const createReached = new Promise((resolve) => { reportCreateReached = resolve; });
+  const firstOpen = async (file, flags) => {
+    if (file === lockFile) {
+      reportCreateReached();
+      await createBlocked;
+    }
+    return open(file, flags);
+  };
+  const probePid = (pid) => (pid === oldPid ? 'dead' : 'alive');
+  const first = acquireWorkspaceLock({
+    lockFile,
+    runId: 'winner',
+    clock,
+    ownerToken: OWNER_A,
+    probePid,
+    openFile: firstOpen,
+  });
+  await createReached;
+  const second = acquireWorkspaceLock({
+    lockFile,
+    runId: 'loser',
+    clock,
+    ownerToken: OWNER_B,
+    probePid,
+  });
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  releaseCreate();
+
+  assert.equal(await first, OWNER_A);
+  await assert.rejects(second, /another mutating DisciplinedRun run holds .*winner/s);
+  const record = JSON.parse(await readText(lockFile));
+  assert.equal(record.runId, 'winner');
+  assert.equal(record.ownerToken, OWNER_A);
+  await assertMissing(`${lockFile}.reclaim`);
+});
+
+test('a guard left by a dead reclaimer is atomically claimable', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-dead-guard-'));
+  const lockFile = path.join(dir, 'workspace.lock');
+  const guardDir = `${lockFile}.reclaim`;
+  const deadToken = '33333333-3333-4333-8333-333333333333';
+  await mkdir(guardDir);
+  await writeText(path.join(guardDir, `owner-99999999-${deadToken}`), '');
+
+  const ownerToken = await acquireWorkspaceLock({
+    lockFile,
+    runId: 'recover-run',
+    clock: () => '2026-07-17T10:00:00.000Z',
+    ownerToken: OWNER_B,
+    probePid: (pid) => (pid === 99999999 ? 'dead' : 'alive'),
+  });
+  assert.equal(ownerToken, OWNER_B);
+  assert.equal(JSON.parse(await readText(lockFile)).runId, 'recover-run');
+  await releaseWorkspaceLock({
+    lockFile,
+    ownerToken,
+    clock: () => '2026-07-17T10:00:00.000Z',
+    probePid: (pid) => (pid === 99999999 ? 'dead' : 'alive'),
+  });
+  await assertMissing(lockFile);
+  await assertMissing(guardDir);
+});
+
+test('releaseWorkspaceLock removes only the matching owner token', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-owner-'));
+  const lockFile = path.join(dir, 'workspace.lock');
+  const clock = () => '2026-07-17T10:00:00.000Z';
+  await acquireWorkspaceLock({ lockFile, runId: 'owner-a', clock, ownerToken: OWNER_A });
+  await writeText(lockFile, `${JSON.stringify({
+    runId: 'owner-b', pid: process.pid, createdAt: clock(), ownerToken: OWNER_B,
+  })}\n`);
+
+  assert.equal(await releaseWorkspaceLock({ lockFile, ownerToken: OWNER_A, clock }), false);
+  assert.equal(JSON.parse(await readText(lockFile)).ownerToken, OWNER_B);
+  assert.equal(await releaseWorkspaceLock({ lockFile, ownerToken: OWNER_B, clock }), true);
+  await assertMissing(lockFile);
+});
+
+test('lock initialization failures close handles and remove only files created by that attempt', async () => {
+  for (const failure of ['open', 'write', 'close']) {
+    const dir = await mkdtemp(path.join(os.tmpdir(), `dpr-lock-${failure}-`));
+    const lockFile = path.join(dir, 'workspace.lock');
+    let handleClosed = false;
+    let closeAttempts = 0;
+    const openFile = async (file, flags) => {
+      if (file !== lockFile) return open(file, flags);
+      if (failure === 'open') {
+        const error = new Error('injected open failure');
+        error.code = 'EIO';
+        throw error;
+      }
+      const handle = await open(file, flags);
+      return {
+        writeFile: async (...args) => {
+          if (failure === 'write') throw new Error('injected write failure');
+          return handle.writeFile(...args);
+        },
+        close: async () => {
+          closeAttempts += 1;
+          if (failure === 'close' && closeAttempts === 1) {
+            throw new Error('injected close failure');
+          }
+          handleClosed = true;
+          await handle.close();
+        },
+      };
+    };
+
+    await assert.rejects(
+      () => acquireWorkspaceLock({
+        lockFile,
+        runId: `failed-${failure}`,
+        clock: () => '2026-07-17T10:00:00.000Z',
+        ownerToken: OWNER_A,
+        openFile,
+      }),
+      new RegExp(`injected ${failure} failure`),
+    );
+    if (failure !== 'open') assert.equal(handleClosed, true);
+    await assertMissing(lockFile);
+    await assertMissing(`${lockFile}.reclaim`);
+  }
+});
+
+test('clock failure occurs before any workspace or reclaim lock is created', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-clock-'));
+  const lockFile = path.join(dir, 'workspace.lock');
+  await assert.rejects(
+    () => acquireWorkspaceLock({
+      lockFile,
+      runId: 'failed-clock',
+      clock: () => { throw new Error('injected clock failure'); },
+      ownerToken: OWNER_A,
+    }),
+    /injected clock failure/,
+  );
+  await assertMissing(lockFile);
+  await assertMissing(`${lockFile}.reclaim`);
 });
