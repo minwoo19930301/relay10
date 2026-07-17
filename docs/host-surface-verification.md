@@ -56,7 +56,12 @@ Boundary reminder: Claude Code loads skills and can shell out to `r10`. It does
 ## Grok Build / Grok CLI (first host-surface check)
 
 Grok discovers repository skills from `.agents/skills` (and walks Claude-compat
-skill roots). In a live Grok Build session opened in this repository:
+skill roots). The open-sourced Grok Build source (pinned in
+[grokbuild-distillation.md](grokbuild-distillation.md)) adds precision to that
+claim: `.grok/skills` and `.agents/skills` are always scanned, in that order,
+while the Claude-compat root is gated on a `[compat]` toggle that defaults on
+but can be disabled — a user who turns it off still loads this pack via
+`.agents/skills`. In a live Grok Build session opened in this repository:
 
 - All eight `relay10-*` skills appeared as available skills (paths under
   `plugins/relay10/skills` and the `.agents/skills` symlink)

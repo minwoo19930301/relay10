@@ -89,7 +89,7 @@ controlled-run surface.
 | Target | Current status | What that means |
 |---|---|---|
 | Claude Code as a Skill and Plugin host | Preview; host path verified 2026-07-15, renamed manifests statically validated 2026-07-17 | Marketplace / `.claude/skills` load all eight skills. This is Skill-host guidance, not native stage execution. |
-| Grok Build / Grok CLI as a Skill host | Preview, verified 2026-07-15 | `.agents/skills` loads the same pack. This is Skill-host guidance, not xAI stage execution. |
+| Grok Build / Grok CLI as a Skill host | Preview, verified 2026-07-15 | `.agents/skills` loads the same pack. This is Skill-host guidance, not xAI stage execution. Note: the pinned Grok Build client source contains an `opt-in` fallback for "Coding data sharing," but effective account or server policy can override it. DisciplinedRun never launches Grok or sees that setting—confirm the current policy in your own session; see the [pinned evidence note](docs/grokbuild-distillation.md). |
 | Codex as a Skill host | Repository surface, statically validated | Same pack via `.agents/skills` / plugin layout. |
 | Codex CLI as optional `disciplinedrun run` stage runtime | Supported and tested | Live model stages still launch `codex exec` and discover models via `codex debug models` in 0.2. Skill-host use does not require this. |
 | Codex with an xAI/Grok custom provider as a **stage executor** | Experimental candidate, untested | Not the same as Grok skill-host support. |

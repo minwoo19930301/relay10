@@ -163,6 +163,17 @@ workflow core
 2. **v0.3 — 공급자 분리:** `CatalogAdapter`, `ExecutorAdapter`, stage별
    `{ providerId, model, effort }`, capability negotiation을 추가한다. xAI/Grok
    E2E를 통과한 뒤에만 공식 지원으로 표시한다.
+   공개된 Grok Build 소스 확인 결과(2026-07-17,
+   [grokbuild-distillation.md](grokbuild-distillation.md)에 커밋 고정)로
+   Grok adapter에는 세 가지 구조적 제약이 미리 확정됐다: (a) headless
+   `grok -p`는 output-file side channel이 없고 `--output-format json`의
+   stdout JSON 한 덩어리만 준다 — `readText(outputFile)` 계약을 stage 단위로
+   바꿔야 한다; (b) prompt는 stdin이 아니라 `-p`, `--prompt-json`, 또는
+   `--prompt-file` CLI argument로 선택된다; (c) Grok의 sandbox는 미지원
+   플랫폼·적용 실패 시 경고만 남기고
+   계속 진행하는 fail-open이라, DisciplinedRun의 read-only stage 계약을
+   "enforced"로 광고할 수 없다 — adapter capability에 `sandboxEnforced:
+   false`로 기록해야 한다.
 3. **v0.4 — GUI:** ChatGPT에는 Apps SDK + remote worker, local repository에는
    local sidecar GUI를 제공한다. Codex 전용 custom GUI는 App Server 경로와
    분리한다.
