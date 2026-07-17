@@ -44,6 +44,34 @@ GitHub repo path `minwoo19930301/relay10` still work in this release.
   structure and accessibility heuristics. Live mode makes ten reader-model
   invocations per round; neither mode establishes factual correctness.
 
+## Why DisciplinedRun instead of a batteries-included harness
+
+DisciplinedRun favors controlled, inspectable work over maximum built-in
+autonomy. Choose it when you want:
+
+- **Explicit scope before implementation.** The optional `relay10-spec` Skill
+  can record the outcome, non-goals, acceptance evidence, and rollback plan.
+  This is host-agent workflow guidance; `dpr run` does not automatically ingest
+  or enforce that contract.
+- **Risk-aware effort and advice.** Under the default conditional policy, five
+  task dimensions tune maker and reviewer effort. After the scout, an evidence
+  checkpoint decides whether economy-tier work needs frontier architect advice.
+  Stage model roles remain declared contracts; this is not live-price or
+  measured-spend routing.
+- **A hard ceiling on CLI stage launches.** For `dpr run`, `--budget-calls`
+  limits DisciplinedRun pipeline stage launches (Codex subprocesses in 0.2).
+  It does not count provider-internal turns, tokens, or currency.
+- **Inspectable artifacts and separate verdicts.** Stage handoffs and events
+  remain ordinary files under `.relay10/runs/<id>/`. Configured command results,
+  the model reviewer, and Reader-10 clarity results are reported separately.
+  These artifacts support inspection; they are not a complete audit trail or
+  proof of correctness.
+
+Choose a batteries-included harness instead when you need native teams or
+swarms, background agents, retry-until-done loops, durable checkpoint/resume,
+or a broader built-in runtime or UI. DisciplinedRun deliberately keeps those
+features out of its core.
+
 ## Quick start
 
 **Skill hosts (Codex, Claude Code, Grok Build):** clone the repo (or install
