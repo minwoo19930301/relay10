@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { DEFAULT_CONFIG } from '../src/config.mjs';
-import { buildRunPlan, runPipeline, verifyFrozenRun } from '../src/pipeline.mjs';
+import { acquireWorkspaceLock, buildRunPlan, runPipeline, verifyFrozenRun } from '../src/pipeline.mjs';
 import { routeTask } from '../src/router.mjs';
 import { readJson, readText, writeText } from '../src/utils.mjs';
 
@@ -262,4 +262,57 @@ test('a run never removes a workspace lock that it did not acquire', async () =>
     /another mutating DisciplinedRun run holds/,
   );
   assert.equal(await readText(lockFile), 'other-run\n');
+});
+
+test('acquireWorkspaceLock reclaims a dead-holder lock and records the new owner', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-'));
+  const lockFile = path.join(dir, 'workspace.lock');
+  const clock = () => '2026-07-17T10:00:00.000Z';
+  await writeText(lockFile, `${JSON.stringify({ runId: 'old-run', pid: 12345, createdAt: '2026-07-17T09:59:00.000Z' })}\n`);
+  await acquireWorkspaceLock({ lockFile, runId: 'new-run', clock, alive: () => false });
+  const record = JSON.parse(await readText(lockFile));
+  assert.equal(record.runId, 'new-run');
+  assert.equal(record.pid, process.pid);
+});
+
+test('acquireWorkspaceLock refuses a fresh lock held by a live process', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-'));
+  const lockFile = path.join(dir, 'workspace.lock');
+  const clock = () => '2026-07-17T10:00:00.000Z';
+  await writeText(lockFile, `${JSON.stringify({ runId: 'old-run', pid: 12345, createdAt: '2026-07-17T09:59:00.000Z' })}\n`);
+  await assert.rejects(
+    () => acquireWorkspaceLock({ lockFile, runId: 'new-run', clock, alive: () => true }),
+    /another mutating DisciplinedRun run holds .*old-run.*12345/s,
+  );
+  assert.equal(JSON.parse(await readText(lockFile)).runId, 'old-run');
+});
+
+test('acquireWorkspaceLock reclaims a live-holder lock past the stale threshold', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-'));
+  const lockFile = path.join(dir, 'workspace.lock');
+  const clock = () => '2026-07-18T11:00:00.000Z';
+  await writeText(lockFile, `${JSON.stringify({ runId: 'old-run', pid: 12345, createdAt: '2026-07-17T09:00:00.000Z' })}\n`);
+  await acquireWorkspaceLock({ lockFile, runId: 'new-run', clock, alive: () => true });
+  assert.equal(JSON.parse(await readText(lockFile)).runId, 'new-run');
+});
+
+test('acquireWorkspaceLock holds an unparsable fresh lock and reclaims it when stale', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-'));
+  const lockFile = path.join(dir, 'workspace.lock');
+  await writeText(lockFile, 'not json\n');
+  const fresh = () => new Date(Date.now() + 60 * 1000).toISOString();
+  await assert.rejects(
+    () => acquireWorkspaceLock({ lockFile, runId: 'new-run', clock: fresh }),
+    /another mutating DisciplinedRun run holds/,
+  );
+  const stale = () => new Date(Date.now() + 25 * 60 * 60 * 1000).toISOString();
+  await acquireWorkspaceLock({ lockFile, runId: 'new-run', clock: stale });
+  assert.equal(JSON.parse(await readText(lockFile)).runId, 'new-run');
+});
+
+test('acquireWorkspaceLock acquires cleanly when no lock exists', async () => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'dpr-lock-'));
+  const lockFile = path.join(dir, 'workspace.lock');
+  await acquireWorkspaceLock({ lockFile, runId: 'solo-run', clock: () => new Date().toISOString() });
+  assert.equal(JSON.parse(await readText(lockFile)).runId, 'solo-run');
 });

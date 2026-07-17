@@ -457,6 +457,91 @@ export async function verifyFrozenRun(runDir) {
   };
 }
 
+const STALE_LOCK_MS = 24 * 60 * 60 * 1000;
+
+function lockHolderAlive(pid) {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    return error?.code === 'EPERM';
+  }
+}
+
+/**
+ * Acquire the mutating-run workspace lock. A leftover lock is reclaimed only
+ * when its recorded holder PID is provably dead or the lock is older than
+ * `staleMs`; a lock whose writer cannot be identified is held until stale.
+ * Best-effort coordination, not mutual exclusion: on shared filesystems two
+ * processes may rarely both believe they acquired.
+ */
+export async function acquireWorkspaceLock({
+  lockFile,
+  runId,
+  clock,
+  staleMs = STALE_LOCK_MS,
+  alive = lockHolderAlive,
+} = {}) {
+  const tryOpen = async () => {
+    const handle = await open(lockFile, 'wx');
+    await handle.writeFile(`${JSON.stringify({ runId, pid: process.pid, createdAt: clock() })}\n`);
+    await handle.close();
+  };
+  try {
+    await tryOpen();
+    return;
+  } catch (error) {
+    if (error?.code !== 'EEXIST') throw error;
+  }
+
+  let holder = null;
+  try {
+    holder = JSON.parse(await readText(lockFile));
+  } catch {
+    holder = null;
+  }
+  let ageMs = Number.POSITIVE_INFINITY;
+  const createdAt = holder?.createdAt ? Date.parse(holder.createdAt) : NaN;
+  if (Number.isFinite(createdAt)) {
+    ageMs = Date.parse(clock()) - createdAt;
+  } else {
+    try {
+      ageMs = Date.parse(clock()) - (await stat(lockFile)).mtimeMs;
+    } catch (error) {
+      if (error?.code !== 'ENOENT') throw error;
+      ageMs = 0;
+    }
+  }
+  const held = holder && Number.isInteger(holder.pid)
+    ? alive(holder.pid) && ageMs < staleMs
+    : ageMs < staleMs;
+  if (held) {
+    const detail = holder
+      ? ` (runId ${holder.runId}, pid ${holder.pid}, started ${holder.createdAt})`
+      : '';
+    throw new Error(`another mutating DisciplinedRun run holds ${lockFile}${detail}`);
+  }
+
+  try {
+    await unlink(lockFile);
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
+  }
+  try {
+    await tryOpen();
+  } catch (error) {
+    if (error?.code === 'EEXIST') {
+      throw new Error(`another mutating DisciplinedRun run reclaimed ${lockFile} first`);
+    }
+    throw error;
+  }
+  const verify = JSON.parse(await readText(lockFile));
+  if (verify?.runId !== runId) {
+    throw new Error(`another mutating DisciplinedRun run reclaimed ${lockFile} first`);
+  }
+}
+
 export async function runPipeline({
   task,
   cwd = process.cwd(),
@@ -495,7 +580,6 @@ export async function runPipeline({
   const eventsFile = path.join(runDir, OUTPUTS.events);
   const lockFile = path.join(stateDir, 'workspace.lock');
   const mutationEnabled = routeStage(route, 'maker')?.enabled !== false;
-  let lockHandle;
   let lockOwned = false;
   let runCreated = false;
   let writeQueue = Promise.resolve();
@@ -631,18 +715,8 @@ export async function runPipeline({
   try {
     await mkdir(stateDir, { recursive: true });
     if (mutationEnabled) {
-      try {
-        lockHandle = await open(lockFile, 'wx');
-        lockOwned = true;
-        await lockHandle.writeFile(`${JSON.stringify({ runId: id, pid: process.pid, createdAt: clock() })}\n`);
-        await lockHandle.close();
-        lockHandle = null;
-      } catch (error) {
-        if (error?.code === 'EEXIST') {
-          throw new Error(`another mutating DisciplinedRun run holds ${lockFile}`);
-        }
-        throw error;
-      }
+      await acquireWorkspaceLock({ lockFile, runId: id, clock });
+      lockOwned = true;
     }
     await mkdir(runsDir, { recursive: true });
     await mkdir(runDir);
@@ -1089,9 +1163,6 @@ export async function runPipeline({
     }
     throw error;
   } finally {
-    if (lockHandle) {
-      try { await lockHandle.close(); } catch {}
-    }
     if (lockOwned) {
       try { await unlink(lockFile); } catch (error) { if (error?.code !== 'ENOENT') throw error; }
     }
