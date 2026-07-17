@@ -5,6 +5,7 @@
   "type": "module",
   "bin": {
     "disciplinedrun": "./src/cli.mjs",
+    "dspr": "./src/cli.mjs",
     "relay10": "./src/cli.mjs",
     "r10": "./src/cli.mjs"
   },

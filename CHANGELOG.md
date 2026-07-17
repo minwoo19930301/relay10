@@ -3,11 +3,11 @@
 ## Unreleased
 
 - **Product rename: DisciplinedRun** (formerly Relay10). npm package
-  `disciplinedrun@0.2.0`, primary CLI `disciplinedrun`, and legacy aliases
-  `r10` / `relay10`. Identity: a lightweight execution discipline for coding
-  agents; explicit scope, risk-aware effort, inspectable evidence, and separate
-  verdicts. The routing and invocation-budget subsystem is the **Effort
-  Governor**.
+  `disciplinedrun@0.2.0`, primary CLI `disciplinedrun`, short alias **`dspr`**,
+  and legacy aliases `r10` / `relay10`. Identity: a lightweight execution
+  discipline for coding agents; explicit scope, risk-aware effort, inspectable
+  evidence, and separate verdicts. The routing and invocation-budget subsystem
+  is the **Effort Governor**.
 - Keep on-disk compatibility: `.relay10/`, `relay10.config.json`, skill ids
   `relay10-*`, plugin package name `relay10`, GitHub path unchanged in this
   release.
