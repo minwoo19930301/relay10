@@ -94,6 +94,35 @@ dpr run "research the API and build a small CLI" --dry-run
 dpr run "research the API and build a small CLI"
 ```
 
+For a short, reversible task, declare both the wall-clock budget and the
+primary source artifact:
+
+```bash
+dpr route "build a small local CLI" \
+  --lane auto --time-budget-minutes 10 --first-artifact src/cli.mjs
+dpr run "build a small local CLI" \
+  --lane auto --time-budget-minutes 10 --first-artifact src/cli.mjs
+```
+
+`auto` selects the fast lane only for a 15-minute-or-shorter task whose risk,
+blast radius, reversibility, and verifiability pass the safety guard. In that
+lane, the separate scout and architect model calls are replaced by recorded
+skip artifacts, the maker is the first model call, maker and reviewer effort
+are capped at `medium`, and the summary is deterministic. The maker call must
+finish and leave a non-empty content change at `--first-artifact` inside 30% of
+the budget (at most five minutes) or the run stops. This proves that a declared
+source file changed; it does not prove that the file runs or is correct. Configure and
+authorize verification commands for that evidence. Live Reader-10 fanout is
+not available in the fast lane.
+
+High-risk, broad, irreversible, or weakly verifiable tasks stay on the full
+lane even under a short automatic budget. Explicit `--lane fast` also requires
+a budget of 15 minutes or less and rejects those tasks instead of lowering
+their safety checks. In either lane, the
+remaining wall-clock budget caps every model-stage and verification-command
+timeout; local artifact persistence and report rendering may take a small
+additional amount of time after the last external command.
+
 To request live Reader-10, which schedules ten separate reader invocations per
 round:
 
@@ -214,8 +243,8 @@ budget has no advisor headroom.
 ```text
 dpr init [--force]
 dpr doctor
-dpr route <task> [--json]
-dpr run <task> [--dry-run] [--live-readers] [--budget-calls N]
+dpr route <task> [--json] [--lane auto|fast|full] [--time-budget-minutes N] [--first-artifact path]
+dpr run <task> [--dry-run] [--live-readers] [--budget-calls N] [--lane auto|fast|full] [--time-budget-minutes N] [--first-artifact path]
 dpr inspect [run-id] [--json]
 dpr report [run-id] [--output file]
 dpr replay [run-id] --frozen [--output file]
