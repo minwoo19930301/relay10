@@ -52,7 +52,7 @@ try {
   assertSucceeded('installed package check', check);
 
   const binSuffix = process.platform === 'win32' ? '.cmd' : '';
-  for (const command of ['disciplinedrun', 'r10', 'relay10']) {
+  for (const command of ['disciplinedrun', 'dpr', 'r10', 'relay10']) {
     const executable = path.join(
       installRoot,
       'node_modules',
