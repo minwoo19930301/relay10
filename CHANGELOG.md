@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Product rename: DisciplinedRun** (formerly Relay10). npm package
+  `disciplinedrun@0.2.0`, primary CLI `disciplinedrun`, short alias **`dpr`**
+  (Disciplined Process Run),
+  and legacy aliases `r10` / `relay10`. Identity: a lightweight execution
+  discipline for coding agents; explicit scope, risk-aware effort, inspectable
+  evidence, and separate verdicts. The routing and invocation-budget subsystem
+  is the **Effort Governor**.
+- Keep on-disk compatibility: `.relay10/`, `relay10.config.json`, skill ids
+  `relay10-*`, plugin package name `relay10`, GitHub path unchanged in this
+  release.
 - Gate the frontier architect after scout evidence for economy-tier work while
   preserving always/never controls and the existing artifact contract.
 - Record advisor decisions, reason codes, evidence counts, and invocation

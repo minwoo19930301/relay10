@@ -1,5 +1,8 @@
 # Relay10 spec initial qualitative check
 
+> Historical evaluation note: the product is now displayed as
+> **DisciplinedRun**, while the verified Skill id remains `relay10-spec`.
+
 Evaluation date: **2026-07-15**
 
 Status: **warning — useful qualitative signal, not reproducible benchmark evidence**

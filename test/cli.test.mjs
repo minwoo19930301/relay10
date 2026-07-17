@@ -206,7 +206,7 @@ test('run ids are strict and resolve only beneath the runs directory', async () 
   const escapedId = '20260713T000000124Z-bbbbbbbb';
   const outside = await mkdtemp(path.join(os.tmpdir(), 'relay10-cli-outside-'));
   await symlink(outside, path.join(cwd, '.relay10', 'runs', escapedId), 'dir');
-  await assert.rejects(resolveRunDir(cwd, escapedId), /escapes the Relay10 runs directory/);
+  await assert.rejects(resolveRunDir(cwd, escapedId), /escapes the DisciplinedRun runs directory/);
 });
 
 test('report and replay output contracts preserve the frozen run', () => {

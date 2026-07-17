@@ -3,7 +3,7 @@ name: relay10-debug
 description: Diagnose a failure from reproducible evidence and isolate its root cause. Use for regressions, flaky behavior, stuck automation, or failed checks; edit only when the user also asked for a fix.
 ---
 
-# Relay10 Debug
+# DisciplinedRun Debug
 
 Prefer one falsifiable hypothesis over a sequence of speculative patches.
 

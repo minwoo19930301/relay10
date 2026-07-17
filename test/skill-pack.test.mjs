@@ -237,7 +237,7 @@ test('CLI help is side-effect free and JSON failure returns a nonzero status wit
   assert.equal(stderr.read(), '');
 });
 
-test('repository Relay10 plugin and all bundled skills pass the static validator', async () => {
+test('repository DisciplinedRun plugin and all bundled skills pass the static validator', async () => {
   const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
   const result = await validateSkillPack(path.join(repositoryRoot, 'plugins', 'relay10'));
   assert.equal(result.passed, true, JSON.stringify(result.errors, null, 2));

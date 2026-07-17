@@ -1,10 +1,10 @@
 name: Reproducible bug
-description: Report a Relay10 failure with enough evidence to reproduce it.
+description: Report a DisciplinedRun failure with enough evidence to reproduce it.
 title: "bug: "
 body:
   - type: markdown
     attributes:
-      value: Thanks for helping make Relay10 more reliable. Remove credentials and private data from every artifact.
+      value: Thanks for helping make DisciplinedRun more reliable. Remove credentials and private data from every artifact.
   - type: textarea
     id: outcome
     attributes:
@@ -18,14 +18,14 @@ body:
       label: Minimal reproduction
       description: Include exact commands, a small fixture or public repository, and the first failing step.
       placeholder: |
-        r10 doctor
-        r10 route "..." --json
+        disciplinedrun doctor
+        disciplinedrun route "..." --json
     validations:
       required: true
   - type: input
     id: version
     attributes:
-      label: Relay10 commit or version
+      label: DisciplinedRun commit or version
       placeholder: v0.1.1 or a commit SHA
     validations:
       required: true

@@ -2,9 +2,27 @@
 
 Verification date: **2026-07-15**
 
+> Product display name: **DisciplinedRun**. The commands, plugin namespace,
+> Skill ids, and outputs below retain the `relay10` compatibility identifiers
+> that were actually verified on this date.
+
+## DisciplinedRun rename check (2026-07-17)
+
+The rename branch preserves the verified technical ids and paths while changing
+the product display name. On the branch, `npm test` passed 95/95 tests,
+`npm run lint` passed, `npm run validate:skills` passed all eight skills, and
+`npm run verify:package` installed the packed `disciplinedrun@0.2.0` artifact
+and exercised the `disciplinedrun`, `r10`, and `relay10` help entry points.
+
+The Claude CLI was not available on `PATH` in this isolated verifier, so the
+2026-07-15 Claude host check below remains the latest live Claude-plugin
+evidence. The 2026-07-17 rename check used the repository's static manifest and
+Skill validators; it must not be presented as a fresh Claude marketplace
+installation test.
+
 This note records evidence for **Skill and Plugin host surfaces**. It does not
-claim stage-executor support. Every Relay10 model stage still launches Codex
-CLI subprocesses (`codex exec` / `codex debug models`).
+claim stage-executor support. Every DisciplinedRun model stage still launches
+Codex CLI subprocesses (`codex exec` / `codex debug models`).
 
 ## Scope
 
@@ -97,7 +115,7 @@ r10 doctor
 
 | Allowed | Not allowed |
 |---|---|
-| “Claude Code can install/load the eight-skill pack (preview)” | “Claude runs Relay10 stages natively” |
+| “Claude Code can install/load the eight-skill pack (preview)” | “Claude runs DisciplinedRun stages natively” |
 | “Grok Build can load the eight skills from `.agents/skills`” | “Grok is a supported stage provider” |
 | “Codex CLI remains the verified stage runtime” | “Multi-provider stage mixing works” |
 

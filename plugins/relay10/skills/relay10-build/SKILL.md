@@ -3,7 +3,7 @@ name: relay10-build
 description: Implement an authorized repository change in small, verifiable slices. Use after scope and acceptance criteria are clear; do not use for diagnosis-only, review-only, or publication-only requests.
 ---
 
-# Relay10 Build
+# DisciplinedRun Build
 
 Apply the approved change while keeping evidence and rollback obvious.
 

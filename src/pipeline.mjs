@@ -383,7 +383,7 @@ function statusFromGates({ truth, verification, readers, renderAudit }) {
 
 function reportData(manifest, { summary, verification, readers, evidence, nextSteps }) {
   return {
-    title: 'Relay10 실행 보고서',
+    title: 'DisciplinedRun 실행 보고서',
     task: manifest.task,
     summary,
     status: manifest.status,
@@ -639,7 +639,7 @@ export async function runPipeline({
         lockHandle = null;
       } catch (error) {
         if (error?.code === 'EEXIST') {
-          throw new Error(`another mutating Relay10 run holds ${lockFile}`);
+          throw new Error(`another mutating DisciplinedRun run holds ${lockFile}`);
         }
         throw error;
       }

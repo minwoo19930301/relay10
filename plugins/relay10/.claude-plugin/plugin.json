@@ -1,8 +1,8 @@
 {
   "name": "relay10",
-  "displayName": "Relay10",
-  "version": "0.1.1",
-  "description": "Eight small, on-demand skills for evidence-led repository work with Relay10.",
+  "displayName": "DisciplinedRun",
+  "version": "0.2.0",
+  "description": "Eight small, on-demand DisciplinedRun skills for evidence-led repository work.",
   "author": {
     "name": "minwoo19930301",
     "url": "https://github.com/minwoo19930301"

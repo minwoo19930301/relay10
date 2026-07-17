@@ -1,9 +1,9 @@
 ---
 name: relay10-skill-lab
-description: Create or tune a focused Relay10 skill using clean-room prompts, trigger tests, and with-skill versus baseline evaluation. Use when adding a skill or changing its description or workflow; do not use merely to run an existing skill.
+description: Create or tune a focused DisciplinedRun skill using clean-room prompts, trigger tests, and with-skill versus baseline evaluation. Use when adding a skill or changing its description or workflow; do not use merely to run an existing skill.
 ---
 
-# Relay10 Skill Lab
+# DisciplinedRun Skill Lab
 
 Add a skill only when it improves a repeated job enough to justify context and maintenance cost.
 

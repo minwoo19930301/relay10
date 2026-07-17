@@ -1,9 +1,11 @@
 {
-  "name": "relay10",
-  "version": "0.1.1",
-  "description": "A small Codex harness with metadata-based model roles and an explicit Reader-10 report gate.",
+  "name": "disciplinedrun",
+  "version": "0.2.0",
+  "description": "DisciplinedRun — a lightweight coding-agent harness with risk-aware effort, inspectable evidence, and separate verdicts. (formerly Relay10)",
   "type": "module",
   "bin": {
+    "disciplinedrun": "./src/cli.mjs",
+    "dpr": "./src/cli.mjs",
     "relay10": "./src/cli.mjs",
     "r10": "./src/cli.mjs"
   },
@@ -22,11 +24,16 @@
     "node": ">=20"
   },
   "keywords": [
+    "disciplinedrun",
+    "relay10",
     "codex",
     "claude-code",
+    "grok",
     "agent-skills",
     "agent-harness",
     "model-routing",
+    "effort-governor",
+    "evidence-led",
     "multi-agent",
     "clarity-eval"
   ],
@@ -50,6 +57,7 @@
     ".claude-plugin",
     "README.md",
     "LICENSE",
-    "SECURITY.md"
+    "SECURITY.md",
+    "CHANGELOG.md"
   ]
 }

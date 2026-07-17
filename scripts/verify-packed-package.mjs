@@ -44,12 +44,30 @@ try {
   );
   assertSucceeded('fresh package install', install);
 
-  const packageRoot = path.join(installRoot, 'node_modules', 'relay10');
+  const packageRoot = path.join(installRoot, 'node_modules', 'disciplinedrun');
   const check = await spawnCapture('npm', ['run', 'check'], {
     cwd: packageRoot,
     timeoutMs: 120_000,
   });
   assertSucceeded('installed package check', check);
+
+  const binSuffix = process.platform === 'win32' ? '.cmd' : '';
+  for (const command of ['disciplinedrun', 'dpr', 'r10', 'relay10']) {
+    const executable = path.join(
+      installRoot,
+      'node_modules',
+      '.bin',
+      `${command}${binSuffix}`,
+    );
+    const help = await spawnCapture(executable, ['--help'], {
+      cwd: installRoot,
+      timeoutMs: 30_000,
+    });
+    assertSucceeded(`${command} installed CLI help`, help);
+    if (!help.stdout.includes('DisciplinedRun')) {
+      throw new Error(`${command} installed CLI help did not show DisciplinedRun`);
+    }
+  }
 
   process.stdout.write(`packed package verification: pass (${filename})\n`);
 } finally {

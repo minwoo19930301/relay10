@@ -78,7 +78,7 @@ function isPlainObject(value) {
 }
 
 function configError(location, message, ErrorType = TypeError) {
-  throw new ErrorType(`Invalid Relay10 config at ${location}: ${message}`);
+  throw new ErrorType(`Invalid DisciplinedRun config at ${location}: ${message}`);
 }
 
 function assertObject(value, location) {
