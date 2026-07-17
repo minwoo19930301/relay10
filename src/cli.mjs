@@ -33,14 +33,14 @@ export const HELP = `DisciplinedRun — lightweight execution discipline for cod
 Explicit scope. Risk-aware effort. Inspectable evidence. Separate verdicts.
 Effort Governor: routing + invocation budget. Formerly Relay10.
 
-Usage (disciplinedrun | dspr | r10 | relay10):
-  dspr init [--force]
-  dspr doctor [--json]
-  dspr route <task> [--json]
-  dspr run <task> [--dry-run] [--live-readers] [--budget-calls N] [--allow-verification-commands]
-  dspr inspect [run-id] [--json]
-  dspr report [run-id] [--output file]
-  dspr replay [run-id] --frozen [--output file]
+Usage (disciplinedrun | dpr | r10 | relay10):
+  dpr init [--force]
+  dpr doctor [--json]
+  dpr route <task> [--json]
+  dpr run <task> [--dry-run] [--live-readers] [--budget-calls N] [--allow-verification-commands]
+  dpr inspect [run-id] [--json]
+  dpr report [run-id] [--output file]
+  dpr replay [run-id] --frozen [--output file]
 
 Safety:
   Config cannot replace the Codex executable or model-catalog command.
@@ -61,7 +61,7 @@ export function formatCliError(error) {
     && (syscall.startsWith('spawn ') || message.startsWith('spawn '));
   if (missingExecutable) {
     const command = error.path || error.cmd || 'executable';
-    return `${command} not found on PATH. DisciplinedRun model stages require an authenticated Codex CLI (install Codex, then re-run dspr doctor or disciplinedrun doctor).`;
+    return `${command} not found on PATH. DisciplinedRun model stages require an authenticated Codex CLI (install Codex, then re-run dpr doctor or disciplinedrun doctor).`;
   }
   return message;
 }

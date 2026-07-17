@@ -3,7 +3,8 @@
 ## Unreleased
 
 - **Product rename: DisciplinedRun** (formerly Relay10). npm package
-  `disciplinedrun@0.2.0`, primary CLI `disciplinedrun`, short alias **`dspr`**,
+  `disciplinedrun@0.2.0`, primary CLI `disciplinedrun`, short alias **`dpr`**
+  (Disciplined Process Run),
   and legacy aliases `r10` / `relay10`. Identity: a lightweight execution
   discipline for coding agents; explicit scope, risk-aware effort, inspectable
   evidence, and separate verdicts. The routing and invocation-budget subsystem

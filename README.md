@@ -23,7 +23,8 @@ from catalog metadata and user overrides. They are not live price
 measurements, benchmarks, or guarantees that DisciplinedRun selected the
 cheapest, weakest, or strongest available model.
 
-Short CLI: **`dspr`**. Legacy aliases: `r10` / `relay10`. Config
+Short CLI: **`dpr`** (Disciplined Process Run). Legacy aliases: `r10` /
+`relay10`. Config
 `relay10.config.json`, run dir `.relay10/`, skill ids `relay10-*`, and the
 GitHub repo path `minwoo19930301/relay10` still work in this release.
 
@@ -57,19 +58,19 @@ git clone https://github.com/minwoo19930301/relay10.git
 cd relay10
 npm link
 
-# product CLI (short: dspr · legacy: r10, relay10)
-dspr doctor
-dspr init
-dspr route "research the API and build a small CLI"
-dspr run "research the API and build a small CLI" --dry-run
-dspr run "research the API and build a small CLI"
+# product CLI (short: dpr · legacy: r10, relay10)
+dpr doctor
+dpr init
+dpr route "research the API and build a small CLI"
+dpr run "research the API and build a small CLI" --dry-run
+dpr run "research the API and build a small CLI"
 ```
 
 To request live Reader-10, which schedules ten separate reader invocations per
 round:
 
 ```bash
-dspr run "your task" --live-readers --budget-calls 30
+dpr run "your task" --live-readers --budget-calls 30
 ```
 
 Different reader roles may use the same model or models from the same family;
@@ -94,7 +95,7 @@ controlled-run surface.
 | Codex with an xAI/Grok custom provider as a **stage executor** | Experimental candidate, untested | Not the same as Grok skill-host support. |
 | Anthropic/Claude or Google Gemini APIs as CLI stage executors | Unsupported in 0.2 | Skill-host support for Claude Code is separate and already works. |
 | Mixed providers in one CLI run | Unsupported | Stage config holds a model, not a provider switch. |
-| Codex desktop app or IDE | Indirect shell use only | Can invoke `dspr` / `disciplinedrun` / `r10`; no native progress UI. |
+| Codex desktop app or IDE | Indirect shell use only | Can invoke `dpr` / `disciplinedrun` / `r10`; no native progress UI. |
 | ChatGPT app/web or a standalone GUI | Not implemented | Needs MCP/Apps SDK or a local sidecar. |
 
 Skills guide the host agent; they do not silently replace that host’s model for
@@ -149,7 +150,7 @@ a session opened inside a clone of this repository loads the same skills through
 `.claude/skills` or `.agents/skills` without installing anything. Grok Build
 discovers the pack via `.agents/skills` (and optional Claude-compat skill
 paths). Skills guide the host agent on Claude Code, Grok Build, or Codex.
-Optional `dspr run` / `disciplinedrun run` model stages still use Codex CLI in
+Optional `dpr run` / `disciplinedrun run` model stages still use Codex CLI in
 0.2.
 The pack follows progressive disclosure and contains original clean-room text.
 The Skill-ecosystem
@@ -183,22 +184,22 @@ budget has no advisor headroom.
 ## Commands
 
 ```text
-dspr init [--force]
-dspr doctor
-dspr route <task> [--json]
-dspr run <task> [--dry-run] [--live-readers] [--budget-calls N]
-dspr inspect [run-id] [--json]
-dspr report [run-id] [--output file]
-dspr replay [run-id] --frozen [--output file]
+dpr init [--force]
+dpr doctor
+dpr route <task> [--json]
+dpr run <task> [--dry-run] [--live-readers] [--budget-calls N]
+dpr inspect [run-id] [--json]
+dpr report [run-id] [--output file]
+dpr replay [run-id] --frozen [--output file]
 ```
 
-Full binary: `disciplinedrun`. Same commands work as `dspr`, `r10`, or `relay10`.
+Full binary: `disciplinedrun`. Same commands work as `dpr`, `r10`, or `relay10`.
 
 The inherited v0.1 `replay --frozen` contract verifies the recorded hashes and
 either reports the saved `report.html` path or copies that exact file outside
 the run directory. `report` is the separate model-free re-render command and
 writes a new file. A frozen replay is not a full environment snapshot, resume
-facility, or proof that remote model behavior can be reproduced. Short alias `dspr` and legacy `r10` /
+facility, or proof that remote model behavior can be reproduced. Short alias `dpr` and legacy `r10` /
 `relay10` accept the same commands.
 
 ## Configuration
