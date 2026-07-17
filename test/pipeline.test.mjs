@@ -259,7 +259,7 @@ test('a run never removes a workspace lock that it did not acquire', async () =>
       route,
       runCodexImpl: async () => { throw new Error('must not execute'); },
     }),
-    /another mutating Relay10 run holds/,
+    /another mutating Boundrun run holds/,
   );
   assert.equal(await readText(lockFile), 'other-run\n');
 });

@@ -44,7 +44,7 @@ try {
   );
   assertSucceeded('fresh package install', install);
 
-  const packageRoot = path.join(installRoot, 'node_modules', 'relay10');
+  const packageRoot = path.join(installRoot, 'node_modules', 'boundrun');
   const check = await spawnCapture('npm', ['run', 'check'], {
     cwd: packageRoot,
     timeoutMs: 120_000,

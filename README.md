@@ -1,25 +1,37 @@
-# Relay10
+# Boundrun
 
-> Route explicitly. Keep handoffs inspectable. Separate correctness signals
-> from report clarity.
+> Bounded, risk-aware, inspectable runs.  
+> Right effort for every stage. Bounded calls. Visible handoffs.
 
-Relay10 is a small Codex harness with zero third-party npm runtime
-dependencies. It maps the local Codex model catalog into three capability
-labels, records stage handoffs as files, keeps command and reviewer results
-separate from report-clarity checks, and renders a standalone HTML run report.
+**Boundrun** is a lightweight agent-run harness (formerly **Relay10**). Zero
+third-party npm runtime dependencies. The same eight-skill pack loads on
+**Codex, Claude Code, and Grok Build**. An optional CLI pipeline can map a
+local model catalog into `frontier` / `balanced` / `economy` labels, record
+stage handoffs as files, keep command and reviewer results separate from
+report-clarity checks, and render a standalone HTML run report.
 
-This is an early `0.1.1` release. The `frontier`, `balanced`, and
-`economy` labels come from catalog metadata and user overrides. They are not
-live price measurements, benchmarks, or guarantees that Relay10 selected the
-cheapest, weakest, or strongest available model.
+**EffortPilot** (document name: Effort Governor) is the routing engine: five
+task dimensions score risk, assign stage effort profiles, and honor
+`--budget-calls` as a hard ceiling on pipeline stage launches—not tokens or
+currency.
+
+This is an early `0.2.0` product-name release of the `0.1.x` line. The
+`frontier`, `balanced`, and `economy` labels come from catalog metadata and
+user overrides. They are not live price measurements, benchmarks, or
+guarantees that Boundrun selected the cheapest, weakest, or strongest
+available model.
+
+Legacy aliases: CLI `r10` / `relay10`, config `relay10.config.json`, run dir
+`.relay10/`, skill ids `relay10-*`, and the GitHub repo path
+`minwoo19930301/relay10` still work in this release.
 
 ## What it does
 
-- **Evidence-gated advisor routing:** five task dimensions select stage
-  profiles, then the scout evidence decides whether an economy task needs the
-  frontier architect. Version 0.1 still does not escalate after a failed stage.
-- **Small execution surface:** one Node CLI, built-in Node modules, and the
-  installed Codex CLI.
+- **EffortPilot routing:** five task dimensions select stage profiles, then
+  scout evidence decides whether an economy task needs the frontier architect.
+  Version 0.2 still does not escalate after a failed stage.
+- **Host-first skills:** repo skills for Codex, Claude Code, and Grok Build,
+  plus one Node CLI on builtins only.
 - **Inspectable handoffs:** each completed stage has a declared role, effort,
   sandbox, output path, and event record.
 - **Separate signals:** explicitly configured commands, a model reviewer, and
@@ -31,66 +43,69 @@ cheapest, weakest, or strongest available model.
 
 ## Quick start
 
-Requirements: Node 20+ and an authenticated Codex CLI.
+**Skill hosts (Codex, Claude Code, Grok Build):** clone the repo (or install
+the Claude marketplace plugin). Skills appear via `.agents/skills` /
+`.claude/skills`. No separate Codex install is required just to load skills.
+
+**Optional bounded CLI pipeline:** Node 20+ and, for live `boundrun run` model
+stages, an authenticated Codex CLI on `PATH`.
 
 ```bash
 git clone https://github.com/minwoo19930301/relay10.git
 cd relay10
 npm link
 
-r10 doctor
-r10 init
-r10 route "research the API and build a small CLI"
-r10 run "research the API and build a small CLI" --dry-run
-r10 run "research the API and build a small CLI"
+# product CLI (aliases: br, r10, relay10)
+boundrun doctor
+boundrun init
+boundrun route "research the API and build a small CLI"
+boundrun run "research the API and build a small CLI" --dry-run
+boundrun run "research the API and build a small CLI"
 ```
 
 To request live Reader-10, which schedules ten separate reader invocations per
 round:
 
 ```bash
-r10 run "your task" --live-readers --budget-calls 30
+boundrun run "your task" --live-readers --budget-calls 30
 ```
 
 Different reader roles may use the same model or models from the same family;
 ten invocations do not guarantee ten independent judgments. The invocation
-budget counts Relay10's Codex subprocess launches, not provider-internal model
-turns, tokens, or currency cost.
+budget counts Boundrun pipeline stage launches (Codex subprocesses in 0.2),
+not provider-internal model turns, tokens, or currency cost.
 
 The report is written under `.relay10/runs/<run-id>/report.html`.
 
 ## Current provider and app support
 
-Relay10 0.1.1 is a **Codex CLI runtime harness**, not a direct
-multi-provider API client.
+Boundrun 0.2.0 is **host-first**. The skill pack runs on the coding agent you
+already use. The optional CLI pipeline is a separate bounded-run surface.
 
 | Target | Current status | What that means |
 |---|---|---|
-| Codex CLI with the locally discovered OpenAI models | Supported and tested | This is the release path. Every model stage launches `codex exec`, and model discovery uses `codex debug models`. |
-| Codex with an xAI/Grok custom provider as a **stage executor** | Experimental candidate, untested | Codex and xAI both expose a Responses-compatible path, but Relay10 cannot select providers per stage and has not completed end-to-end tool, schema, search, or Reader-10 tests. Do not treat this as released Grok stage support. |
-| Anthropic/Claude or Google Gemini APIs as stage executors | Unsupported | Their native APIs and current OpenAI-compatibility surfaces need provider-specific executors or a verified translation layer plus an agent tool runtime. |
-| Claude Code as a Skill and Plugin host | Preview, re-verified 2026-07-15 | The `.claude/skills` symlink, `.claude-plugin` plugin manifest, and repository marketplace let Claude Code load the eight skills and invoke the `r10` CLI. Every Relay10 model stage still launches Codex CLI subprocesses; Claude Code does not become a stage executor. |
-| Grok Build / Grok CLI as a Skill host | Preview, verified 2026-07-15 | Grok loads the eight skills from `.agents/skills` (and Claude-compat skill roots) inside a cloned repo. Skills guide the host agent only; model stages still require Codex CLI. This is not xAI stage-executor support. |
-| Mixed providers in one run | Unsupported | Stage configuration contains a model, not a provider or profile. |
-| Codex desktop app or IDE | Indirect shell use only | A task can invoke `r10`, but Relay10 then starts separate Codex CLI subprocesses. There is no native progress UI or current-task model switching. |
-| ChatGPT app/web or a standalone GUI | Not implemented | These need a remote MCP/Apps SDK backend or a local sidecar/App Server client. |
+| Claude Code as a Skill and Plugin host | Preview, re-verified 2026-07-15 | Marketplace / `.claude/skills` load all eight skills. Primary path for Claude users. |
+| Grok Build / Grok CLI as a Skill host | Preview, verified 2026-07-15 | `.agents/skills` loads the same pack. Primary path for Grok users. |
+| Codex as a Skill host | Supported | Same pack via `.agents/skills` / plugin layout. |
+| Codex CLI as optional `boundrun run` stage runtime | Supported and tested | Live model stages still launch `codex exec` and discover models via `codex debug models` in 0.2. Skill-host use does not require this. |
+| Codex with an xAI/Grok custom provider as a **stage executor** | Experimental candidate, untested | Not the same as Grok skill-host support. |
+| Anthropic/Claude or Google Gemini APIs as CLI stage executors | Unsupported in 0.2 | Skill-host support for Claude Code is separate and already works. |
+| Mixed providers in one CLI run | Unsupported | Stage config holds a model, not a provider switch. |
+| Codex desktop app or IDE | Indirect shell use only | Can invoke `boundrun` / `r10`; no native progress UI. |
+| ChatGPT app/web or a standalone GUI | Not implemented | Needs MCP/Apps SDK or a local sidecar. |
 
-The repo-scoped Skills make the existing commands easier to invoke from Codex,
-Claude Code, and Grok Build, but a Skill by itself does not switch the current
-app task's model for every Relay10 stage. The current branch preview includes an
-eight-Skill pack plus Codex and Claude Code plugin bundles; the immutable
-`v0.1.1` tag does not. The preview has no MCP server or custom UI, so native
-progress and stage execution still use the existing CLI. Evidence for host
-checks lives in
+Skills guide the host agent; they do not silently replace that host’s model for
+every tool call. Evidence for host checks lives in
 [host-surface-verification.md](https://github.com/minwoo19930301/relay10/blob/main/docs/host-surface-verification.md).
 See also the full
 [lineage and portability decision](https://github.com/minwoo19930301/relay10/blob/main/docs/lineage-and-portability.md).
 
-## Relay10 Skill pack
+## Skill pack
 
-Relay10 distills recurring patterns from current global coding agents and
+Boundrun distills recurring patterns from current global coding agents and
 Agent Skill collections into eight on-demand skills instead of installing a
-large catalog:
+large catalog. Skill **ids remain `relay10-*`** in this release for host
+compatibility:
 
 | Skill | Job | Important boundary |
 |---|---|---|
@@ -122,9 +137,10 @@ Installed Claude Code plugin skills appear namespaced as `relay10:<skill-name>`;
 a session opened inside a clone of this repository loads the same skills through
 `.claude/skills` or `.agents/skills` without installing anything. Grok Build
 discovers the pack via `.agents/skills` (and optional Claude-compat skill
-paths). Skills guide the host agent and can call the `r10` CLI, which still
-requires an authenticated Codex CLI for model stages. The pack follows
-progressive disclosure and contains original clean-room text. The Skill-ecosystem
+paths). Skills guide the host agent on Claude Code, Grok Build, or Codex.
+Optional `boundrun run` / `r10 run` model stages still use Codex CLI in 0.2.
+The pack follows progressive disclosure and contains original clean-room text.
+The Skill-ecosystem
 source subset and license cautions are recorded in
 `plugins/relay10/provenance/sources.json`; the complete agent, harness,
 workflow, and Skill lineage is recorded in `docs/prior-art.md`.
@@ -206,7 +222,7 @@ Advisor routing can be switched for comparison or compatibility:
 ```
 
 `conditional` is the default, `always` restores always-on architect invocation,
-and `never` disables the architect checkpoint. Relay10
+and `never` disables the architect checkpoint. Boundrun
 records invocation counts but does not currently observe provider tokens or
 billed currency, so these modes must not be described as a measured percentage
 cost saving without an external evaluation.
@@ -232,11 +248,9 @@ slugs:
   Anthropic/Claude, and Gemini API adapters are not included, and providers
   cannot be mixed by stage. Grok Build skill-host loading is separate from
   xAI stage execution and does not change this limit.
-- Codex desktop can invoke the CLI indirectly, but there is no Relay10 Skill,
-  Plugin, MCP server, Apps SDK UI, or standalone GUI in the immutable v0.1.1
-  release. The current preview adds Skill/Plugin surfaces for Codex and Claude
-  Code, and skill discovery for Grok Build via `.agents/skills`, without MCP
-  or a custom UI.
+- There is no MCP server, Apps SDK UI, or standalone GUI. Skill/Plugin surfaces
+  cover Codex and Claude Code; Grok discovers skills via `.agents/skills`.
+  CLI stage runtime remains Codex-backed in 0.2.
 - The scout is a general read/search Codex stage, not a dedicated crawler,
   browser automation system, or site-specific extraction engine.
 - Deterministic Reader-10 checks structure, length, terminology, links, and
@@ -281,9 +295,9 @@ for the development and review gates.
 
 ## License
 
-Relay10 is MIT licensed and was implemented as a clean-room wrapper with zero
-third-party npm runtime dependencies. No source code from the compared
-harnesses is included.
+Boundrun (formerly Relay10) is MIT licensed and was implemented as a clean-room
+wrapper with zero third-party npm runtime dependencies. No source code from the
+compared harnesses is included.
 
 The design selection is intentionally narrow. From the Korean projects it keeps
 role-specific model tiers, plan/build/review separation, doctor and inspectable
@@ -292,6 +306,6 @@ projects it keeps on-demand skills, read-only plan roles, checkpoint and success
 gates, architect/editor separation, stateless transcripts, provider/worker
 ports, and independent review. It excludes swarms, nested completion loops,
 always-on daemons, databases, vector memory, schedulers, native TUI/GUI stacks,
-global injection, and telemetry from the core. Relay10's
+global injection, and telemetry from the core. Boundrun's EffortPilot
 risk/verifiability/reversibility router, separation of correctness from clarity,
 hash-bound frozen replay, and Reader-10 gate are its own additions.

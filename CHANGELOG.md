@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **Product rename: Boundrun** (formerly Relay10). npm package `boundrun@0.2.0`,
+  CLIs `boundrun` / `br`, legacy aliases `r10` / `relay10`. Identity:
+  bounded, risk-aware, inspectable runs; tagline “Right effort for every
+  stage. Bounded calls. Visible handoffs.” Engine brand: **EffortPilot**
+  (doc synonym Effort Governor).
+- Keep on-disk compatibility: `.relay10/`, `relay10.config.json`, skill ids
+  `relay10-*`, plugin package name `relay10`, GitHub path unchanged in this
+  release.
 - Gate the frontier architect after scout evidence for economy-tier work while
   preserving always/never controls and the existing artifact contract.
 - Record advisor decisions, reason codes, evidence counts, and invocation

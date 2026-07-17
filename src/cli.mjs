@@ -29,16 +29,18 @@ import {
   writeJson,
 } from './utils.mjs';
 
-export const HELP = `Relay10 — lightweight risk-aware Codex harness
+export const HELP = `Boundrun — lightweight agent-run harness
+Right effort for every stage. Bounded calls. Visible handoffs.
+Engine: EffortPilot (risk-aware routing + call budget). Formerly Relay10.
 
-Usage:
-  r10 init [--force]
-  r10 doctor [--json]
-  r10 route <task> [--json]
-  r10 run <task> [--dry-run] [--live-readers] [--budget-calls N] [--allow-verification-commands]
-  r10 inspect [run-id] [--json]
-  r10 report [run-id] [--output file]
-  r10 replay [run-id] --frozen [--output file]
+Usage (boundrun | br | r10 | relay10):
+  boundrun init [--force]
+  boundrun doctor [--json]
+  boundrun route <task> [--json]
+  boundrun run <task> [--dry-run] [--live-readers] [--budget-calls N] [--allow-verification-commands]
+  boundrun inspect [run-id] [--json]
+  boundrun report [run-id] [--output file]
+  boundrun replay [run-id] --frozen [--output file]
 
 Safety:
   Config cannot replace the Codex executable or model-catalog command.
@@ -46,7 +48,7 @@ Safety:
   report writes report.regenerated.html by default and never replaces report.html.
   replay --frozen verifies artifact hashes and never changes the frozen run.
 
-Run artifacts: .relay10/runs/<run-id>/
+Run artifacts: .relay10/runs/<run-id>/  (legacy path; still the on-disk layout)
 `;
 
 export const RUN_ID_PATTERN = /^\d{8}T\d{9}Z-[a-z0-9]{8}$/i;
@@ -59,7 +61,7 @@ export function formatCliError(error) {
     && (syscall.startsWith('spawn ') || message.startsWith('spawn '));
   if (missingExecutable) {
     const command = error.path || error.cmd || 'executable';
-    return `${command} not found on PATH. Relay10 model stages require an authenticated Codex CLI (install Codex, then re-run r10 doctor).`;
+    return `${command} not found on PATH. Boundrun model stages require an authenticated Codex CLI (install Codex, then re-run boundrun doctor or r10 doctor).`;
   }
   return message;
 }
@@ -293,12 +295,12 @@ function aliasesProtectedFile(candidate, protectedFile) {
 export async function resolveRunDir(cwd, candidate) {
   const runsDir = path.resolve(cwd, '.relay10', 'runs');
   const id = candidate ?? await latestRun(runsDir);
-  if (!id) throw new Error('No Relay10 run found');
+  if (!id) throw new Error('No Boundrun run found');
   if (!RUN_ID_PATTERN.test(id)) throw new Error(`Invalid run id: ${id}`);
 
   const runDir = path.resolve(runsDir, id);
   if (!pathIsWithin(runsDir, runDir) || path.dirname(runDir) !== runsDir) {
-    throw new Error(`Run path escapes the Relay10 runs directory: ${id}`);
+    throw new Error(`Run path escapes the Boundrun runs directory: ${id}`);
   }
   if (!(await exists(runDir))) throw new Error(`Run not found: ${id}`);
 
@@ -309,7 +311,7 @@ export async function resolveRunDir(cwd, candidate) {
   ]);
   if (!selectedStat.isDirectory()) throw new Error(`Run path is not a directory: ${id}`);
   if (selectedRun !== path.join(runsDirectory, id)) {
-    throw new Error(`Run path escapes the Relay10 runs directory: ${id}`);
+    throw new Error(`Run path escapes the Boundrun runs directory: ${id}`);
   }
   return runDir;
 }
@@ -527,7 +529,7 @@ if (isMainModule()) {
   main().then((code) => {
     process.exitCode = code;
   }).catch((error) => {
-    process.stderr.write(`relay10: ${formatCliError(error)}\n`);
+    process.stderr.write(`boundrun: ${formatCliError(error)}\n`);
     process.exitCode = 1;
   });
 }

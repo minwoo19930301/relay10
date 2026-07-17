@@ -1,9 +1,11 @@
 {
-  "name": "relay10",
-  "version": "0.1.1",
-  "description": "A small Codex harness with metadata-based model roles and an explicit Reader-10 report gate.",
+  "name": "boundrun",
+  "version": "0.2.0",
+  "description": "Boundrun — lightweight agent-run harness. Right effort for every stage. Bounded calls. Visible handoffs. (formerly Relay10)",
   "type": "module",
   "bin": {
+    "boundrun": "./src/cli.mjs",
+    "br": "./src/cli.mjs",
     "relay10": "./src/cli.mjs",
     "r10": "./src/cli.mjs"
   },
@@ -22,11 +24,15 @@
     "node": ">=20"
   },
   "keywords": [
+    "boundrun",
+    "relay10",
     "codex",
     "claude-code",
+    "grok",
     "agent-skills",
     "agent-harness",
     "model-routing",
+    "effort-pilot",
     "multi-agent",
     "clarity-eval"
   ],
@@ -50,6 +56,7 @@
     ".claude-plugin",
     "README.md",
     "LICENSE",
-    "SECURITY.md"
+    "SECURITY.md",
+    "CHANGELOG.md"
   ]
 }

@@ -94,14 +94,14 @@ test('generateReport creates a self-contained, accessible Korean HTML report', (
   assert.match(html, /> 생략<\/span>/);
   assert.match(html, /코드 easy-no-open-questions · 초기 역할 economy · 점수 3 · 미해결 질문 0개/);
   assert.match(html, /판단 전 1\/30회 · 필수 잔여 3회 · 고급 조언 0회/);
-  assert.match(html, /하네스별 장단점과 Relay10 체리피킹/);
-  assert.match(html, /Relay10이 채택한 패턴/);
+  assert.match(html, /하네스별 장단점과 Boundrun 체리피킹/);
+  assert.match(html, /Boundrun이 채택한 패턴/);
   assert.match(html, /현재 공급자·CLI·앱 지원 범위/);
   assert.match(html, /> 지원<\/span>/);
   assert.match(html, /> 미지원<\/span>/);
   assert.match(html, /글로벌 상위 저장소에서 무엇을 증류했나/);
   assert.match(html, /별 수는 인기와 발견 신호일 뿐/);
-  assert.match(html, /여덟 개만 남긴 Relay10 Skill pack/);
+  assert.match(html, /여덟 개만 남긴 Boundrun Skill pack/);
   assert.match(html, /앞으로 30일·60일·90일에 할 일/);
   assert.match(html, /Reader-10 검수/);
   assert.match(html, /10\/10 자동 구조 프로필 통과/);
