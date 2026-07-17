@@ -6,7 +6,7 @@ import test from 'node:test';
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const skillRoot = path.join(root, 'plugins', 'relay10', 'skills', 'relay10-spec');
 
-test('Relay10 spec skill carries a bounded confirmed-contract workflow', async () => {
+test('DisciplinedRun spec skill carries a bounded confirmed-contract workflow', async () => {
   const [skill, contract, agent] = await Promise.all([
     readFile(path.join(skillRoot, 'SKILL.md'), 'utf8'),
     readFile(path.join(skillRoot, 'references', 'task-contract.md'), 'utf8'),
@@ -45,7 +45,7 @@ test('Relay10 spec skill carries a bounded confirmed-contract workflow', async (
   assert.match(agent, /blocking decisions/i);
 });
 
-test('Relay10 spec evaluation set separates trigger, near-miss, outcome, and adversarial cases', async () => {
+test('DisciplinedRun spec evaluation set separates trigger, near-miss, outcome, and adversarial cases', async () => {
   const evaluation = JSON.parse(await readFile(path.join(skillRoot, 'evals', 'cases.json'), 'utf8'));
   const shouldTrigger = [
     ...evaluation.tuning.shouldTrigger,

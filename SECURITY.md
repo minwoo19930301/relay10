@@ -1,6 +1,6 @@
 # Security
 
-Relay10 deliberately keeps acquisition and planning stages read-only and gives
+DisciplinedRun deliberately keeps acquisition and planning stages read-only and gives
 write access only to the maker stage. External publishing is never performed by
 the harness itself.
 
@@ -12,4 +12,4 @@ the harness itself.
 
 The default `workspace-write` sandbox is a safety boundary, not a guarantee.
 The called Codex CLI, local configuration, MCP servers, hooks, and commands may
-have capabilities outside Relay10's control.
+have capabilities outside DisciplinedRun's control.

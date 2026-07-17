@@ -1,18 +1,18 @@
 ---
 name: relay10-orchestrate
-description: Route a multi-stage repository task through the smallest useful Relay10 workflow. Use for work that mixes research, planning, implementation, review, or release; do not use for a single obvious read or edit.
+description: Route a multi-stage repository task through the smallest useful DisciplinedRun workflow. Use for work that mixes research, planning, implementation, review, or release; do not use for a single obvious read or edit.
 ---
 
-# Relay10 Orchestrate
+# DisciplinedRun Orchestrate
 
-Coordinate the other Relay10 skills without turning every request into a large process.
+Coordinate the other DisciplinedRun skills without turning every request into a large process.
 
 ## Preflight
 
 1. Restate the requested outcome, constraints, and forbidden actions.
 2. Inspect the repository and current git state before proposing edits.
-3. If `r10` is available, run `r10 doctor` and preview routing with `r10 route "<task>" --json`.
-4. Treat `r10 run "<task>" --dry-run` as a preview. Run a mutating pipeline only when the user authorized implementation.
+3. If the CLI is available, run `disciplinedrun doctor` and preview routing with `disciplinedrun route "<task>" --json` (`r10` remains a legacy alias).
+4. Treat `disciplinedrun run "<task>" --dry-run` as a preview. Run a mutating pipeline only when the user authorized implementation.
 
 This skill helps choose a workflow. It does not change the model of the host agent's current task, whether that host is Codex or Claude Code, and does not make unsupported providers available.
 

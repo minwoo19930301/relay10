@@ -3,7 +3,7 @@ name: relay10-spec
 description: Turn an ambiguous or high-impact change request into a small executable specification using bounded Socratic clarification and a confirmed task contract. Use when scope, authority, acceptance checks, or rollback are unclear; do not use for a narrow reversible edit or a question the repository can answer.
 ---
 
-# Relay10 Spec
+# DisciplinedRun Spec
 
 Design the smallest change that can prove the requested outcome. Resolve facts
 from evidence, and ask the user only for decisions that evidence cannot make.

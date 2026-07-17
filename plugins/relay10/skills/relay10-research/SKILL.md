@@ -3,7 +3,7 @@ name: relay10-research
 description: Gather current, read-only evidence about a repository, API, product, or ecosystem. Use before broad changes, comparisons, or claims that may have changed; do not use when the user already supplied sufficient stable evidence.
 ---
 
-# Relay10 Research
+# DisciplinedRun Research
 
 Build a compact evidence ledger before analysis or implementation.
 

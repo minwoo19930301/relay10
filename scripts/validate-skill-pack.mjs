@@ -89,7 +89,7 @@ function parseYamlScalar(rawValue, line) {
   return value;
 }
 
-// Relay10 metadata deliberately uses a strict YAML subset: two-space-indented
+// DisciplinedRun metadata deliberately uses a strict YAML subset: two-space-indented
 // mappings and one-line string scalars. Rejecting everything else keeps the
 // dependency-free parser fail-closed instead of pretending to implement YAML.
 export function parseYamlScalars(source) {
@@ -562,7 +562,7 @@ function helpText() {
   return [
     'Usage: node scripts/validate-skill-pack.mjs [plugin-path] [--json]',
     '',
-    'Validate the Relay10 Codex and Claude Code plugin manifests and every bundled skill.',
+    'Validate the DisciplinedRun Codex and Claude Code plugin manifests and every bundled skill.',
     '',
     'Options:',
     '  --json  Print the machine-readable result.',

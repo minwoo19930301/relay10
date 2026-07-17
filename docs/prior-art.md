@@ -1,17 +1,17 @@
 # Prior art, provenance, and clean-room record
 
-This file records what Relay10's authors inspected, what abstract ideas were
+This file records what DisciplinedRun's authors inspected, what abstract ideas were
 retained, and what was not copied. It is an engineering provenance note, not a
 legal opinion or a claim that the underlying workflow ideas are novel.
 
 ## Clean-room boundary
 
-Relay10 is an independently implemented MIT-licensed wrapper. The repository
+DisciplinedRun is an independently implemented MIT-licensed wrapper. The repository
 does **not** vendor source code, prompt text, skill instructions, scripts,
 templates, assets, model weights, or datasets from the compared projects.
 Public repository metadata, READMEs, documentation, and behavior descriptions
 were used to identify patterns and trade-offs. Those patterns were rewritten
-as Relay10 requirements and implemented against Relay10's own architecture.
+as DisciplinedRun requirements and implemented against DisciplinedRun's own architecture.
 
 The boundary is especially strict for repositories or paths whose GitHub API
 license is `NOASSERTION`, whose license is component-specific, or whose content
@@ -79,7 +79,7 @@ The entries below identify conceptual lineage. “Retained” means the project
 implemented its own narrow version; it does not mean the upstream project was
 the first or only source of the idea.
 
-| Abstract pattern observed in the ecosystem | Relay10's independent expression | Excluded upstream shape |
+| Abstract pattern observed in the ecosystem | DisciplinedRun's independent expression | Excluded upstream shape |
 |---|---|---|
 | Use different roles or models for planning and editing. | `scout`, `architect`, `maker`, `reviewer`, and `explainer` have explicit roles; model labels are mapped from local Codex catalog metadata with user overrides. | Provider/runtime internals, universal quality rankings, and claims that a label is objectively cheapest or smartest. |
 | Separate planning from consequential execution. | Read-only planning stages and a workspace-write maker; skill instructions preserve diagnosis/plan-only boundaries. | Full plan-mode runtimes, hidden permission escalation, or automatic publication. |
@@ -95,7 +95,7 @@ the first or only source of the idea.
 
 ## Locally authored implementation evidence
 
-The following files are the primary Relay10 implementation surfaces and are
+The following files are the primary DisciplinedRun implementation surfaces and are
 not derived copies of any compared repository:
 
 - `src/router.mjs`: five-dimensional initial routing using complexity, risk,
@@ -103,16 +103,16 @@ not derived copies of any compared repository:
 - `src/catalog.mjs`: local Codex catalog discovery and candid capability labels;
 - `src/executor.mjs` and `src/pipeline.mjs`: subprocess and stage contracts;
 - `src/reader10.mjs` and `src/report.mjs`: clarity checks and standalone report;
-- `test/*.test.mjs`: behavior and regression tests written for Relay10;
+- `test/*.test.mjs`: behavior and regression tests written for DisciplinedRun;
 - `plugins/relay10/skills/relay10-*/SKILL.md`: locally written, focused skill
   procedures;
-- `plugins/relay10/.codex-plugin/plugin.json`: Relay10's own plugin metadata;
+- `plugins/relay10/.codex-plugin/plugin.json`: DisciplinedRun's own plugin metadata;
 - `plugins/relay10/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`:
-  Relay10's own Claude Code plugin and marketplace metadata.
+  DisciplinedRun's own Claude Code plugin and marketplace metadata.
 - `docs/host-surface-verification.md`: dated evidence for Claude Code and Grok
   Build skill-host loading; not stage-executor proof.
 
-Relay10-specific combinations include the risk/verifiability/reversibility
+DisciplinedRun-specific combinations include the risk/verifiability/reversibility
 router, correctness-versus-clarity separation, literal-argv verification,
 hash-bound frozen replay, and the bounded Reader-10 report gate. Similar
 individual ideas may exist elsewhere; the claim is independent implementation,
@@ -120,7 +120,7 @@ not invention of every component concept.
 
 ## License handling decisions
 
-- No third-party repository license is used as a dependency of Relay10's
+- No third-party repository license is used as a dependency of DisciplinedRun's
   implementation because no third-party code or skill content is vendored.
 - GitHub API `NOASSERTION` is treated as unresolved, not permissive.
 - The Anthropic `docx`, `pdf`, `pptx`, and `xlsx` skill directories are treated

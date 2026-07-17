@@ -1,25 +1,27 @@
-# Boundrun
+# DisciplinedRun
 
-> Bounded, risk-aware, inspectable runs.  
-> Right effort for every stage. Bounded calls. Visible handoffs.
+> A lightweight execution discipline for coding agents.
+> Explicit scope. Risk-aware effort. Inspectable evidence. Separate verdicts.
 
-**Boundrun** is a lightweight agent-run harness (formerly **Relay10**). Zero
-third-party npm runtime dependencies. The same eight-skill pack loads on
-**Codex, Claude Code, and Grok Build**. An optional CLI pipeline can map a
-local model catalog into `frontier` / `balanced` / `economy` labels, record
-stage handoffs as files, keep command and reviewer results separate from
-report-clarity checks, and render a standalone HTML run report.
+**DisciplinedRun** is a lightweight agent-run harness (formerly **Relay10**)
+with zero third-party npm runtime dependencies. It combines a portable
+eight-skill workflow pack with an optional CLI pipeline. The pack loads on
+**Codex, Claude Code, and Grok Build**. The CLI maps a local model catalog into
+`frontier` / `balanced` / `economy` labels, records stage handoffs as files,
+keeps command and reviewer results separate from report-clarity checks, and
+renders a standalone HTML run report.
 
-**EffortPilot** (document name: Effort Governor) is the routing engine: five
-task dimensions score risk, assign stage effort profiles, and honor
-`--budget-calls` as a hard ceiling on pipeline stage launches—not tokens or
-currency.
+The **Effort Governor** is one subsystem, not the whole product. Five task
+dimensions assess a run, tune maker and reviewer effort, help decide whether
+frontier advice is needed, and honor `--budget-calls` as a hard ceiling on
+pipeline stage launches—not tokens or currency.
 
-This is an early `0.2.0` product-name release of the `0.1.x` line. The
-`frontier`, `balanced`, and `economy` labels come from catalog metadata and
-user overrides. They are not live price measurements, benchmarks, or
-guarantees that Boundrun selected the cheapest, weakest, or strongest
-available model.
+This branch prepares the `0.2.0` product-name release. The latest immutable
+published release remains `v0.1.1` under the Relay10 name until a new release
+is explicitly approved. The `frontier`, `balanced`, and `economy` labels come
+from catalog metadata and user overrides. They are not live price
+measurements, benchmarks, or guarantees that DisciplinedRun selected the
+cheapest, weakest, or strongest available model.
 
 Legacy aliases: CLI `r10` / `relay10`, config `relay10.config.json`, run dir
 `.relay10/`, skill ids `relay10-*`, and the GitHub repo path
@@ -27,7 +29,7 @@ Legacy aliases: CLI `r10` / `relay10`, config `relay10.config.json`, run dir
 
 ## What it does
 
-- **EffortPilot routing:** five task dimensions select stage profiles, then
+- **Effort Governor:** five task dimensions select stage profiles, then
   scout evidence decides whether an economy task needs the frontier architect.
   Version 0.2 still does not escalate after a failed stage.
 - **Host-first skills:** repo skills for Codex, Claude Code, and Grok Build,
@@ -47,51 +49,52 @@ Legacy aliases: CLI `r10` / `relay10`, config `relay10.config.json`, run dir
 the Claude marketplace plugin). Skills appear via `.agents/skills` /
 `.claude/skills`. No separate Codex install is required just to load skills.
 
-**Optional bounded CLI pipeline:** Node 20+ and, for live `boundrun run` model
-stages, an authenticated Codex CLI on `PATH`.
+**Optional controlled CLI pipeline:** Node 20+ and, for live
+`disciplinedrun run` model stages, an authenticated Codex CLI on `PATH`.
 
 ```bash
 git clone https://github.com/minwoo19930301/relay10.git
 cd relay10
 npm link
 
-# product CLI (aliases: br, r10, relay10)
-boundrun doctor
-boundrun init
-boundrun route "research the API and build a small CLI"
-boundrun run "research the API and build a small CLI" --dry-run
-boundrun run "research the API and build a small CLI"
+# product CLI (legacy aliases: r10, relay10)
+disciplinedrun doctor
+disciplinedrun init
+disciplinedrun route "research the API and build a small CLI"
+disciplinedrun run "research the API and build a small CLI" --dry-run
+disciplinedrun run "research the API and build a small CLI"
 ```
 
 To request live Reader-10, which schedules ten separate reader invocations per
 round:
 
 ```bash
-boundrun run "your task" --live-readers --budget-calls 30
+disciplinedrun run "your task" --live-readers --budget-calls 30
 ```
 
 Different reader roles may use the same model or models from the same family;
 ten invocations do not guarantee ten independent judgments. The invocation
-budget counts Boundrun pipeline stage launches (Codex subprocesses in 0.2),
-not provider-internal model turns, tokens, or currency cost.
+budget counts DisciplinedRun pipeline stage launches (Codex subprocesses in
+0.2), not provider-internal model turns, tokens, or currency cost.
 
 The report is written under `.relay10/runs/<run-id>/report.html`.
 
 ## Current provider and app support
 
-Boundrun 0.2.0 is **host-first**. The skill pack runs on the coding agent you
-already use. The optional CLI pipeline is a separate bounded-run surface.
+The DisciplinedRun 0.2.0 preview is **host-first**. The skill pack runs on the
+coding agent you already use. The optional CLI pipeline is a separate
+controlled-run surface.
 
 | Target | Current status | What that means |
 |---|---|---|
-| Claude Code as a Skill and Plugin host | Preview, re-verified 2026-07-15 | Marketplace / `.claude/skills` load all eight skills. Primary path for Claude users. |
-| Grok Build / Grok CLI as a Skill host | Preview, verified 2026-07-15 | `.agents/skills` loads the same pack. Primary path for Grok users. |
-| Codex as a Skill host | Supported | Same pack via `.agents/skills` / plugin layout. |
-| Codex CLI as optional `boundrun run` stage runtime | Supported and tested | Live model stages still launch `codex exec` and discover models via `codex debug models` in 0.2. Skill-host use does not require this. |
+| Claude Code as a Skill and Plugin host | Preview; host path verified 2026-07-15, renamed manifests statically validated 2026-07-17 | Marketplace / `.claude/skills` load all eight skills. This is Skill-host guidance, not native stage execution. |
+| Grok Build / Grok CLI as a Skill host | Preview, verified 2026-07-15 | `.agents/skills` loads the same pack. This is Skill-host guidance, not xAI stage execution. |
+| Codex as a Skill host | Repository surface, statically validated | Same pack via `.agents/skills` / plugin layout. |
+| Codex CLI as optional `disciplinedrun run` stage runtime | Supported and tested | Live model stages still launch `codex exec` and discover models via `codex debug models` in 0.2. Skill-host use does not require this. |
 | Codex with an xAI/Grok custom provider as a **stage executor** | Experimental candidate, untested | Not the same as Grok skill-host support. |
 | Anthropic/Claude or Google Gemini APIs as CLI stage executors | Unsupported in 0.2 | Skill-host support for Claude Code is separate and already works. |
 | Mixed providers in one CLI run | Unsupported | Stage config holds a model, not a provider switch. |
-| Codex desktop app or IDE | Indirect shell use only | Can invoke `boundrun` / `r10`; no native progress UI. |
+| Codex desktop app or IDE | Indirect shell use only | Can invoke `disciplinedrun` / `r10`; no native progress UI. |
 | ChatGPT app/web or a standalone GUI | Not implemented | Needs MCP/Apps SDK or a local sidecar. |
 
 Skills guide the host agent; they do not silently replace that host’s model for
@@ -100,9 +103,11 @@ every tool call. Evidence for host checks lives in
 See also the full
 [lineage and portability decision](https://github.com/minwoo19930301/relay10/blob/main/docs/lineage-and-portability.md).
 
+<a id="relay10-skill-pack"></a>
+
 ## Skill pack
 
-Boundrun distills recurring patterns from current global coding agents and
+DisciplinedRun distills recurring patterns from current global coding agents and
 Agent Skill collections into eight on-demand skills instead of installing a
 large catalog. Skill **ids remain `relay10-*`** in this release for host
 compatibility:
@@ -117,6 +122,12 @@ compatibility:
 | `relay10-review` | review a fixed baseline and report findings | remains read-only |
 | `relay10-release` | prove package, artifact, hash, and support claims | requires explicit publication authority |
 | `relay10-skill-lab` | tune triggers and compare against no-skill baseline | rejects skills without measured benefit |
+
+The Confirmed Task Contract is an optional output of the `relay10-spec` Skill.
+`disciplinedrun run` does not automatically ingest, cryptographically bind, or
+enforce that contract. The same boundary applies to other Skill guidance: a
+host agent follows it; the CLI does not claim to turn every instruction into a
+runtime invariant.
 
 The canonical pack lives under `plugins/relay10/skills`. `.agents/skills` and
 `.claude/skills` are relative symlinks to that directory so a cloned repository
@@ -138,7 +149,8 @@ a session opened inside a clone of this repository loads the same skills through
 `.claude/skills` or `.agents/skills` without installing anything. Grok Build
 discovers the pack via `.agents/skills` (and optional Claude-compat skill
 paths). Skills guide the host agent on Claude Code, Grok Build, or Codex.
-Optional `boundrun run` / `r10 run` model stages still use Codex CLI in 0.2.
+Optional `disciplinedrun run` / `r10 run` model stages still use Codex CLI in
+0.2.
 The pack follows progressive disclosure and contains original clean-room text.
 The Skill-ecosystem
 source subset and license cautions are recorded in
@@ -171,24 +183,26 @@ budget has no advisor headroom.
 ## Commands
 
 ```text
-r10 init [--force]
-r10 doctor
-r10 route <task> [--json]
-r10 run <task> [--dry-run] [--live-readers] [--budget-calls N]
-r10 inspect [run-id] [--json]
-r10 report [run-id] [--output file]
-r10 replay [run-id] --frozen [--output file]
+disciplinedrun init [--force]
+disciplinedrun doctor
+disciplinedrun route <task> [--json]
+disciplinedrun run <task> [--dry-run] [--live-readers] [--budget-calls N]
+disciplinedrun inspect [run-id] [--json]
+disciplinedrun report [run-id] [--output file]
+disciplinedrun replay [run-id] --frozen [--output file]
 ```
 
-In 0.1, `replay --frozen` verifies the recorded hashes and either reports the
-saved `report.html` path or copies that exact file outside the run directory.
-`report` is the separate model-free re-render command and writes a new file. A
-frozen replay is not a full environment snapshot, resume facility, or proof
-that remote model behavior can be reproduced.
+The inherited v0.1 `replay --frozen` contract verifies the recorded hashes and
+either reports the saved `report.html` path or copies that exact file outside
+the run directory. `report` is the separate model-free re-render command and
+writes a new file. A frozen replay is not a full environment snapshot, resume
+facility, or proof that remote model behavior can be reproduced. Legacy `r10`
+and `relay10` aliases accept the same commands.
 
 ## Configuration
 
-`r10 init` writes `relay10.config.json`. Model roles are derived from
+`disciplinedrun init` writes the compatibility filename
+`relay10.config.json`. Model roles are derived from
 `codex debug models`; explicit model overrides take precedence. See the
 [example configuration](https://github.com/minwoo19930301/relay10/blob/main/examples/relay10.config.json)
 and [configuration schema](https://github.com/minwoo19930301/relay10/blob/main/schema/config.schema.json).
@@ -222,7 +236,7 @@ Advisor routing can be switched for comparison or compatibility:
 ```
 
 `conditional` is the default, `always` restores always-on architect invocation,
-and `never` disables the architect checkpoint. Boundrun
+and `never` disables the architect checkpoint. DisciplinedRun
 records invocation counts but does not currently observe provider tokens or
 billed currency, so these modes must not be described as a measured percentage
 cost saving without an external evaluation.
@@ -242,7 +256,7 @@ slugs:
 }
 ```
 
-## Version 0.1 limits
+## Version 0.2 preview limits
 
 - The verified stage runtime is Codex CLI. Direct OpenAI, xAI/Grok,
   Anthropic/Claude, and Gemini API adapters are not included, and providers
@@ -280,7 +294,7 @@ slugs:
 - [Conditional advisor evidence and routing decision](https://github.com/minwoo19930301/relay10/blob/main/docs/conditional-advisor-routing.md)
 - [Clean-room prior art ledger](https://github.com/minwoo19930301/relay10/blob/main/docs/prior-art.md)
 - [30/60/90 development and promotion playbook](https://github.com/minwoo19930301/relay10/blob/main/docs/growth-playbook.md)
-- [Launch report](https://github.com/minwoo19930301/relay10/blob/main/docs/launch-report.html)
+- [Relay10 v0.1.1 historical launch report](https://github.com/minwoo19930301/relay10/blob/main/docs/launch-report.html)
 
 The latest research snapshot is dated 2026-07-14. Stars and project status change;
 follow the linked primary sources before making adoption or licensing choices.
@@ -295,9 +309,9 @@ for the development and review gates.
 
 ## License
 
-Boundrun (formerly Relay10) is MIT licensed and was implemented as a clean-room
-wrapper with zero third-party npm runtime dependencies. No source code from the
-compared harnesses is included.
+DisciplinedRun (formerly Relay10) is MIT licensed and was implemented as a
+clean-room wrapper with zero third-party npm runtime dependencies. No source
+code from the compared harnesses is included.
 
 The design selection is intentionally narrow. From the Korean projects it keeps
 role-specific model tiers, plan/build/review separation, doctor and inspectable
@@ -306,6 +320,7 @@ projects it keeps on-demand skills, read-only plan roles, checkpoint and success
 gates, architect/editor separation, stateless transcripts, provider/worker
 ports, and independent review. It excludes swarms, nested completion loops,
 always-on daemons, databases, vector memory, schedulers, native TUI/GUI stacks,
-global injection, and telemetry from the core. Boundrun's EffortPilot
-risk/verifiability/reversibility router, separation of correctness from clarity,
-hash-bound frozen replay, and Reader-10 gate are its own additions.
+global injection, and telemetry from the core. DisciplinedRun's
+risk/verifiability/reversibility router and Effort Governor, separation of
+correctness from clarity, hash-bound frozen replay, and Reader-10 gate are its
+own additions.

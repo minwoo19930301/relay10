@@ -2,11 +2,12 @@
 
 ## Unreleased
 
-- **Product rename: Boundrun** (formerly Relay10). npm package `boundrun@0.2.0`,
-  CLIs `boundrun` / `br`, legacy aliases `r10` / `relay10`. Identity:
-  bounded, risk-aware, inspectable runs; tagline “Right effort for every
-  stage. Bounded calls. Visible handoffs.” Engine brand: **EffortPilot**
-  (doc synonym Effort Governor).
+- **Product rename: DisciplinedRun** (formerly Relay10). npm package
+  `disciplinedrun@0.2.0`, primary CLI `disciplinedrun`, and legacy aliases
+  `r10` / `relay10`. Identity: a lightweight execution discipline for coding
+  agents; explicit scope, risk-aware effort, inspectable evidence, and separate
+  verdicts. The routing and invocation-budget subsystem is the **Effort
+  Governor**.
 - Keep on-disk compatibility: `.relay10/`, `relay10.config.json`, skill ids
   `relay10-*`, plugin package name `relay10`, GitHub path unchanged in this
   release.

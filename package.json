@@ -1,11 +1,10 @@
 {
-  "name": "boundrun",
+  "name": "disciplinedrun",
   "version": "0.2.0",
-  "description": "Boundrun — lightweight agent-run harness. Right effort for every stage. Bounded calls. Visible handoffs. (formerly Relay10)",
+  "description": "DisciplinedRun — a lightweight coding-agent harness with risk-aware effort, inspectable evidence, and separate verdicts. (formerly Relay10)",
   "type": "module",
   "bin": {
-    "boundrun": "./src/cli.mjs",
-    "br": "./src/cli.mjs",
+    "disciplinedrun": "./src/cli.mjs",
     "relay10": "./src/cli.mjs",
     "r10": "./src/cli.mjs"
   },
@@ -24,7 +23,7 @@
     "node": ">=20"
   },
   "keywords": [
-    "boundrun",
+    "disciplinedrun",
     "relay10",
     "codex",
     "claude-code",
@@ -32,7 +31,8 @@
     "agent-skills",
     "agent-harness",
     "model-routing",
-    "effort-pilot",
+    "effort-governor",
+    "evidence-led",
     "multi-agent",
     "clarity-eval"
   ],

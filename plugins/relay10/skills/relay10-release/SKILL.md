@@ -3,7 +3,7 @@ name: relay10-release
 description: Prove that an authorized release or handoff is reproducible, traceable, and honestly described. Use for packaging, GitHub delivery, artifact reports, or launch preparation; do not publish without explicit authorization.
 ---
 
-# Relay10 Release
+# DisciplinedRun Release
 
 Make release claims match checked artifacts and current support boundaries.
 
